@@ -1,0 +1,9 @@
+CREATE TABLE OOPR
+(
+	OpprId		INT,
+	CardCode	VARCHAR(100),
+	CardName	VARCHAR(100),
+	UPSAP		BIT
+)
+
+GO

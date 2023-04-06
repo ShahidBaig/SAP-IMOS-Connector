@@ -1,0 +1,125 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x86</Platforms>
+    <StartupObject>IMW.WinUI.Program</StartupObject>
+    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+    <Authors>Corvit</Authors>
+    <Company>Corvit</Company>
+    <PackageIcon>logo.png</PackageIcon>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="logo.png" />
+    <None Remove="Scripts\2.0.0.0\Deploy\scripts.sql" />
+    <None Remove="Scripts\2.0.0.0\IMOS\1 - SAPItemIdentityConfig.sql" />
+    <None Remove="Scripts\2.0.0.0\IMOS\1 - TABLES.sql" />
+    <None Remove="Scripts\2.0.0.0\IMOS\2 - sp_GetSAPQuotationItems.sql" />
+    <None Remove="Scripts\2.0.0.0\ISC\1 - ISCTables.sql" />
+    <None Remove="Scripts\2.0.0.0\ISC\1 - TABLES.sql" />
+    <None Remove="Scripts\2.0.0.0\ISC\2 - sp_ClearIMOSMappedTablesforSQ.sql" />
+    <None Remove="Scripts\2.0.0.0\ISC\3 - sp_GetSAPQuotationItemsISC.sql" />
+    <None Remove="Scripts\2.0.0.0\ISC\4 - SAP_QuotationAnalyzer.sql" />
+    <None Remove="Scripts\2.0.0.0\ISC\5 - SAP_InsertQtyConversionDetail.sql" />
+    <None Remove="Scripts\Versions\Versions.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="SAPbobsCOM">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>9</VersionMajor>
+      <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30090</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\IMOS\1 - SAPItemIdentityConfig.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\IMOS\2 - sp_GetSAPQuotationItems.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\ISC\1 - TABLES.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\Deploy\scripts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\ISC\2 - sp_ClearIMOSMappedTablesforSQ.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\ISC\3 - sp_GetSAPQuotationItemsISC.sql">
+    </Content>
+    <Content Include="Scripts\2.0.0.0\ISC\4 - SAP_QuotationAnalyzer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\ISC\5 - SAP_InsertQtyConversionDetail.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\2.0.0.0\ISC\3 - sp_GetSAPQuotationItemsISC.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Versions\Versions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.13.0" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IMW.Common\IMW.Common.csproj" />
+    <ProjectReference Include="..\IMW.DAL\IMW.DAL.csproj" />
+    <ProjectReference Include="..\IMW.DB\IMW.DB.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

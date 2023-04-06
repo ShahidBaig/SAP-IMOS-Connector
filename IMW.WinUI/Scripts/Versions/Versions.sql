@@ -1,0 +1,7 @@
+CREATE TABLE ISCVersions
+(
+	VersionNo	VARCHAR(15) NOT NULL PRIMARY KEY,
+	Description VARCHAR(250),
+	VersionDate	DATETIME
+)
+GO
