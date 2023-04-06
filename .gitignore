@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/IMW.DAL/obj
+/IMW.DAL/bin
+/IMW.Common/obj
+/IMW.Common/bin
+/IMW.DB/obj
+/IMW.DB/bin/Release/net6.0
+*.user
+/IMW.WinUI/obj
+/IMW.WinUI/bin
+/ISCService/obj
+/ISCService/bin/Release/net6.0
