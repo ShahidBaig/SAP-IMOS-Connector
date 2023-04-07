@@ -14,7 +14,7 @@
             Company company2;
             Company company = (Company) Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("632F4591-AA62-4219-8FB6-22BCF5F60090")));
 
-			var appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+			var appSettings = HelperDAL.GetSettings();
 
 			try
             {

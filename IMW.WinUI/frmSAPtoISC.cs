@@ -63,7 +63,7 @@
 
         private void GetSettings()
 		{
-			var appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+			var appSettings = HelperDAL.GetSettings();
 			this.txtTSI.Text = appSettings.TSI;
         }
 

@@ -1,6 +1,7 @@
 ﻿namespace IMW.WinUI
 {
     using IMW.Common;
+    using IMW.DAL;
     using Microsoft.Extensions.Configuration;
     using SAPbobsCOM;
     using System;
@@ -20,7 +21,7 @@
         {
             try
 			{
-				var appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+				var appSettings = HelperDAL.GetSettings();
 
 				oCompany.CompanyDB = appSettings.CompanyDB;
                 oCompany.Server = appSettings.Server;

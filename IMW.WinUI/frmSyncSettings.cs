@@ -53,7 +53,7 @@ namespace IMW.WinUI
         {
             try
             {
-                AppSettings appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+                AppSettings appSettings = HelperDAL.GetSettings();
                 string settings = appSettings.Sync;
                 string[] splits = settings.Split('|');
                 int index = 0;

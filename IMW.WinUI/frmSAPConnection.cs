@@ -64,7 +64,7 @@
         private TextBox txtIMOSServer;
         private TextBox txtIMOSDbUserName;
         private TextBox txtIMOSDbPassword;
-        public frmMainScreen main;
+        public frmMain main;
 
         public frmSAPConnection()
         {
@@ -155,7 +155,7 @@
         {
             try
 			{
-				var appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+				var appSettings = HelperDAL.GetSettings();
 
 				this.oCompany.CompanyDB = appSettings.CompanyDB;
 				this.oCompany.Server = appSettings.Server;
@@ -223,7 +223,7 @@
 
         private void GetSettings()
 		{
-			var appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+			var appSettings = HelperDAL.GetSettings();
 
 			this.txtCompanyDB.Text = appSettings.CompanyDB;
 			this.txtServer.Text = appSettings.Server;

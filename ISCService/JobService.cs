@@ -32,11 +32,11 @@ namespace ISCService
                 var configJson1 = File.ReadAllText("appsettings.json");
                 var jsonNodeOptions1 = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
                 var node1 = JsonNode.Parse(configJson1, jsonNodeOptions1);
-
                 var configJson = File.ReadAllText(Path.Combine(node1["AppSettings"]["ISCAppPath"].ToString(), "appsettings.json"));
-
                 var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
                 var node = JsonNode.Parse(configJson, jsonNodeOptions);
+
+                HelperDAL.SettingsPath = node1["AppSettings"]["ISCAppPath"].ToString();
 
                 return node["AppSettings"][name].ToString();
             }
@@ -44,10 +44,10 @@ namespace ISCService
             {
             }
 
-            return "0|0|1|1|1|1|1";
+            return "0|0|0|0|0|0|0";
         }
 
-        private void SetupSyncSettings()
+        public void SetupSyncSettings()
         {
             string[] splits = GetSettings("Sync").Split('|');
             int index = 0;

@@ -31,6 +31,7 @@ namespace ISCService
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
+                    _jobService.SetupSyncSettings();
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
 					while (index < jobs.Length)

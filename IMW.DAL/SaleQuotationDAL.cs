@@ -1238,7 +1238,7 @@
 
                 LogConsumerDAL.Instance.Write("Initiating Getting Sales Qoutation Data from ISC to IMOS");
 
-                var appSettings = AppConfiguration.Configuration.GetSection("AppSettings").Get<AppSettings>();
+                var appSettings = HelperDAL.GetSettings();
 
                 ISCConnection.ConnectionString = HelperDAL.ISCConnectionString;
                 ISCConnection.Open();

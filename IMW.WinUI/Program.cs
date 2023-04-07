@@ -20,7 +20,7 @@ namespace IMW.WinUI
 			AppConfiguration.Configuration = builder.Build();
 
 			ApplicationConfiguration.Initialize();
-            Application.Run(new frmMainScreen());
+            Application.Run(new frmMain());
         }
     }
 }
