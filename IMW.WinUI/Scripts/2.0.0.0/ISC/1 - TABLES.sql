@@ -254,6 +254,8 @@ ALTER TABLE SAPQuotationLines
 ADD UgpEntry INT
 GO
 
-
+ALTER TABLE SAPQuotationLines 
+ALTER COLUMN SequenceNo REAL NULL
+GO
 
 

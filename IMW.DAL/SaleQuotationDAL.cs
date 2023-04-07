@@ -1057,17 +1057,6 @@
 
 							recordset.DoQuery(string.Format(format, args));
 
-							//oSQ.Lines.ItemCode = item.ItemCode;
-							//oSQ.Lines.Quantity = item.Quantity;
-							//oSQ.Lines.ItemDescription = item.Dscription;
-							//oSQ.Lines.Price = item.Price;
-							//oSQ.Lines.LineTotal = item.GetLineTotal();
-							//oSQ.Lines.VatGroup = item.TaxCode;
-							//oSQ.Lines.WarehouseCode = item.WhsCode;
-							//oSQ.Lines.UoMEntry = item.UgpEntry;
-
-							//oSQ.Lines.Add();
-
 							LogConsumerDAL.Instance.Write(item.ItemCode + " Added new line");
 						}
 						catch (Exception ex)

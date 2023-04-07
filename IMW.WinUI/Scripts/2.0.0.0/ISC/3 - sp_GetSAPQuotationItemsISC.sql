@@ -24,7 +24,7 @@ BEGIN
 		PriceList INT,
 		Price DECIMAL,
 		FormulaDesc VARCHAR(MAX),
-		SequenceNo INT,
+		SequenceNo REAL,
 		UgpEntry INT
 	)
 
