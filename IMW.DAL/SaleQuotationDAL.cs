@@ -1477,11 +1477,12 @@
             DataTable l_Data = new DataTable();
             DateTime l_DocDate = DateTime.Now;
             SAPbobsCOM.Documents oSalesQuotation;
+			SAPbobsCOM.Document_Lines oSalesQuotationLine;
 
-            string l_Query = string.Empty;
+			string l_Query = string.Empty;
             string l_Param = string.Empty;
             string l_CardCode = string.Empty;
-            string l_ItemID = "FG050000340";
+            string l_ItemID = "FG010000020";
             int l_OOPRID = 0;
 			int l_Source = 0;
 			int lRetCode;
@@ -1495,25 +1496,30 @@
 
                 if (this.m_Connection.GetData(l_Query, ref l_Data))
                 {
-                    l_CardCode = PublicFunctions.ConvertNullAsString(l_Data.Rows[0]["CardCode"], string.Empty);
-                    l_OOPRID = PublicFunctions.ConvertNullAsInteger(l_Data.Rows[0]["OPPRID"], 0);
-					l_Source = PublicFunctions.ConvertNullAsInteger(l_Data.Rows[0]["Source"], 0);
-
 					foreach (DataRow l_Row in l_Data.Rows)
-                    {
-                        oSalesQuotation = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations);
+					{
+						l_CardCode = PublicFunctions.ConvertNullAsString(l_Row["CardCode"], string.Empty);
+						l_OOPRID = PublicFunctions.ConvertNullAsInteger(l_Row["OPPRID"], 0);
+						l_Source = PublicFunctions.ConvertNullAsInteger(l_Row["Source"], 0);
 
-                        oSalesQuotation.CardCode = l_CardCode;
+						oSalesQuotation = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations);
+
+						oSalesQuotation.DocType = SAPbobsCOM.BoDocumentTypes.dDocument_Items;
+						oSalesQuotation.CardCode = l_CardCode;
                         oSalesQuotation.DocDate = DateTime.Now.Date;
                         oSalesQuotation.TaxDate = DateTime.Now.Date;
                         oSalesQuotation.DocDueDate = DateTime.Now.Date;
-                        oSalesQuotation.Series = l_Source;
+                        oSalesQuotation.Series = 14;
+                        oSalesQuotation.BPL_IDAssignedToInvoice = 1;
 
-						oSalesQuotation.Lines.Add();
+                        oSalesQuotationLine = oSalesQuotation.Lines;
 
-						oSalesQuotation.Lines.ItemCode = l_ItemID;
-                        oSalesQuotation.Lines.Quantity = 1;
-                        oSalesQuotation.Lines.Price = 0;
+						oSalesQuotationLine.ItemCode = l_ItemID;
+						oSalesQuotationLine.Quantity = 1;
+                        oSalesQuotationLine.VatGroup = "STX01";
+						oSalesQuotationLine.WarehouseCode = "M-F-UNT3";
+                        oSalesQuotationLine.UoMEntry = -1;
+                        
 
 						lRetCode = oSalesQuotation.Add();
 
@@ -1521,7 +1527,7 @@
                         {
                             string sErrDesc = this.oCompany.GetLastErrorDescription();
 
-                            LogConsumerDAL.Instance.Write($"Unabel to create SQ for Opportunity {l_OOPRID}" + sErrDesc);
+                            LogConsumerDAL.Instance.Write($"Unable to create SQ for Opportunity {l_OOPRID}" + sErrDesc);
                         }
                         else
                         {
