@@ -20,6 +20,8 @@
         public string DfltWH { get; set; }
 
         public string VatGourpSa { get; set; }
+
+        public string Currency { get; set; }
     }
 }
 

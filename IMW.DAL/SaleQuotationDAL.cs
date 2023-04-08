@@ -938,23 +938,41 @@
         public bool SaveSaleQuotationtoSAP(string DocEntry, List<SaleQuotationLineItem> LineItems)
         {
             this.oCompany = new SAPDAL().ConnectSAP();
-            bool l_Update = false;
+
             Common l_ISCCommon = new Common();
+            Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Dictionary<string, double> taxRates = new Dictionary<string, double>();
+			Dictionary<string, int> uomCodes = new Dictionary<string, int>();
+            Dictionary<string, Item> itemCodes = new Dictionary<string, Item>();
             string l_Param = string.Empty;
             string l_Query = string.Empty;
             string iscConnectionString = HelperDAL.ISCConnectionString;
-			Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-			int num = 1;
+            string cardCode = string.Empty;
+            bool l_Update = false;
             bool l_ObjectUpdate = false;
-            Dictionary<string, double> taxRates = new Dictionary<string, double>();
-			Dictionary<string, int> uomCodes = new Dictionary<string, int>();
+            int num = 1;
+            int priceList = -1;
+            double discount = -1;
 
-			try
-			{
+            try
+            {
 				SAPbobsCOM.Documents oSQ = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations) as SAPbobsCOM.Documents;
 				oSQ.GetByKey(Convert.ToInt32(DocEntry));
 
-				foreach (SaleQuotationLineItem item in LineItems)
+                cardCode = oSQ.CardCode;
+
+                Recordset recordset2 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordset2.DoQuery($"SELECT \"ListNum\", \"Discount\" FROM OCRD WHERE \"CardCode\" = '{cardCode}'");
+
+                while (!recordset2.EoF)
+                {
+                    priceList = recordset2.Fields.Item("ListNum").Value;
+                    discount = recordset2.Fields.Item("Discount").Value;
+
+                    recordset2.MoveNext();
+                }
+
+                foreach (SaleQuotationLineItem item in LineItems)
 				{
 					item.Updated = 0;
 
@@ -988,9 +1006,38 @@
 					{
 						try
 						{
+                            Item lineItem = new Item();
 
 							string format = "INSERT INTO QUT1 (\"DocEntry\", \"LineNum\", \"ItemCode\", \"Dscription\", \"Quantity\",\"DocDate\", \"OpenQty\", \"Price\", \"Currency\", \"Rate\", \"DiscPrcnt\", \"LineTotal\", \"TotalFrgn\",\"VatGroup\",\"VatPrcnt\",\"WhsCode\",\"UomEntry\",\"UomCode\") VALUES ({0}, {1}, '{2}', '{3}', {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11},{12},'{13}','{14}','{15}','{16}','{17}');";
 							object[] args = new object[18];
+
+                            if (!string.IsNullOrEmpty(item.ItemCode))
+                            {
+                                if (itemCodes.ContainsKey(item.ItemCode))
+                                {
+                                    lineItem = itemCodes[item.ItemCode];
+                                }
+                                else
+                                {
+                                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                                    recordset1.DoQuery($"SELECT I.\"ItemCode\", I.\"ItemName\", I.\"SalUnitMsr\", I.\"U_InCharges\", I.\"FrgnName\", P.\"Price\", P.\"Currency\" FROM OITM I LEFT OUTER JOIN ITM1 P ON I.\"ItemCode\" = P.\"ItemCode\" WHERE I.\"ItemCode\" = '{item.ItemCode}' AND P.\"PriceList\" = {priceList}");
+
+                                    while (!recordset1.EoF)
+                                    {
+                                        lineItem.ItemCode = recordset1.Fields.Item("ItemCode").Value;
+                                        lineItem.ItemName = recordset1.Fields.Item("ItemName").Value;
+                                        lineItem.SalUnitMsr = recordset1.Fields.Item("SalUnitMsr").Value;
+                                        lineItem.U_InCharges = recordset1.Fields.Item("U_InCharges").Value;
+                                        lineItem.FrgnName = recordset1.Fields.Item("FrgnName").Value;
+                                        lineItem.Price = recordset1.Fields.Item("Price").Value;
+                                        lineItem.Currency = recordset1.Fields.Item("Currency").Value;
+
+                                        recordset1.MoveNext();
+                                    }
+
+                                    itemCodes.Add(item.ItemCode, lineItem);
+                                }
+                            }
 
                             if (!string.IsNullOrEmpty(item.TaxCode))
                             {
@@ -1043,12 +1090,12 @@
 							args[4] = item.Quantity;
 							args[5] = DateTime.Now.Date.ToString("yyyy/MM/dd");
 							args[6] = 0;
-							args[7] = item.Price;
-							args[8] = "";
-							args[9] = 0;
-							args[10] = 0;
-							args[11] = 0;
-							args[12] = 0;
+							args[7] = lineItem.Price;
+							args[8] = lineItem.Currency;
+                            args[9] = 0;
+							args[10] = discount;
+							args[11] = (item.Quantity * lineItem.Price) * (1.0 - discount/100.0);
+                            args[12] = 0;
 							args[13] = item.TaxCode;
 							args[14] = item.TaxRate;
 							args[15] = item.WhsCode;
