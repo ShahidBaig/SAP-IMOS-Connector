@@ -51,7 +51,11 @@
 
 		public int UgpEntry { get; set; }
 
-		public int Updated { get; set; }
-	}
+        public string UgpCode { get; set; }
+
+        public int Updated { get; set; }
+
+        public double SequenceNo { get; set; }
+    }
 }
 
