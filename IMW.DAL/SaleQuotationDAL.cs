@@ -1614,16 +1614,20 @@
         private bool CreateSQInSAP()
         {
             DataTable l_Data = new DataTable();
-            DateTime l_DocDate = DateTime.Now;
+			DataTable l_SourceData = new DataTable();
+			DateTime l_DocDate = DateTime.Now;
             SAPbobsCOM.Documents oSalesQuotation;
 			SAPbobsCOM.Document_Lines oSalesQuotationLine;
 
-			string l_Query = string.Empty;
-            string l_Param = string.Empty;
+            string l_Query = string.Empty;
+			string l_SourceDesc = string.Empty;
+			string l_SAPSource = string.Empty;
+			string l_Param = string.Empty;
             string l_CardCode = string.Empty;
             string l_ItemID = "FG010000020";
             int l_OOPRID = 0;
 			int l_Source = 0;
+			int l_SAPSeries = 0;
 			int lRetCode;
 
             try
@@ -1641,6 +1645,50 @@
 						l_OOPRID = PublicFunctions.ConvertNullAsInteger(l_Row["OPPRID"], 0);
 						l_Source = PublicFunctions.ConvertNullAsInteger(l_Row["Source"], 0);
 
+						LogConsumerDAL.Instance.Write(l_Source.ToString());
+
+						Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+						recordset.DoQuery($"SELECT \"Descript\" FROM OOSR WHERE \"Num\" = '{l_Source}'");
+
+						while (!recordset.EoF)
+						{
+							l_SourceDesc = recordset.Fields.Item("Descript").Value;
+							LogConsumerDAL.Instance.Write(l_SourceDesc);
+
+							l_Query = "SELECT SAPSource FROM OpportunitySource WITH (NOLOCK) WHERE OppoSource = ";
+
+                            PublicFunctions.FieldToParam(l_SourceDesc, ref l_Param, Declarations.FieldTypes.String);
+                            l_Query += l_Param;
+
+                            if (this.m_Connection.GetData(l_Query, ref l_SourceData))
+                            {
+                                l_SAPSource = PublicFunctions.ConvertNullAsString(l_SourceData.Rows[0]["SAPSource"].ToString(), string.Empty);
+								LogConsumerDAL.Instance.Write(l_SAPSource);
+
+								Recordset recordset2 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                                recordset2.DoQuery($"SELECT \"Series\" FROM NNM1 WHERE \"SeriesName\" = '{l_SAPSource}' AND \"ObjectCode\" = '23'");
+
+                                while (!recordset2.EoF)
+                                {
+									l_SAPSeries = recordset2.Fields.Item("Series").Value;
+									LogConsumerDAL.Instance.Write(l_SAPSeries.ToString());
+
+									recordset2.MoveNext();
+								}
+
+                                if (l_SAPSeries == 0)
+                                {
+									l_SAPSeries = 14;
+								}
+                            }
+                            else
+                            {
+                                l_SAPSeries = 14;
+                            }
+
+							recordset.MoveNext();
+						}
+
 						oSalesQuotation = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations);
 
 						oSalesQuotation.DocType = SAPbobsCOM.BoDocumentTypes.dDocument_Items;
@@ -1648,7 +1696,7 @@
                         oSalesQuotation.DocDate = DateTime.Now.Date;
                         oSalesQuotation.TaxDate = DateTime.Now.Date;
                         oSalesQuotation.DocDueDate = DateTime.Now.Date;
-                        oSalesQuotation.Series = 14;
+                        oSalesQuotation.Series = l_SAPSeries;
                         oSalesQuotation.BPL_IDAssignedToInvoice = 1;
 
                         oSalesQuotationLine = oSalesQuotation.Lines;

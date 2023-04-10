@@ -258,4 +258,27 @@ ALTER TABLE SAPQuotationLines
 ALTER COLUMN SequenceNo REAL NULL
 GO
 
+CREATE TABLE OpportunitySource
+(
+	OppoSource VARCHAR(50),
+	SAPSource VARCHAR(50)
+)
+GO
+
+INSERT INTO OpportunitySource VALUES ('I9','M-N/I9')
+INSERT INTO OpportunitySource VALUES ('Golra','M-N/Gol')
+INSERT INTO OpportunitySource VALUES ('DHA ISL','M-N/DHI')
+INSERT INTO OpportunitySource VALUES ('Hayatabad','M-N/HYT')
+INSERT INTO OpportunitySource VALUES ('Corporate - North','M-N/CORP')
+INSERT INTO OpportunitySource VALUES ('Garden Town','M-C/GT')
+INSERT INTO OpportunitySource VALUES ('Corporate - Central','M-C/CORP')
+INSERT INTO OpportunitySource VALUES ('Gujranwala','M-C/GRW')
+INSERT INTO OpportunitySource VALUES ('DHA Y Block','M-C/DHA')
+INSERT INTO OpportunitySource VALUES ('Bukhari','M-S/BOK')
+INSERT INTO OpportunitySource VALUES ('Corporate - South','M-S/CORP')
+INSERT INTO OpportunitySource VALUES ('Lucky One','M-S/LO')
+INSERT INTO OpportunitySource VALUES ('Online','M-S/KO')
+GO
+
+
 
