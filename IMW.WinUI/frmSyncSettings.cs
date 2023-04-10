@@ -193,6 +193,8 @@ namespace IMW.WinUI
                 LogConsumerDAL.Instance.Write("Initiating Getting Item Master Data from SAP to ISC");
                 new ItemsDAL().LoadItem();
                 LogConsumerDAL.Instance.Write("Completed Iteration for Item Master Data from SAP to ISC");
+
+                MessageBox.Show("Items sync is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception) { }
         }
@@ -204,6 +206,8 @@ namespace IMW.WinUI
                 LogConsumerDAL.Instance.Write("Initiating Getting Customers Data from SAP to ISC");
                 new CustomerDAL().LoadCustomers();
                 LogConsumerDAL.Instance.Write("Completed Iteration for Customers Data from SAP to ISC");
+
+                MessageBox.Show("Customers sync is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception) { }
         }
@@ -215,6 +219,8 @@ namespace IMW.WinUI
                 LogConsumerDAL.Instance.Write("Initiating Getting Sales Qoutation Data from SAP to ISC");
                 new SaleQuotationDAL().TransferSQFromoSAPToISC();
                 LogConsumerDAL.Instance.Write("Completed Iteration for Qoutation Data from SAP to ISC");
+
+                MessageBox.Show("Sales Quotation transfer from SAP to ISC is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
             {
@@ -229,6 +235,8 @@ namespace IMW.WinUI
                 LogConsumerDAL.Instance.Write("Initiating Getting Sales Qoutation Data from ISC to IMOS");
                 new SaleQuotationDAL().TransferSQFromISCToIMOS();
                 LogConsumerDAL.Instance.Write("Completed Iteration for Qoutation Data from ISC to IMOS");
+
+                MessageBox.Show("Sales Quotation transfer from ISC to IMOS is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
             {
@@ -243,6 +251,8 @@ namespace IMW.WinUI
                 LogConsumerDAL.Instance.Write("Initiating Getting Sales Qoutation Data from ISC to SAP");
                 new SaleQuotationDAL().TransferSQFromISCToSAP();
                 LogConsumerDAL.Instance.Write("Completed Iteration Sales Qoutation from ISC to SAP");
+
+                MessageBox.Show("Sales Quotation transfer from ISC to SAP is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
             {
@@ -257,6 +267,8 @@ namespace IMW.WinUI
                 LogConsumerDAL.Instance.Write("Initiating Getting Sales Qoutation Data from IMOS to ISC");
                 new SaleQuotationDAL().TransferSQFromIMOSToISC();
                 LogConsumerDAL.Instance.Write("Completed Iteration Sales Qoutation from IMOS to ISC");
+
+                MessageBox.Show("Sales Quotation transfer from IMOS to ISC is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
             {
