@@ -1113,6 +1113,7 @@
         {
             List<SaleQuotation> saleQuotationToSAP = this.GetSaleQuotationTOSAP();
 
+            LogConsumerDAL.Instance.Write($"Updating [{saleQuotationToSAP.Count}] SQs in SAP.");
             foreach (SaleQuotation quotation in saleQuotationToSAP)
             {
                 List<SaleQuotationLineItem> list = new List<SaleQuotationLineItem>();
@@ -1121,12 +1122,15 @@
 
                 try
                 {
+                    LogConsumerDAL.Instance.Write($"Getting SQ {quotation.DocNum} from IMOS.");
                     if (this.GetSalesQuotationItemList(quotation.DocNum, ref l_Data))
                     {
                         this.ClearIMOSMappedTablesforSQ(quotation.DocNum);
 
+                        LogConsumerDAL.Instance.Write($"Saving SQ {quotation.DocNum} in ISC.");
                         if (this.AddTablesDatafromIMOStoISC("SalesQuotationItemsList", l_Data))
                         {
+                            LogConsumerDAL.Instance.Write($"Preparing SQ {quotation.DocNum} in ISC.");
                             if (this.GetSalesQuotationforSAPItems(quotation.DocNum, ref l_ISCData))
                             {
                                 foreach (DataRow l_Row in l_ISCData.Rows)
@@ -1163,8 +1167,10 @@
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    LogConsumerDAL.Instance.Write($"Exception while saving SQs in SAP: {ex.Message}");
+
                     throw;
                 }
                 finally
@@ -1305,17 +1311,16 @@
                                 }
 
                                 oSQ.Lines.Quantity = item.Quantity;
-                                oSQ.Lines.LineTotal = (oSQ.Lines.Price * item.Quantity) * (1.0 - discount / 100.0);
-                                oSQ.Lines.GrossPrice = (oSQ.Lines.Price * item.Quantity) * (1.0 - discount / 100.0);
-                                oSQ.Lines.PriceAfterVAT = oSQ.Lines.GrossPrice * (1.0 + item.TaxRate / 100.0);
-                                oSQ.Lines.TaxTotal = ((item.Quantity * oSQ.Lines.Price) * (1.0 - discount / 100.0)) * (item.TaxRate / 100.0); ;
-                                oSQ.Lines.GrossTotal = (oSQ.Lines.Price * item.Quantity) * (1.0 - discount / 100.0);
+                                oSQ.Lines.LineTotal = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
+                                oSQ.Lines.GrossPrice = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
+                                oSQ.Lines.TaxTotal = ((item.Quantity * oSQ.Lines.PriceAfterVAT) * (1.0 - discount / 100.0)) * (item.TaxRate / 100.0); ;
+                                oSQ.Lines.GrossTotal = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
 
-                                docTotal += oSQ.Lines.PriceAfterVAT;
+                                docTotal += oSQ.Lines.LineTotal;
 
                                 item.Updated = 1;
 
-                                LogConsumerDAL.Instance.Write(oSQ.Lines.ItemCode + " Updated line");
+                                //LogConsumerDAL.Instance.Write(oSQ.Lines.ItemCode + " Updated line");
                             }
                         }
                         catch (Exception ex)
@@ -1438,12 +1443,11 @@
                             args[24] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
                             args[25] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
 
-                            LogConsumerDAL.Instance.Write($"Ading new line: {string.Format(format, args)}");
                             recordset.DoQuery(string.Format(format, args));
 
                             docTotal += ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
 
-                            LogConsumerDAL.Instance.Write(item.ItemCode + " Added new line");
+                            //LogConsumerDAL.Instance.Write(item.ItemCode + " Added new line");
                         }
                         catch (Exception ex)
                         {
@@ -1472,7 +1476,7 @@
                                         oSQ1.Lines.Quantity = item.Quantity;
                                         l_ObjectUpdate = true;
 
-                                        LogConsumerDAL.Instance.Write(oSQ1.Lines.ItemCode + " Updated line");
+                                        //LogConsumerDAL.Instance.Write(oSQ1.Lines.ItemCode + " Updated line");
                                     }
                                 }
                                 catch (Exception ex)
@@ -1493,6 +1497,8 @@
                     oSQ1.DocTotal = docTotal;
                     oSQ1.Update();
                 }
+
+                recordset2.DoQuery($"UPDATE OQUT SET \"DocTotal\" = {docTotal} WHERE \"DocEntry\" = '{DocEntry}'");
             }
             catch (Exception ex)
             {

@@ -12,13 +12,13 @@ namespace ISCService
 {
     public sealed class JobService
     {
-        bool syncItems = false;
-        bool syncCustomers = false;
-        bool createSQFromSAPOPToSAPSQ = false;
-        bool transferSQFromSAPToISC = false;
-        bool transferSQFromISCToIMOS = false;
-        bool transferSQFromIMOSToISC = false;
-        bool transferSQFromISCToSAP = false;
+        public bool SyncItems { get; set; }  = false;
+        public bool SyncCustomers { get; set; } = false;
+        public bool CreateSQFromSAPOPToSAPSQ { get; set; } = false;
+        public bool TransferSQFromSAPToISC { get; set; } = false;
+        public bool TransferSQFromISCToIMOS { get; set; } = false;
+        public bool TransferSQFromIMOSToISC { get; set; } = false;
+        public bool TransferSQFromISCToSAP { get; set; } = false;
 
         public JobService() 
         {
@@ -47,7 +47,30 @@ namespace ISCService
             return "0|0|0|0|0|0|0";
         }
 
-        public void SetupSyncSettings()
+        private bool[] GetJobSyncFlags()
+        {
+            bool[] flags = { SyncItems, SyncCustomers, CreateSQFromSAPOPToSAPSQ, TransferSQFromSAPToISC, TransferSQFromISCToIMOS, TransferSQFromIMOSToISC, TransferSQFromISCToSAP };
+
+            return flags;
+        }
+
+        public string[] GetJobs()
+        {
+            string[] jobs =
+            {
+                    "LoadItems",
+                    "LoadCustomers",
+                    "CreateSQFromSAPOPToSAPSQ",
+                    "TransferSQfromSAPtoISC",
+                    "TransferSQfromISCtoIMOS",
+                    "TransferSQfromIMOStoISC",
+                    "TransferSQfromISCtoSAP"
+                };
+
+            return jobs;
+        }
+
+        public bool[] SetupSyncSettings()
         {
             string[] splits = GetSettings("Sync").Split('|');
             int index = 0;
@@ -56,64 +79,66 @@ namespace ISCService
             {
                 if (index == 0)
                 {
-                    syncItems = splits[index] == "1" ? true : false;
+                    SyncItems = splits[index] == "1" ? true : false;
                 }
                 else if (index == 1)
                 {
-                    syncCustomers = splits[index] == "1" ? true : false;
+                    SyncCustomers = splits[index] == "1" ? true : false;
                 }
                 else if (index == 2)
                 {
-                    createSQFromSAPOPToSAPSQ = splits[index] == "1" ? true : false;
+                    CreateSQFromSAPOPToSAPSQ = splits[index] == "1" ? true : false;
                 }
                 else if (index == 3)
                 {
-                    transferSQFromSAPToISC = splits[index] == "1" ? true : false;
+                    TransferSQFromSAPToISC = splits[index] == "1" ? true : false;
                 }
                 else if (index == 4)
                 {
-                    transferSQFromISCToIMOS = splits[index] == "1" ? true : false;
+                    TransferSQFromISCToIMOS = splits[index] == "1" ? true : false;
                 }
                 else if (index == 5)
                 {
-                    transferSQFromIMOSToISC = splits[index] == "1" ? true : false;
+                    TransferSQFromIMOSToISC = splits[index] == "1" ? true : false;
                 }
                 else if (index == 6)
                 {
-                    transferSQFromISCToSAP = splits[index] == "1" ? true : false;
+                    TransferSQFromISCToSAP = splits[index] == "1" ? true : false;
                 }
 
                 index++;
             }
+
+            return GetJobSyncFlags();
         }
 
         public void ExecuteJob(string jobName)
         {
-            if (jobName == "LoadItems" && syncItems)
+            if (jobName == "LoadItems" && SyncItems)
             {
                 new ItemsDAL().LoadItem();
             }
-            else if (jobName == "LoadCustomers" && syncCustomers)
+            else if (jobName == "LoadCustomers" && SyncCustomers)
             {
                 new CustomerDAL().LoadCustomers();
             }
-            else if (jobName == "CreateSQFromSAPOPToSAPSQ" && createSQFromSAPOPToSAPSQ)
+            else if (jobName == "CreateSQFromSAPOPToSAPSQ" && CreateSQFromSAPOPToSAPSQ)
             {
                 new SaleQuotationDAL().CreateSQFromOP();
             }
-            else if (jobName == "TransferSQfromSAPtoISC" && transferSQFromSAPToISC)
+            else if (jobName == "TransferSQfromSAPtoISC" && TransferSQFromSAPToISC)
             {
                 new SaleQuotationDAL().TransferSQFromoSAPToISC();
             }
-            else if (jobName == "TransferSQfromISCtoIMOS" && transferSQFromISCToIMOS)
+            else if (jobName == "TransferSQfromISCtoIMOS" && TransferSQFromISCToIMOS)
             {
                 new SaleQuotationDAL().TransferSQFromISCToIMOS();
             }
-            else if (jobName == "TransferSQfromIMOStoISC" && transferSQFromIMOSToISC)
+            else if (jobName == "TransferSQfromIMOStoISC" && TransferSQFromIMOSToISC)
             {
                 new SaleQuotationDAL().TransferSQFromIMOSToISC();
             }
-            else if (jobName == "TransferSQfromISCtoSAP" && transferSQFromISCToSAP)
+            else if (jobName == "TransferSQfromISCtoSAP" && TransferSQFromISCToSAP)
             {
                 new SaleQuotationDAL().TransferSQFromISCToSAP();
             }
