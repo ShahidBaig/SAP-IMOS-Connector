@@ -16,6 +16,7 @@
         public int U_InCharges { get; set; }
 
         public double Price { get; set; }
+        public double AvgCost { get; set; }
 
         public string DfltWH { get; set; }
 

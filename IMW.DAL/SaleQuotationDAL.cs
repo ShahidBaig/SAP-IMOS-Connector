@@ -567,7 +567,7 @@
             {
                 Connection = connection,
                 CommandText = "SELECT DocEntry, DocNum, DocType, CANCELED, DocStatus, InvntSttus, Transfered, ObjType, DocDate, DocDueDate, CardCode, CardName, U_Type1,IMOS_PO_ID FROM OQUT where Posted_IMOS=1 and Completed_IMOS=1 and Posted_SAP = 0;"
-			}.ExecuteReader();
+            }.ExecuteReader();
             while (true)
             {
                 if (!reader.Read())
@@ -679,7 +679,7 @@
             {
                 Connection = connection,
                 CommandText = "SELECT DocEntry, DocNum, DocType, CANCELED, DocStatus, InvntSttus, Transfered, ObjType, DocDate, DocDueDate, CardCode, CardName, U_Type1,IMOS_PO_ID FROM OQUT where Posted_IMOS=1 and Completed_IMOS=1 and Posted_SAP = 0;"
-			}.ExecuteReader();
+            }.ExecuteReader();
             while (true)
             {
                 if (!reader.Read())
@@ -1149,7 +1149,7 @@
                                             UOM = l_Row["SalUnitMsr"].ToString(),
                                             Quantity = PublicFunctions.ConvertNullAsDouble(l_Row["Qty"].ToString(), 0.0),
                                             UgpEntry = Convert.ToInt32(l_Row["UgpEntry"].ToString()),
-                                            SequenceNo  = PublicFunctions.ConvertNullAsDouble(l_Row["SequenceNo"].ToString(), 0)
+                                            SequenceNo = PublicFunctions.ConvertNullAsDouble(l_Row["SequenceNo"].ToString(), 0)
                                         };
 
                                         list.Add(item);
@@ -1194,6 +1194,7 @@
             Dictionary<string, double> taxRates = new Dictionary<string, double>();
             Dictionary<int, string> uomCodes = new Dictionary<int, string>();
             Dictionary<string, Item> itemCodes = new Dictionary<string, Item>();
+            Dictionary<string, string> whsCodes = new Dictionary<string, string>();
             string l_Param = string.Empty;
             string l_Query = string.Empty;
             string iscConnectionString = HelperDAL.ISCConnectionString;
@@ -1203,7 +1204,6 @@
             int num = 1;
             int priceList = -1;
             double discount = -1;
-            double docTotal = 0;
 
             try
             {
@@ -1225,7 +1225,105 @@
 
                 foreach (SaleQuotationLineItem item in LineItems)
                 {
+                    Item lineItem = new Item();
+
                     item.Updated = 0;
+
+                    if (!string.IsNullOrEmpty(item.ItemCode))
+                    {
+                        if (itemCodes.ContainsKey(item.ItemCode))
+                        {
+                            lineItem = itemCodes[item.ItemCode];
+                        }
+                        else
+                        {
+                            Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                            recordset1.DoQuery($"SELECT I.\"ItemCode\", I.\"ItemName\", I.\"SalUnitMsr\", I.\"U_InCharges\", I.\"FrgnName\", P.\"Price\", P.\"Currency\", C.\"AvgPrice\" FROM OITM I LEFT OUTER JOIN ITM1 P ON I.\"ItemCode\" = P.\"ItemCode\"  LEFT OUTER JOIN OITW C ON I.\"ItemCode\" = C.\"ItemCode\" WHERE I.\"ItemCode\" = '{item.ItemCode}' AND P.\"PriceList\" = {priceList} AND C.\"WhsCode\" = '{item.WhsCode}'");
+
+                            while (!recordset1.EoF)
+                            {
+                                lineItem.ItemCode = recordset1.Fields.Item("ItemCode").Value;
+                                lineItem.ItemName = recordset1.Fields.Item("ItemName").Value;
+                                lineItem.SalUnitMsr = recordset1.Fields.Item("SalUnitMsr").Value;
+                                lineItem.U_InCharges = recordset1.Fields.Item("U_InCharges").Value;
+                                lineItem.FrgnName = recordset1.Fields.Item("FrgnName").Value;
+                                lineItem.Price = recordset1.Fields.Item("Price").Value;
+                                lineItem.Currency = recordset1.Fields.Item("Currency").Value;
+                                lineItem.AvgCost = recordset1.Fields.Item("AvgPrice").Value;
+
+                                recordset1.MoveNext();
+                            }
+
+                            itemCodes.Add(item.ItemCode, lineItem);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(item.TaxCode))
+                    {
+                        if (taxRates.ContainsKey(item.TaxCode))
+                        {
+                            item.TaxRate = taxRates[item.TaxCode];
+                        }
+                        else
+                        {
+                            Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                            recordset1.DoQuery($"SELECT \"Rate\" FROM AVT1 WHERE \"Code\" = '{item.TaxCode}'");
+
+                            while (!recordset1.EoF)
+                            {
+                                item.TaxRate = recordset1.Fields.Item("Rate").Value;
+
+                                recordset1.MoveNext();
+                            }
+
+                            taxRates.Add(item.TaxCode, item.TaxRate);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(item.WhsCode))
+                    {
+                        if (whsCodes.ContainsKey(item.WhsCode))
+                        {
+                            item.WhsAddress = whsCodes[item.WhsCode];
+                        }
+                        else
+                        {
+                            Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                            recordset1.DoQuery($"SELECT \"Street\" FROM OWHS WHERE \"WhsCode\" = '{item.WhsCode}'");
+
+                            while (!recordset1.EoF)
+                            {
+                                item.WhsAddress = recordset1.Fields.Item("Street").Value;
+
+                                recordset1.MoveNext();
+                            }
+
+                            whsCodes.Add(item.WhsCode, item.WhsAddress);
+                        }
+                    }
+
+                    item.UgpCode = "Manual";
+                    if (item.UgpEntry != -1)
+                    {
+                        if (uomCodes.ContainsKey(item.UgpEntry))
+                        {
+                            item.UgpCode = uomCodes[item.UgpEntry];
+                        }
+                        else
+                        {
+                            Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                            recordset1.DoQuery($"SELECT \"UgpCode\" FROM OUGP WHERE \"UgpEntry\" = '{item.UgpEntry}'");
+
+                            while (!recordset1.EoF)
+                            {
+                                item.UgpCode = recordset1.Fields.Item("UgpCode").Value;
+
+                                recordset1.MoveNext();
+                            }
+
+                            uomCodes.Add(item.UgpEntry, item.UgpCode);
+                        }
+                    }
 
                     for (int i = 0; i < oSQ.Lines.Count; i++)
                     {
@@ -1235,88 +1333,11 @@
                         {
                             if (item.ItemCode == oSQ.Lines.ItemCode)
                             {
-                                Item lineItem = new Item();
-
-                                if (!string.IsNullOrEmpty(item.ItemCode))
-                                {
-                                    if (itemCodes.ContainsKey(item.ItemCode))
-                                    {
-                                        lineItem = itemCodes[item.ItemCode];
-                                    }
-                                    else
-                                    {
-                                        Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                                        recordset1.DoQuery($"SELECT I.\"ItemCode\", I.\"ItemName\", I.\"SalUnitMsr\", I.\"U_InCharges\", I.\"FrgnName\", P.\"Price\", P.\"Currency\" FROM OITM I LEFT OUTER JOIN ITM1 P ON I.\"ItemCode\" = P.\"ItemCode\" WHERE I.\"ItemCode\" = '{item.ItemCode}' AND P.\"PriceList\" = {priceList}");
-
-                                        while (!recordset1.EoF)
-                                        {
-                                            lineItem.ItemCode = recordset1.Fields.Item("ItemCode").Value;
-                                            lineItem.ItemName = recordset1.Fields.Item("ItemName").Value;
-                                            lineItem.SalUnitMsr = recordset1.Fields.Item("SalUnitMsr").Value;
-                                            lineItem.U_InCharges = recordset1.Fields.Item("U_InCharges").Value;
-                                            lineItem.FrgnName = recordset1.Fields.Item("FrgnName").Value;
-                                            lineItem.Price = recordset1.Fields.Item("Price").Value;
-                                            lineItem.Currency = recordset1.Fields.Item("Currency").Value;
-
-                                            recordset1.MoveNext();
-                                        }
-
-                                        itemCodes.Add(item.ItemCode, lineItem);
-                                    }
-                                }
-
-                                if (!string.IsNullOrEmpty(item.TaxCode))
-                                {
-                                    if (taxRates.ContainsKey(item.TaxCode))
-                                    {
-                                        item.TaxRate = taxRates[item.TaxCode];
-                                    }
-                                    else
-                                    {
-                                        Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                                        recordset1.DoQuery($"SELECT \"Rate\" FROM AVT1 WHERE \"Code\" = '{item.TaxCode}'");
-
-                                        while (!recordset1.EoF)
-                                        {
-                                            item.TaxRate = recordset1.Fields.Item("Rate").Value;
-
-                                            recordset1.MoveNext();
-                                        }
-
-                                        taxRates.Add(item.TaxCode, item.TaxRate);
-                                    }
-                                }
-
-                                item.UgpCode = "Manual";
-                                if (item.UgpEntry != -1)
-                                {
-                                    if (uomCodes.ContainsKey(item.UgpEntry))
-                                    {
-                                        item.UgpCode = uomCodes[item.UgpEntry];
-                                    }
-                                    else
-                                    {
-                                        Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                                        recordset1.DoQuery($"SELECT \"UgpCode\" FROM OUGP WHERE \"UgpEntry\" = '{item.UgpEntry}'");
-
-                                        while (!recordset1.EoF)
-                                        {
-                                            item.UgpCode = recordset1.Fields.Item("UgpCode").Value;
-
-                                            recordset1.MoveNext();
-                                        }
-
-                                        uomCodes.Add(item.UgpEntry, item.UgpCode);
-                                    }
-                                }
-
                                 oSQ.Lines.Quantity = item.Quantity;
                                 oSQ.Lines.LineTotal = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
                                 oSQ.Lines.GrossPrice = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
                                 oSQ.Lines.TaxTotal = ((item.Quantity * oSQ.Lines.PriceAfterVAT) * (1.0 - discount / 100.0)) * (item.TaxRate / 100.0); ;
                                 oSQ.Lines.GrossTotal = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
-
-                                docTotal += oSQ.Lines.LineTotal;
 
                                 item.Updated = 1;
 
@@ -1328,9 +1349,44 @@
                             LogConsumerDAL.Instance.Write(ex.Message);
                         }
                     }
+
+                    if (item.Updated == 0)
+                    {
+                        if (oSQ.Lines.Count > 0)
+                        {
+                            oSQ.Lines.SetCurrentLine(oSQ.Lines.Count - 1);
+                        }
+
+                        oSQ.Lines.ItemCode = item.ItemCode;
+                        oSQ.Lines.ItemDescription = item.Dscription;
+                        oSQ.Lines.SerialNum = lineItem.FrgnName.Substring(0, (lineItem.FrgnName.Length >= 17 ? 17 : lineItem.FrgnName.Length));
+                        oSQ.Lines.PriceAfterVAT = (lineItem.Price) * (1.0 + item.TaxRate / 100.0);
+                        oSQ.Lines.Quantity = item.Quantity;
+                        oSQ.Lines.Currency = lineItem.Currency;
+                        oSQ.Lines.LineTotal = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
+                        oSQ.Lines.TaxTotal = ((item.Quantity * oSQ.Lines.PriceAfterVAT) * (1.0 - discount / 100.0)) * (item.TaxRate / 100.0);
+                        oSQ.Lines.GrossTotal = (oSQ.Lines.PriceAfterVAT * item.Quantity) * (1.0 - discount / 100.0);
+
+                        oSQ.Lines.DiscountPercent = discount;
+                        oSQ.Lines.Address = item.WhsAddress;
+
+                        oSQ.Lines.UserFields.Fields.Item("U_InsChargVal").Value = lineItem.U_InCharges.ToString();
+                        //oSQ.Lines.UserFields.Fields.Item("U_JobNum").Value = 0;
+
+                        oSQ.Lines.GrossBuyPrice = lineItem.AvgCost;
+
+                        oSQ.Lines.Add();
+                    }
                 }
 
-                oSQ.Update();
+                int result = oSQ.Update();
+
+                if (result != 0)
+                {
+                    string lastErrorDescription = this.oCompany.GetLastErrorDescription();
+
+                    LogConsumerDAL.Instance.Write($"Error Saving SQ [{DocEntry}]: {lastErrorDescription}");
+                }
 
                 foreach (SaleQuotationLineItem item in LineItems)
                 {
@@ -1338,167 +1394,204 @@
                     {
                         try
                         {
-                            Item lineItem = new Item();
+                            Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                            Item lineItem = itemCodes[item.ItemCode];
 
-                            string format = "INSERT INTO QUT1 (\"DocEntry\", \"LineNum\", \"ItemCode\", \"Dscription\", \"Quantity\",\"DocDate\", \"OpenQty\", \"Price\", \"Currency\", \"Rate\", \"DiscPrcnt\", \"LineTotal\", \"TotalFrgn\",\"VatGroup\",\"VatPrcnt\",\"WhsCode\",\"UomEntry\",\"UomCode\", \"VisOrder\",\"unitMsr\", \"PriceBefDi\",\"PriceAfVAT\",\"SpecPrice\",\"VatSum\", \"TotInclTax\", \"GTotal\") VALUES ({0}, {1}, '{2}', '{3}', {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11},{12},'{13}','{14}','{15}','{16}','{17}',{18},'{19}',{20},{21},'{22}',{23},{24},{25});";
-                            object[] args = new object[26];
-
-                            if (!string.IsNullOrEmpty(item.ItemCode))
-                            {
-                                if (itemCodes.ContainsKey(item.ItemCode))
-                                {
-                                    lineItem = itemCodes[item.ItemCode];
-                                }
-                                else
-                                {
-                                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                                    recordset1.DoQuery($"SELECT I.\"ItemCode\", I.\"ItemName\", I.\"SalUnitMsr\", I.\"U_InCharges\", I.\"FrgnName\", P.\"Price\", P.\"Currency\" FROM OITM I LEFT OUTER JOIN ITM1 P ON I.\"ItemCode\" = P.\"ItemCode\" WHERE I.\"ItemCode\" = '{item.ItemCode}' AND P.\"PriceList\" = {priceList}");
-
-                                    while (!recordset1.EoF)
-                                    {
-                                        lineItem.ItemCode = recordset1.Fields.Item("ItemCode").Value;
-                                        lineItem.ItemName = recordset1.Fields.Item("ItemName").Value;
-                                        lineItem.SalUnitMsr = recordset1.Fields.Item("SalUnitMsr").Value;
-                                        lineItem.U_InCharges = recordset1.Fields.Item("U_InCharges").Value;
-                                        lineItem.FrgnName = recordset1.Fields.Item("FrgnName").Value;
-                                        lineItem.Price = recordset1.Fields.Item("Price").Value;
-                                        lineItem.Currency = recordset1.Fields.Item("Currency").Value;
-
-                                        recordset1.MoveNext();
-                                    }
-
-                                    itemCodes.Add(item.ItemCode, lineItem);
-                                }
-                            }
-
-                            if (!string.IsNullOrEmpty(item.TaxCode))
-                            {
-                                if (taxRates.ContainsKey(item.TaxCode))
-                                {
-                                    item.TaxRate = taxRates[item.TaxCode];
-                                }
-                                else
-                                {
-                                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                                    recordset1.DoQuery($"SELECT \"Rate\" FROM AVT1 WHERE \"Code\" = '{item.TaxCode}'");
-
-                                    while (!recordset1.EoF)
-                                    {
-                                        item.TaxRate = recordset1.Fields.Item("Rate").Value;
-
-                                        recordset1.MoveNext();
-                                    }
-
-                                    taxRates.Add(item.TaxCode, item.TaxRate);
-                                }
-                            }
-
-                            item.UgpCode = "Manual";
-                            if (item.UgpEntry != -1)
-                            {
-                                if (uomCodes.ContainsKey(item.UgpEntry))
-                                {
-                                    item.UgpCode = uomCodes[item.UgpEntry];
-                                }
-                                else
-                                {
-                                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                                    recordset1.DoQuery($"SELECT \"UgpCode\" FROM OUGP WHERE \"UgpEntry\" = '{item.UgpEntry}'");
-
-                                    while (!recordset1.EoF)
-                                    {
-                                        item.UgpCode = recordset1.Fields.Item("UgpCode").Value;
-
-                                        recordset1.MoveNext();
-                                    }
-
-                                    uomCodes.Add(item.UgpEntry, item.UgpCode);
-                                }
-                            }
-
-                            args[0] = DocEntry;
-                            args[1] = num++;
-                            args[2] = item.ItemCode;
-                            args[3] = item.Dscription;
-                            args[4] = item.Quantity;
-                            args[5] = DateTime.Now.Date.ToString("yyyy/MM/dd");
-                            args[6] = 0;
-                            args[7] = lineItem.Price;
-                            args[8] = lineItem.Currency;
-                            args[9] = 0;
-                            args[10] = discount;
-                            args[11] = (item.Quantity * lineItem.Price) * (1.0 - discount / 100.0);
-                            args[12] = 0;
-                            args[13] = item.TaxCode;
-                            args[14] = item.TaxRate;
-                            args[15] = item.WhsCode;
-                            args[16] = item.UgpEntry;
-                            args[17] = item.UgpCode;
-                            args[18] = item.SequenceNo == 99999 ? 99999 : item.SequenceNo * 10;
-                            args[19] = item.UgpCode;
-                            args[20] = lineItem.Price;
-                            args[21] = (lineItem.Price) * (1.0 + item.TaxRate / 100.0);
-                            args[22] = "R";
-                            args[23] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (item.TaxRate / 100.0);
-                            args[24] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
-                            args[25] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
-
-                            recordset.DoQuery(string.Format(format, args));
-
-                            docTotal += ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
-
-                            //LogConsumerDAL.Instance.Write(item.ItemCode + " Added new line");
+                            recordset1.DoQuery($"UPDATE QUT1 SET \"StockPrice\"={lineItem.AvgCost}, \"StockValue\"=\"Quantity\" * {lineItem.AvgCost} WHERE \"DocEntry\"={DocEntry} AND \"ItemCode\"='{item.ItemCode}'");
                         }
-                        catch (Exception ex)
-                        {
-                            LogConsumerDAL.Instance.Write(item.ItemCode + ex.Message);
-                        }
+                        catch (Exception) { }
                     }
                 }
 
-                SAPbobsCOM.Documents oSQ1 = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations) as SAPbobsCOM.Documents;
-                oSQ1.GetByKey(Convert.ToInt32(DocEntry));
+                #region "Old Code"
+                //foreach (SaleQuotationLineItem item in LineItems)
+                //{
+                //    if (item.Updated == 0)
+                //    {
+                //        try
+                //        {
+                //            Item lineItem = new Item();
+                //            int index = 0;
 
-                foreach (SaleQuotationLineItem item in LineItems)
-                {
-                    if (item.Updated == 0)
-                    {
-                        try
-                        {
-                            for (int i = 0; i < oSQ1.Lines.Count; i++)
-                            {
-                                oSQ1.Lines.SetCurrentLine(i);
+                //string format = "INSERT INTO QUT1 (\"DocEntry\", \"LineNum\", \"ItemCode\", \"Dscription\", \"Quantity\",\"DocDate\", \"OpenQty\", \"Price\", \"Currency\", \"Rate\", \"DiscPrcnt\", \"LineTotal\", \"TotalFrgn\",\"VatGroup\",\"VatPrcnt\",\"WhsCode\",\"UomEntry\",\"UomCode\", \"VisOrder\",\"unitMsr\", \"PriceBefDi\",\"PriceAfVAT\",\"SpecPrice\",\"VatSum\", \"TotInclTax\", \"GTotal\") VALUES ({0}, {1}, '{2}', '{3}', {4}, '{5}', {6}, {7}, '{8}', {9}, {10}, {11},{12},'{13}','{14}','{15}','{16}','{17}',{18},'{19}',{20},{21},'{22}',{23},{24},{25});";
+                //object[] args = new object[26];
 
-                                try
-                                {
-                                    if (item.ItemCode == oSQ1.Lines.ItemCode)
-                                    {
-                                        oSQ1.Lines.Quantity = item.Quantity;
-                                        l_ObjectUpdate = true;
+                //            //while(index < args.Length)
+                //            //{
+                //            //    format += "{" + index + "}";
 
-                                        //LogConsumerDAL.Instance.Write(oSQ1.Lines.ItemCode + " Updated line");
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    LogConsumerDAL.Instance.Write(ex.Message);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            LogConsumerDAL.Instance.Write(item.ItemCode + ex.Message);
-                        }
-                    }
-                }
+                //            //    if(index < args.Length - 1)
+                //            //    {
+                //            //        format += ",";
+                //            //    }
+                //            //    else
+                //            //    {
+                //            //        format += ")";
+                //            //    }
 
-                if (l_ObjectUpdate || docTotal > 0)
-                {
-                    oSQ1.DocTotal = docTotal;
-                    oSQ1.Update();
-                }
+                //            //    index++;
+                //            //}
 
-                recordset2.DoQuery($"UPDATE OQUT SET \"DocTotal\" = {docTotal} WHERE \"DocEntry\" = '{DocEntry}'");
+                //            if (!string.IsNullOrEmpty(item.ItemCode))
+                //            {
+                //                if (itemCodes.ContainsKey(item.ItemCode))
+                //                {
+                //                    lineItem = itemCodes[item.ItemCode];
+                //                }
+                //                else
+                //                {
+                //                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                //                    recordset1.DoQuery($"SELECT I.\"ItemCode\", I.\"ItemName\", I.\"SalUnitMsr\", I.\"U_InCharges\", I.\"FrgnName\", P.\"Price\", P.\"Currency\" FROM OITM I LEFT OUTER JOIN ITM1 P ON I.\"ItemCode\" = P.\"ItemCode\" WHERE I.\"ItemCode\" = '{item.ItemCode}' AND P.\"PriceList\" = {priceList}");
+
+                //                    while (!recordset1.EoF)
+                //                    {
+                //                        lineItem.ItemCode = recordset1.Fields.Item("ItemCode").Value;
+                //                        lineItem.ItemName = recordset1.Fields.Item("ItemName").Value;
+                //                        lineItem.SalUnitMsr = recordset1.Fields.Item("SalUnitMsr").Value;
+                //                        lineItem.U_InCharges = recordset1.Fields.Item("U_InCharges").Value;
+                //                        lineItem.FrgnName = recordset1.Fields.Item("FrgnName").Value;
+                //                        lineItem.Price = recordset1.Fields.Item("Price").Value;
+                //                        lineItem.Currency = recordset1.Fields.Item("Currency").Value;
+
+                //                        recordset1.MoveNext();
+                //                    }
+
+                //                    itemCodes.Add(item.ItemCode, lineItem);
+                //                }
+                //            }
+
+                //            if (!string.IsNullOrEmpty(item.TaxCode))
+                //            {
+                //                if (taxRates.ContainsKey(item.TaxCode))
+                //                {
+                //                    item.TaxRate = taxRates[item.TaxCode];
+                //                }
+                //                else
+                //                {
+                //                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                //                    recordset1.DoQuery($"SELECT \"Rate\" FROM AVT1 WHERE \"Code\" = '{item.TaxCode}'");
+
+                //                    while (!recordset1.EoF)
+                //                    {
+                //                        item.TaxRate = recordset1.Fields.Item("Rate").Value;
+
+                //                        recordset1.MoveNext();
+                //                    }
+
+                //                    taxRates.Add(item.TaxCode, item.TaxRate);
+                //                }
+                //            }
+
+                //            item.UgpCode = "Manual";
+                //            if (item.UgpEntry != -1)
+                //            {
+                //                if (uomCodes.ContainsKey(item.UgpEntry))
+                //                {
+                //                    item.UgpCode = uomCodes[item.UgpEntry];
+                //                }
+                //                else
+                //                {
+                //                    Recordset recordset1 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                //                    recordset1.DoQuery($"SELECT \"UgpCode\" FROM OUGP WHERE \"UgpEntry\" = '{item.UgpEntry}'");
+
+                //                    while (!recordset1.EoF)
+                //                    {
+                //                        item.UgpCode = recordset1.Fields.Item("UgpCode").Value;
+
+                //                        recordset1.MoveNext();
+                //                    }
+
+                //                    uomCodes.Add(item.UgpEntry, item.UgpCode);
+                //                }
+                //            }
+
+                //            //args[0] = DocEntry;
+                //            //args[1] = num++;
+                //            //args[2] = item.ItemCode;
+                //            //args[3] = item.Dscription;
+                //            //args[4] = item.Quantity;
+                //            //args[5] = DateTime.Now.Date.ToString("yyyy/MM/dd");
+                //            //args[6] = 0;
+                //            //args[7] = lineItem.Price;
+                //            //args[8] = lineItem.Currency;
+                //            //args[9] = 0;
+                //            //args[10] = discount;
+                //            //args[11] = (item.Quantity * lineItem.Price) * (1.0 - discount / 100.0);
+                //            //args[12] = 0;
+                //            //args[13] = item.TaxCode;
+                //            //args[14] = item.TaxRate;
+                //            //args[15] = item.WhsCode;
+                //            //args[16] = item.UgpEntry;
+                //            //args[17] = item.UgpCode;
+                //            //args[18] = item.SequenceNo == 99999 ? 99999 : item.SequenceNo * 10;
+                //            //args[19] = item.UgpCode;
+                //            //args[20] = lineItem.Price;
+                //            //args[21] = (lineItem.Price) * (1.0 + item.TaxRate / 100.0);
+                //            //args[22] = "R";
+                //            //args[23] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (item.TaxRate / 100.0);
+                //            //args[24] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
+                //            //args[25] = ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
+                //            //args[26] = item.Quantity;
+
+                //            //recordset.DoQuery(string.Format(format, args));
+
+                //            docTotal += ((item.Quantity * lineItem.Price) * (1.0 - discount / 100.0)) * (1.0 + item.TaxRate / 100.0);
+
+                //            //LogConsumerDAL.Instance.Write(item.ItemCode + " Added new line");
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            LogConsumerDAL.Instance.Write(item.ItemCode + ex.Message);
+                //        }
+                //    }
+                //}
+
+                //SAPbobsCOM.Documents oSQ1 = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations) as SAPbobsCOM.Documents;
+                //oSQ1.GetByKey(Convert.ToInt32(DocEntry));
+
+                //foreach (SaleQuotationLineItem item in LineItems)
+                //{
+                //    if (item.Updated == 0)
+                //    {
+                //        try
+                //        {
+                //            for (int i = 0; i < oSQ1.Lines.Count; i++)
+                //            {
+                //                oSQ1.Lines.SetCurrentLine(i);
+
+                //                try
+                //                {
+                //                    if (item.ItemCode == oSQ1.Lines.ItemCode)
+                //                    {
+                //                        oSQ1.Lines.Quantity = item.Quantity;
+                //                        l_ObjectUpdate = true;
+
+                //                        //LogConsumerDAL.Instance.Write(oSQ1.Lines.ItemCode + " Updated line");
+                //                    }
+                //                }
+                //                catch (Exception ex)
+                //                {
+                //                    LogConsumerDAL.Instance.Write(ex.Message);
+                //                }
+                //            }
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            LogConsumerDAL.Instance.Write(item.ItemCode + ex.Message);
+                //        }
+                //    }
+                //}
+
+                //if (l_ObjectUpdate || docTotal > 0)
+                //{
+                //    oSQ1.DocTotal = docTotal;
+                //    oSQ1.Update();
+                //}
+                #endregion
+
+                recordset2.DoQuery($"UPDATE QUT1 SET \"DiscPrcnt\" = {discount}, \"LineTotal\" = (\"PriceAfVAT\" * \"Quantity\") * (1.0 - {discount} / 100.0), \"VatSum\" = ((\"PriceAfVAT\" * \"Quantity\") * (1.0 - {discount} / 100.0)) * (\"VatPrcnt\" / 100.0), \"GTotal\" = (\"PriceAfVAT\" * \"Quantity\") * (1.0 - {discount} / 100.0) WHERE \"DocEntry\"={DocEntry}");
+
+                recordset2.DoQuery($"UPDATE OQUT SET \"DocTotal\" = (SELECT SUM(\"GTotal\") FROM QUT1 WHERE \"DocEntry\" = '{DocEntry}') WHERE \"DocEntry\" = '{DocEntry}'");
             }
             catch (Exception ex)
             {
@@ -1614,21 +1707,21 @@
         private bool CreateSQInSAP()
         {
             DataTable l_Data = new DataTable();
-			DataTable l_SourceData = new DataTable();
-			DateTime l_DocDate = DateTime.Now;
+            DataTable l_SourceData = new DataTable();
+            DateTime l_DocDate = DateTime.Now;
             SAPbobsCOM.Documents oSalesQuotation;
-			SAPbobsCOM.Document_Lines oSalesQuotationLine;
+            SAPbobsCOM.Document_Lines oSalesQuotationLine;
 
             string l_Query = string.Empty;
-			string l_SourceDesc = string.Empty;
-			string l_SAPSource = string.Empty;
-			string l_Param = string.Empty;
+            string l_SourceDesc = string.Empty;
+            string l_SAPSource = string.Empty;
+            string l_Param = string.Empty;
             string l_CardCode = string.Empty;
             string l_ItemID = "FG010000020";
             int l_OOPRID = 0;
-			int l_Source = 0;
-			int l_SAPSeries = 0;
-			int lRetCode;
+            int l_Source = 0;
+            int l_SAPSeries = 0;
+            int lRetCode;
 
             try
             {
@@ -1639,23 +1732,23 @@
 
                 if (this.m_Connection.GetData(l_Query, ref l_Data))
                 {
-					foreach (DataRow l_Row in l_Data.Rows)
-					{
-						l_CardCode = PublicFunctions.ConvertNullAsString(l_Row["CardCode"], string.Empty);
-						l_OOPRID = PublicFunctions.ConvertNullAsInteger(l_Row["OPPRID"], 0);
-						l_Source = PublicFunctions.ConvertNullAsInteger(l_Row["Source"], 0);
+                    foreach (DataRow l_Row in l_Data.Rows)
+                    {
+                        l_CardCode = PublicFunctions.ConvertNullAsString(l_Row["CardCode"], string.Empty);
+                        l_OOPRID = PublicFunctions.ConvertNullAsInteger(l_Row["OPPRID"], 0);
+                        l_Source = PublicFunctions.ConvertNullAsInteger(l_Row["Source"], 0);
 
-						LogConsumerDAL.Instance.Write(l_Source.ToString());
+                        LogConsumerDAL.Instance.Write(l_Source.ToString());
 
-						Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-						recordset.DoQuery($"SELECT \"Descript\" FROM OOSR WHERE \"Num\" = '{l_Source}'");
+                        Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                        recordset.DoQuery($"SELECT \"Descript\" FROM OOSR WHERE \"Num\" = '{l_Source}'");
 
-						while (!recordset.EoF)
-						{
-							l_SourceDesc = recordset.Fields.Item("Descript").Value;
-							LogConsumerDAL.Instance.Write(l_SourceDesc);
+                        while (!recordset.EoF)
+                        {
+                            l_SourceDesc = recordset.Fields.Item("Descript").Value;
+                            LogConsumerDAL.Instance.Write(l_SourceDesc);
 
-							l_Query = "SELECT SAPSource FROM OpportunitySource WITH (NOLOCK) WHERE OppoSource = ";
+                            l_Query = "SELECT SAPSource FROM OpportunitySource WITH (NOLOCK) WHERE OppoSource = ";
 
                             PublicFunctions.FieldToParam(l_SourceDesc, ref l_Param, Declarations.FieldTypes.String);
                             l_Query += l_Param;
@@ -1663,36 +1756,36 @@
                             if (this.m_Connection.GetData(l_Query, ref l_SourceData))
                             {
                                 l_SAPSource = PublicFunctions.ConvertNullAsString(l_SourceData.Rows[0]["SAPSource"].ToString(), string.Empty);
-								LogConsumerDAL.Instance.Write(l_SAPSource);
+                                LogConsumerDAL.Instance.Write(l_SAPSource);
 
-								Recordset recordset2 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                                Recordset recordset2 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                                 recordset2.DoQuery($"SELECT \"Series\" FROM NNM1 WHERE \"SeriesName\" = '{l_SAPSource}' AND \"ObjectCode\" = '23'");
 
                                 while (!recordset2.EoF)
                                 {
-									l_SAPSeries = recordset2.Fields.Item("Series").Value;
-									LogConsumerDAL.Instance.Write(l_SAPSeries.ToString());
+                                    l_SAPSeries = recordset2.Fields.Item("Series").Value;
+                                    LogConsumerDAL.Instance.Write(l_SAPSeries.ToString());
 
-									recordset2.MoveNext();
-								}
+                                    recordset2.MoveNext();
+                                }
 
                                 if (l_SAPSeries == 0)
                                 {
-									l_SAPSeries = 14;
-								}
+                                    l_SAPSeries = 14;
+                                }
                             }
                             else
                             {
                                 l_SAPSeries = 14;
                             }
 
-							recordset.MoveNext();
-						}
+                            recordset.MoveNext();
+                        }
 
-						oSalesQuotation = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations);
+                        oSalesQuotation = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQuotations);
 
-						oSalesQuotation.DocType = SAPbobsCOM.BoDocumentTypes.dDocument_Items;
-						oSalesQuotation.CardCode = l_CardCode;
+                        oSalesQuotation.DocType = SAPbobsCOM.BoDocumentTypes.dDocument_Items;
+                        oSalesQuotation.CardCode = l_CardCode;
                         oSalesQuotation.DocDate = DateTime.Now.Date;
                         oSalesQuotation.TaxDate = DateTime.Now.Date;
                         oSalesQuotation.DocDueDate = DateTime.Now.Date;
@@ -1701,16 +1794,16 @@
 
                         oSalesQuotationLine = oSalesQuotation.Lines;
 
-						oSalesQuotationLine.ItemCode = l_ItemID;
-						oSalesQuotationLine.Quantity = 1;
+                        oSalesQuotationLine.ItemCode = l_ItemID;
+                        oSalesQuotationLine.Quantity = 1;
                         oSalesQuotationLine.VatGroup = "STX01";
-						oSalesQuotationLine.WarehouseCode = "M-F-UNT3";
+                        oSalesQuotationLine.WarehouseCode = "M-F-UNT3";
                         oSalesQuotationLine.UoMEntry = -1;
-                        
 
-						lRetCode = oSalesQuotation.Add();
 
-						if (lRetCode != 0)
+                        lRetCode = oSalesQuotation.Add();
+
+                        if (lRetCode != 0)
                         {
                             string sErrDesc = this.oCompany.GetLastErrorDescription();
 

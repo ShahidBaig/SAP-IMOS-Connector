@@ -40,6 +40,7 @@
         public double Price { get; set; }
 
         public string WhsCode { get; set; }
+        public string WhsAddress { get; set; }
 
         public string TaxCode { get; set; }
 
