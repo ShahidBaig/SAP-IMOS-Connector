@@ -42,10 +42,10 @@ namespace IMW.DAL
             {
                 try
                 {
-                    var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
+                    var appSettings = AppConfiguration.Configuration?.GetSection("ConnectionStrings")?.Get<ConnectionStrings>();
 
-                    ISCConnectionString = appSettings.iscConn;
-                    IMOSConnectionString = appSettings.imosConn;
+                    ISCConnectionString = appSettings?.iscConn;
+                    IMOSConnectionString = appSettings?.imosConn;
                 }
                 catch (Exception)
                 {
