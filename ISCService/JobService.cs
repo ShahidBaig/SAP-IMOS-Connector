@@ -7,6 +7,7 @@ using IMW.DAL;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using IMW.Common;
+using System.ServiceProcess;
 
 namespace ISCService
 {
@@ -27,24 +28,16 @@ namespace ISCService
 
         private string GetSettings(string name)
         {
-            try
-            {
-                var configJson1 = File.ReadAllText("appsettings.json");
-                var jsonNodeOptions1 = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-                var node1 = JsonNode.Parse(configJson1, jsonNodeOptions1);
-                var configJson = File.ReadAllText(Path.Combine(node1["AppSettings"]["ISCAppPath"].ToString(), "appsettings.json"));
-                var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-                var node = JsonNode.Parse(configJson, jsonNodeOptions);
+            var configJson1 = File.ReadAllText(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"));
+            var jsonNodeOptions1 = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
+            var node1 = JsonNode.Parse(configJson1, jsonNodeOptions1);
+            var configJson = File.ReadAllText(Path.Combine(node1["AppSettings"]["ISCAppPath"].ToString(), "appsettings.json"));
+            var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
+            var node = JsonNode.Parse(configJson, jsonNodeOptions);
 
-                HelperDAL.SettingsPath = node1["AppSettings"]["ISCAppPath"].ToString();
+            HelperDAL.SettingsPath = node1["AppSettings"]["ISCAppPath"].ToString();
 
-                return node["AppSettings"][name].ToString();
-            }
-            catch (Exception)
-            {
-            }
-
-            return "0|0|0|0|0|0|0";
+            return node["AppSettings"][name].ToString();
         }
 
         private bool[] GetJobSyncFlags()
