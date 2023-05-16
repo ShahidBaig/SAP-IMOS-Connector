@@ -1241,20 +1241,20 @@
                         l_Query += ")";
                     }
 
-                    if(!taxList.Contains(item.TaxCode))
-                    {
-                        taxList.Add(item.TaxCode);
-                    }
+                    //if(!taxList.Contains(item.TaxCode))
+                    //{
+                    //    taxList.Add(item.TaxCode);
+                    //}
 
                     if (!whsList.Contains(item.WhsCode))
                     {
                         whsList.Add(item.WhsCode);
                     }
 
-                    if (!uomList.Contains(item.UgpEntry))
-                    {
-                        uomList.Add(item.UgpEntry);
-                    }
+                    //if (!uomList.Contains(item.UgpEntry))
+                    //{
+                    //    uomList.Add(item.UgpEntry);
+                    //}
 
                     index++;
                 }
@@ -1359,46 +1359,48 @@
                     recordset2.MoveNext();
                 }
 
-                if(uomList.Count > 1 || uomList[0] != -1)
-                {
-                    l_Query = $"SELECT \"UgpEntry\", \"UgpCode\" FROM OUGP WHERE \"UgpEntry\" IN (";
+                #region "UoM"
+                //if(uomList.Count > 1 || uomList[0] != -1)
+                //{
+                //    l_Query = $"SELECT \"UgpEntry\", \"UgpCode\" FROM OUGP WHERE \"UgpEntry\" IN (";
 
-                    index = 0;
-                    foreach (int uomEntry in uomList)
-                    {
-                        l_Query += $"{uomEntry}";
+                //    index = 0;
+                //    foreach (int uomEntry in uomList)
+                //    {
+                //        l_Query += $"{uomEntry}";
 
-                        if (index < uomList.Count - 1)
-                        {
-                            l_Query += ",";
-                        }
-                        else
-                        {
-                            l_Query += ")";
-                        }
+                //        if (index < uomList.Count - 1)
+                //        {
+                //            l_Query += ",";
+                //        }
+                //        else
+                //        {
+                //            l_Query += ")";
+                //        }
 
-                        index++;
-                    }
+                //        index++;
+                //    }
 
-                    recordset2.DoQuery(l_Query);
+                //    recordset2.DoQuery(l_Query);
 
-                    while (!recordset2.EoF)
-                    {
-                        if (!uomCodes.ContainsKey(recordset2.Fields.Item("UgpEntry").Value))
-                        {
-                            uomCodes.Add(recordset2.Fields.Item("UgpEntry").Value, recordset2.Fields.Item("UgpCode").Value);
-                        }
+                //    while (!recordset2.EoF)
+                //    {
+                //        if (!uomCodes.ContainsKey(recordset2.Fields.Item("UgpEntry").Value))
+                //        {
+                //            uomCodes.Add(recordset2.Fields.Item("UgpEntry").Value, recordset2.Fields.Item("UgpCode").Value);
+                //        }
 
-                        recordset2.MoveNext();
-                    }
-                }
+                //        recordset2.MoveNext();
+                //    }
+                //}
+                #endregion
 
                 foreach (SaleQuotationLineItem item in LineItems)
                 {
                     Item lineItem = null;
 
                     item.Updated = 0;
-                    item.UgpCode = "Manual";
+                    //item.UgpCode = "Manual";
 
                     try
                     {
@@ -1407,13 +1409,13 @@
                             lineItem = itemCodes[item.ItemCode][item.WhsCode];
                         }
 
-                        if (!string.IsNullOrEmpty(item.TaxCode))
-                        {
-                            if (taxRates.ContainsKey(item.TaxCode))
-                            {
-                                item.TaxRate = taxRates[item.TaxCode];
-                            }
-                        }
+                        //if (!string.IsNullOrEmpty(item.TaxCode))
+                        //{
+                        //    if (taxRates.ContainsKey(item.TaxCode))
+                        //    {
+                        //        item.TaxRate = taxRates[item.TaxCode];
+                        //    }
+                        //}
 
                         if (!string.IsNullOrEmpty(item.WhsCode))
                         {
@@ -1423,13 +1425,13 @@
                             }
                         }
 
-                        if (item.UgpEntry != -1)
-                        {
-                            if (uomCodes.ContainsKey(item.UgpEntry))
-                            {
-                                item.UgpCode = uomCodes[item.UgpEntry];
-                            }
-                        }
+                        //if (item.UgpEntry != -1)
+                        //{
+                        //    if (uomCodes.ContainsKey(item.UgpEntry))
+                        //    {
+                        //        item.UgpCode = uomCodes[item.UgpEntry];
+                        //    }
+                        //}
 
                         for (int i = 0; i < oSQ.Lines.Count; i++)
                         {

@@ -22,7 +22,7 @@
             List<BOM> list = new List<BOM>();
             SqlDataReader reader = new SqlCommand { 
                 Connection = connection,
-                CommandText = "selectFather,ChildNum,VisOrder,Code,Quantity,Warehouse,Price,Currency,PriceList,OrigPrice,OrigCurr from ITT1"
+                CommandText = "select Father,ChildNum,VisOrder,Code,Quantity,Warehouse,Price,Currency,PriceList,OrigPrice,OrigCurr from ITT1"
             }.ExecuteReader();
             while (true)
             {

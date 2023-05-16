@@ -10,6 +10,12 @@ BEGIN
 
 	SET @l_OrderID = @p_OrderID
 
+	DROP TABLE IF EXISTS #OITMItemGroups
+	DROP TABLE IF EXISTS #OITMItems
+	DROP TABLE IF EXISTS #OrderItems
+	DROP TABLE IF EXISTS #SAPQuotationLines
+	DROP TABLE IF EXISTS #QtyConversionDetail
+
 	CREATE TABLE #OITMItemGroups
 	(
 		ItemCode NVARCHAR(100),
@@ -55,38 +61,58 @@ BEGIN
 		Height REAL
 	)
 
+	CREATE TABLE #QtyConversionDetail
+	(
+		QtyFormulaNo	int,
+		Grp1Name	varchar(50),
+		Grp2Name	varchar(50),
+		Grp3Name	varchar(50),
+		Grp4Name	varchar(50),
+		FormulaDesc	varchar(500),
+		SequenceNo	real,
+		ItemGroupData	varchar(203)
+	)
+
 	INSERT INTO #OrderItems
 	SELECT *
 	FROM SalesQuotationItemsList
 	WHERE OrderID = @l_OrderID
 
+	INSERT INTO #QtyConversionDetail
+	SELECT QtyFormulaNo, REPLACE(ISNULL(Grp1Name, ''), 'N/A', ''), REPLACE(ISNULL(Grp2Name, ''), 'N/A', ''), 
+		REPLACE(ISNULL(Grp3Name, ''), 'N/A', ''), REPLACE(ISNULL(Grp4Name, ''), 'N/A', ''), FormulaDesc, ISNULL(SequenceNo, 99999), ItemGroupData
+	FROM VW_QtyConversionDetail
+
 	INSERT INTO #OITMItems
-	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, IT.PriceList, IT.Price, O.UgpEntry
+	SELECT O.ItemCode, O.ItemName, REPLACE(ISNULL(O.U_Grp1Name, ''), 'N/A', ''), REPLACE(ISNULL(O.U_Grp2Name, ''), 'N/A', ''), 
+		REPLACE(ISNULL(O.U_Grp3Name, ''), 'N/A', ''), REPLACE(ISNULL(O.U_Grp4Name, ''), 'N/A', ''), O.DfltWH, O.VatGourpSa, O.SalUnitMsr, -1, 0, O.UgpEntry
 	FROM OITM O WITH (NOLOCK)
-		INNER JOIN ITM1 IT WITH (NOLOCK) ON O.ItemCode = IT.ItemCode
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems)
 
 	INSERT INTO #OITMItemGroups
-	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, ISNULL(Q.SequenceNo, 99999), UgpEntry
+	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
 	FROM #OITMItems O
-		LEFT OUTER JOIN VW_QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND REPLACE(ISNULL(O.U_Grp2Name, ''), 'N/A', '') = REPLACE(ISNULL(Q.Grp2Name, ''), 'N/A', '') 
-	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND ISNULL(Q.Grp3Name, '') = '' AND ISNULL(Q.Grp4Name, '') = ''
+		LEFT OUTER JOIN #QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND O.U_Grp2Name = Q.Grp2Name 
+	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND O.U_Grp2Name <> ''
+		AND Q.Grp3Name = '' AND Q.Grp4Name = '' AND Q.SequenceNo <> 99999
 
 	INSERT INTO #OITMItemGroups
-	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, ISNULL(Q.SequenceNo, 99999), UgpEntry
+	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
 	FROM #OITMItems O
-		LEFT OUTER JOIN VW_QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND REPLACE(ISNULL(O.U_Grp2Name, ''), 'N/A', '') = REPLACE(ISNULL(Q.Grp2Name, ''), 'N/A', '') 
-			AND REPLACE(ISNULL(O.U_Grp3Name, ''), 'N/A', '') = REPLACE(ISNULL(Q.Grp3Name, ''), 'N/A', '')
-	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND ISNULL(Q.Grp3Name, '') <> '' AND ISNULL(Q.Grp4Name, '') = ''
-
+		LEFT OUTER JOIN #QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND O.U_Grp2Name = Q.Grp2Name 
+			AND O.U_Grp3Name = Q.Grp3Name
+	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND Q.Grp3Name <> '' 
+		AND Q.Grp4Name = '' AND Q.SequenceNo <> 99999
+		
 	INSERT INTO #OITMItemGroups
-	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, ISNULL(Q.SequenceNo, 99999), UgpEntry
+	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
 	FROM #OITMItems O
 		INNER JOIN ITM1 IT WITH (NOLOCK) ON O.ItemCode = IT.ItemCode
-		LEFT OUTER JOIN VW_QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND REPLACE(ISNULL(O.U_Grp2Name, ''), 'N/A', '') = REPLACE(ISNULL(Q.Grp2Name, ''), 'N/A', '') 
-			AND REPLACE(ISNULL(O.U_Grp3Name, ''), 'N/A', '') = REPLACE(ISNULL(Q.Grp3Name, ''), 'N/A', '') AND REPLACE(ISNULL(O.U_Grp4Name, ''), 'N/A', '') = REPLACE(ISNULL(Q.Grp4Name, ''), 'N/A', '')
+		LEFT OUTER JOIN #QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND O.U_Grp2Name = Q.Grp2Name 
+			AND O.U_Grp3Name = Q.Grp3Name AND O.U_Grp4Name = Q.Grp4Name
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems)
-		AND ISNULL(Q.Grp1Name, '') <> '' AND ISNULL(Q.Grp2Name, '') <> '' AND ISNULL(Q.Grp3Name, '') <> '' AND ISNULL(Q.Grp4Name, '') <> ''
+		AND Q.Grp1Name <> '' AND Q.Grp2Name <> '' AND Q.Grp3Name <> '' AND Q.Grp4Name <> ''
+		 AND Q.SequenceNo <> 99999
 
 	DELETE FROM SAPQuotationLines
 	WHERE OrderID = @l_OrderID
@@ -104,15 +130,19 @@ BEGIN
 							  WHEN MAX(FormulaDesc) = 'SUM((HEIGHT * DEPTH)/1000000)' THEN SUM((ISNULL(HEIGHT, 0) * ISNULL(DEPTH, 0))/1000000) 
 							  WHEN MAX(FormulaDesc) = 'SUM(WIDTH/3000)' THEN SUM(ISNULL(WIDTH, 0)/3000) 
 							  WHEN MAX(FormulaDesc) = 'SUM(WIDTH/5000)' THEN SUM(ISNULL(WIDTH, 0)/5000)
+							  WHEN MAX(FormulaDesc) = 'SUM(HEIGHT/1000)' THEN SUM(ISNULL(Height, 0)/1000)
 							ELSE COUNT(OI.ItemCode) 
 					END
-		END ELSE MAX(Qty) END Quantity, MAX(OG.SequenceNo), MAX(ISNULL(OG.UgpEntry, O.UgpEntry))
+		END ELSE MAX(Qty) END Quantity, MAX(ISNULL(OG.SequenceNo, 99999)) SequenceNo, MAX(ISNULL(OG.UgpEntry, O.UgpEntry)) UgpEntry
 	FROM #OrderItems OI
 		LEFT OUTER JOIN #OITMItems O ON OI.ItemCode = O.ItemCode
 		LEFT OUTER JOIN #OITMItemGroups OG ON OI.ItemCode = OG.ItemCode
 	GROUP BY OI.ItemCode
 
-	SELECT * FROM SAPQuotationLines
+	SELECT Q.* 
+	FROM SAPQuotationLines Q
+		LEFT OUTER JOIN #OITMItemGroups OG ON Q.ItemCode = OG.ItemCode
 	WHERE OrderID = @l_OrderID
-	ORDER BY ISNULL(SequenceNo, 99999)
+	ORDER BY ISNULL(Q.SequenceNo, 99999), OG.Grp1Name, OG.Grp2Name, OG.Grp3Name, OG.Grp4Name
 END
+GO
