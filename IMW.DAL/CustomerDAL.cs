@@ -91,7 +91,7 @@
             this.oCompany = new SAPDAL().ConnectSAP();
             List<Customer> list = new List<Customer>();
             Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-            recordset.DoQuery($"SELECT * FROM OCRD where DocEntry > {lastCustomerFSAP.ToString()}");
+            recordset.DoQuery($"SELECT * FROM OCRD where \"DocEntry\" > {lastCustomerFSAP.ToString()}");
             while (true)
             {
                 if (recordset.EoF)

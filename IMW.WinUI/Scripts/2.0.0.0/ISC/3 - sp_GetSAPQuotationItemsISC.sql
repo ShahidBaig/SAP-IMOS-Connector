@@ -84,9 +84,11 @@ BEGIN
 	FROM VW_QtyConversionDetail
 
 	INSERT INTO #OITMItems
-	SELECT O.ItemCode, O.ItemName, REPLACE(ISNULL(O.U_Grp1Name, ''), 'N/A', ''), REPLACE(ISNULL(O.U_Grp2Name, ''), 'N/A', ''), 
-		REPLACE(ISNULL(O.U_Grp3Name, ''), 'N/A', ''), REPLACE(ISNULL(O.U_Grp4Name, ''), 'N/A', ''), O.DfltWH, O.VatGourpSa, O.SalUnitMsr, -1, 0, O.UgpEntry
+	SELECT O.ItemCode, O.ItemName, REPLACE(ISNULL(ISNULL(G.U_Grp1Name, O.U_Grp1Name), ''), 'N/A', ''), REPLACE(ISNULL(ISNULL(G.U_Grp2Name, O.U_Grp2Name), ''), 'N/A', ''), 
+		REPLACE(ISNULL(ISNULL(G.U_Grp3Name, O.U_Grp3Name), ''), 'N/A', ''), REPLACE(ISNULL(ISNULL(G.U_Grp4Name, O.U_Grp4Name), ''), 'N/A', ''), 
+		ISNULL(G.DfltWH, O.DfltWH), ISNULL(G.VatGourpSa, O.VatGourpSa), ISNULL(G.SalUnitMsr, O.SalUnitMsr), -1, 0, ISNULL(G.UgpEntry, O.UgpEntry)
 	FROM OITM O WITH (NOLOCK)
+		LEFT OUTER JOIN OITM_ItemGroups G WITH (NOLOCK) ON O.ItemCode = G.ItemCode
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems)
 
 	INSERT INTO #OITMItemGroups
@@ -94,7 +96,7 @@ BEGIN
 	FROM #OITMItems O
 		LEFT OUTER JOIN #QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND O.U_Grp2Name = Q.Grp2Name 
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND O.U_Grp2Name <> ''
-		AND Q.Grp3Name = '' AND Q.Grp4Name = '' AND Q.SequenceNo <> 99999
+		AND Q.Grp3Name = '' AND Q.Grp4Name = '' --AND Q.SequenceNo <> 99999
 
 	INSERT INTO #OITMItemGroups
 	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
@@ -102,7 +104,7 @@ BEGIN
 		LEFT OUTER JOIN #QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND O.U_Grp2Name = Q.Grp2Name 
 			AND O.U_Grp3Name = Q.Grp3Name
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND Q.Grp3Name <> '' 
-		AND Q.Grp4Name = '' AND Q.SequenceNo <> 99999
+		AND Q.Grp4Name = '' --AND Q.SequenceNo <> 99999
 		
 	INSERT INTO #OITMItemGroups
 	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
@@ -112,14 +114,14 @@ BEGIN
 			AND O.U_Grp3Name = Q.Grp3Name AND O.U_Grp4Name = Q.Grp4Name
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems)
 		AND Q.Grp1Name <> '' AND Q.Grp2Name <> '' AND Q.Grp3Name <> '' AND Q.Grp4Name <> ''
-		 AND Q.SequenceNo <> 99999
+		 --AND Q.SequenceNo <> 99999
 
 	DELETE FROM SAPQuotationLines
 	WHERE OrderID = @l_OrderID
 
 	INSERT INTO SAPQuotationLines (Line_No, ItemCode, ItemName, OrderID, ID, DfltWH, VatGourpSa, SalUnitMsr, PriceList, Price, Qty, SequenceNo, UgpEntry)
 	SELECT ROW_NUMBER() OVER (ORDER BY OI.ItemCode) Line_No, OI.ItemCode, MAX(ISNULL(OG.ItemName, O.ItemName)) ItemName, MAX(OrderID) OrderID, MAX(OI.ID) ID, 
-		CASE WHEN MAX(ISNULL(OG.DfltWH, O.DfltWH)) = '' THEN 'M-F-UNT3' ELSE MAX(ISNULL(OG.DfltWH, O.DfltWH)) END DfltWH, 
+		CASE WHEN MAX(ISNULL(ISNULL(OG.DfltWH, O.DfltWH), '')) = '' THEN 'M-F-UNT3' ELSE MAX(ISNULL(OG.DfltWH, O.DfltWH)) END DfltWH, 
 		MAX(ISNULL(OG.VatGourpSa, O.VatGourpSa)) VatGourpSa, MAX(ISNULL(OG.SalUnitMsr, O.SalUnitMsr)) SalUnitMsr, MAX(ISNULL(OG.PriceList, O.PriceList)) PriceList, MAX(ISNULL(OG.Price, O.Price)) Price,
 		CASE WHEN MAX(Qty) = 0 THEN
 			CASE WHEN MAX(ISNULL(OG.ItemCode, '')) = '' AND MAX(ISNULL(OG.FormulaDesc, '')) = ''  THEN COUNT(OI.ItemCode) 
@@ -134,7 +136,7 @@ BEGIN
 							  WHEN MAX(FormulaDesc) = 'SUM(HEIGHT/1000)' THEN SUM(ISNULL(Height, 0)/1000)
 							ELSE COUNT(OI.ItemCode) 
 					END
-		END ELSE MAX(Qty) END Quantity, MAX(ISNULL(OG.SequenceNo, 99999)) SequenceNo, MAX(ISNULL(OG.UgpEntry, O.UgpEntry)) UgpEntry
+		END ELSE SUM(CASE WHEN Qty = 0 THEN 1 ELSE Qty END) END Quantity, MAX(ISNULL(OG.SequenceNo, 99999)) SequenceNo, MAX(ISNULL(ISNULL(OG.UgpEntry, O.UgpEntry), -1)) UgpEntry
 	FROM #OrderItems OI
 		LEFT OUTER JOIN #OITMItems O ON OI.ItemCode = O.ItemCode
 		LEFT OUTER JOIN #OITMItemGroups OG ON OI.ItemCode = OG.ItemCode
