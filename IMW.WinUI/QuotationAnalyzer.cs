@@ -17,7 +17,7 @@ namespace IMW.WinUI
 {
     public partial class QuotationAnalyzer : Form
     {
-        private Company oCompany = ((Company)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("632F4591-AA62-4219-8FB6-22BCF5F60090"))));
+        private Company oCompany = new SAPbobsCOM.Company();
         private DBConnector dbConnect = new DBConnector(HelperDAL.ISCConnectionString);
 
         public QuotationAnalyzer()

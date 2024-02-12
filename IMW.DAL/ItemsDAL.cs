@@ -9,10 +9,11 @@
     using System.Data.SqlClient;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using IMW.DB;
 
     public class ItemsDAL
     {
-        private Company oCompany = ((Company)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("632F4591-AA62-4219-8FB6-22BCF5F60090"))));
+        private Company oCompany = new SAPbobsCOM.Company();
 
         public List<MatFolder> GetIMOSHierarchy()
         {
@@ -186,7 +187,7 @@
             }
         }
 
-        public bool LoadItem()
+        public bool LoadItem_Old()
         {
             DateTime lastItemCreateDateFSAP = this.GetLastItemCreateDateFSAP();
             string lastItemFSAP = this.GetLastItemFSAP(lastItemCreateDateFSAP);
@@ -239,110 +240,325 @@
             return false;
         }
 
-    public bool LoadItemToIMOSfromSAP(string IMOS_Parent, string SAP_ItemFrgnName, string SAP_ItemName, ItemTargetTable table)
-    {
-        SqlConnection connection = new SqlConnection
+        public string GetItemBy(Company SAPCompany, string ColumnName, string ColumnValue)
         {
-            ConnectionString = HelperDAL.IMOSConnectionString
-        };
-        connection.Open();
-        SqlCommand command = new SqlCommand
-        {
-            Connection = connection
-        };
-        SqlTransaction transaction = connection.BeginTransaction();
-        command.Transaction = transaction;
-        command.CommandText = $"Insert into matfolder(Name,Type,Parent_ID) values ('{SAP_ItemFrgnName}','100',{IMOS_Parent})";
-        command.ExecuteNonQuery();
-        switch (table)
-        {
-            case ItemTargetTable.Material:
-                command.CommandText = $"Insert into Mat(Name,TEXT) values ('{SAP_ItemFrgnName}','{SAP_ItemName}')";
-                command.ExecuteNonQuery();
-                break;
+            this.oCompany = SAPCompany;
 
-            case ItemTargetTable.Profil:
-                command.CommandText = $"Insert into PROFIL(Name,TEXT) values ('{SAP_ItemFrgnName}','{SAP_ItemName}')";
-                command.ExecuteNonQuery();
-                break;
+            Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
 
-            case ItemTargetTable.Surface:
-                command.CommandText = $"Insert into surf(Name,TEXT) values ('{SAP_ItemFrgnName}','{SAP_ItemName}')";
-                command.ExecuteNonQuery();
-                break;
+            recordset.DoQuery($"SELECT \"ItemCode\",\"SalUnitMsr\",\"DfltWH\" FROM OITM WHERE \"{ColumnName}\" = {PublicFunctions.FieldToParam(ColumnValue, Declarations.FieldTypes.String)}");
 
-            default:
-                break;
+            while (!recordset.EoF)
+            {
+                return recordset.Fields.Item(0).Value;
+            }
+
+            return string.Empty;
         }
-        transaction.Commit();
-        connection.Close();
-        return true;
-    }
 
-    public bool MapItem(IMW.Common.MapItem mi, string DocNum)
-    {
-            bool l_Result;
-        SqlConnection connection = new SqlConnection
+        public bool LoadItem(string LoadTypes = "")
         {
-            ConnectionString = HelperDAL.ISCConnectionString
-        };
-        connection.Open();
-        SqlTransaction transaction = connection.BeginTransaction();
-        this.oCompany = new SAPDAL().ConnectSAP();
-        SqlCommand command = new SqlCommand
-        {
-            CommandText = $"Select isnull(count(IMOSItem),0) total from MapIMOSSAP where IMOSItem='{mi.IMOSItem}' and IMOSItemVar='{mi.IMOSItemVariable}' and IMOSItemVarValue='{mi.IMOSItemVariableValue}' and SAPItem='{mi.SAPItem}' and DocNum='{DocNum}' and Length='{mi.Length}' and Width='{mi.Width}' and Thickness='{mi.Thickness}'",
-            Connection = connection,
-            Transaction = transaction
-        };
-        if (Convert.ToInt32(command.ExecuteScalar()) != 0)
-        {
-            connection.Close();
-                l_Result = false;
+            this.oCompany = new SAPDAL().ConnectSAP();
+
+            Recordset recordset = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Recordset recordset2 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Recordset recordset3 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Recordset recordset4 = this.oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Common l_Common = new Common();
+            DataTable l_Items = new DataTable();
+            DataTable l_ItemPrices = new DataTable();
+            DataTable l_Resources = new DataTable();
+            DataTable l_Groups = new DataTable();
+            string[] loadTypes = (string.IsNullOrEmpty(LoadTypes) ? "Items" : LoadTypes).Split(",");
+
+            try
+            {
+                l_Common.UseConnection(HelperDAL.ISCConnectionString);
+
+                foreach (string loadType in loadTypes)
+                {
+                    if (loadType == "Items")
+                    {
+                        l_Common.GetList("SELECT ItemCode FROM OITM WITH (NOLOCK)", ref l_Items);
+                        recordset.DoQuery("SELECT \"ItemCode\",\"ItemName\",\"FrgnName\",\"BLength1\",\"BWidth1\",\"ExitPrice\",\"AvgPrice\",\"PriceUnit\",\"CreateDate\",\"BuyUnitMsr\",\"SalUnitMsr\",\"UgpEntry\",\"DfltWH\",\"VatGourpSa\",\"BHeight1\",\"U_Grp1Name\",\"U_Grp2Name\",\"U_Grp3Name\",\"U_Grp4Name\" FROM OITM");
+
+                        while (!recordset.EoF)
+                        {
+                            try
+                            {
+                                if (l_Items.Select($"ItemCode = '{recordset.Fields.Item(0).Value}'").Length > 0)
+                                {
+                                    l_Common.Execut($"UPDATE OITM SET " +
+                                        $"ItemName = {PublicFunctions.FieldToParam(recordset.Fields.Item("ItemName").Value, Declarations.FieldTypes.String)}," +
+                                        $"FrgnName = {PublicFunctions.FieldToParam(recordset.Fields.Item("FrgnName").Value, Declarations.FieldTypes.String)}," +
+                                        $"BLength1 = {PublicFunctions.FieldToParam(recordset.Fields.Item("BLength1").Value, Declarations.FieldTypes.String)}," +
+                                        $"BWidth1 = {PublicFunctions.FieldToParam(recordset.Fields.Item("BWidth1").Value, Declarations.FieldTypes.String)}," +
+                                        $"ExitPrice = {PublicFunctions.FieldToParam(recordset.Fields.Item("ExitPrice").Value, Declarations.FieldTypes.String)}," +
+                                        $"AvgPrice = {PublicFunctions.FieldToParam(recordset.Fields.Item("AvgPrice").Value, Declarations.FieldTypes.String)}, " +
+                                        $"PriceUnit = {PublicFunctions.FieldToParam(recordset.Fields.Item("PriceUnit").Value, Declarations.FieldTypes.String)}," +
+                                        $"CreateDate = {PublicFunctions.FieldToParam(recordset.Fields.Item("CreateDate").Value, Declarations.FieldTypes.String)}," +
+                                        $"SalUnitMsr = {PublicFunctions.FieldToParam(recordset.Fields.Item("SalUnitMsr").Value, Declarations.FieldTypes.String)}," +
+                                        $"BuyUnitMsr = {PublicFunctions.FieldToParam(recordset.Fields.Item("BuyUnitMsr").Value, Declarations.FieldTypes.String)}," +
+                                        $"UGPEntry = {PublicFunctions.FieldToParam(recordset.Fields.Item("UgpEntry").Value, Declarations.FieldTypes.String)}," +
+                                        $"DfltWH = {PublicFunctions.FieldToParam(recordset.Fields.Item("DfltWH").Value, Declarations.FieldTypes.String)}," +
+                                        $"VatGourpSa = {PublicFunctions.FieldToParam(recordset.Fields.Item("VatGourpSa").Value, Declarations.FieldTypes.String)}," +
+                                        $"BHeight1 = {PublicFunctions.FieldToParam(recordset.Fields.Item("BHeight1").Value, Declarations.FieldTypes.String)}," +
+                                        $"U_Grp1Name = {PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp1Name").Value, Declarations.FieldTypes.String)}, " +
+                                        $"U_Grp2Name = {PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp2Name").Value, Declarations.FieldTypes.String)}, " +
+                                        $"U_Grp3Name = {PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp3Name").Value, Declarations.FieldTypes.String)}, " +
+                                        $"U_Grp4Name = {PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp4Name").Value, Declarations.FieldTypes.String)}" +
+                                        $" WHERE ItemCode = {PublicFunctions.FieldToParam(recordset.Fields.Item("ItemCode").Value, Declarations.FieldTypes.String)}");
+                                }
+                                else
+                                {
+                                    l_Common.Execut($"Insert into OITM(ItemCode,ItemName,FrgnName,ExitPrice,AvgPrice, PriceUnit,CreateDate,BuyUnitMsr,SalUnitMsr,UGPEntry," +
+                                        $"DfltWH,VatGourpSa,BHeight1, BLength1, BWidth1,U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name) " +
+                                        $"values ({PublicFunctions.FieldToParam(recordset.Fields.Item("ItemCode").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("ItemName").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("FrgnName").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("ExitPrice").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("AvgPrice").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("PriceUnit").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("CreateDate").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("BuyUnitMsr").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("SalUnitMsr").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("UgpEntry").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("DfltWH").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("VatGourpSa").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("BHeight1").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("BLength1").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("BWidth1").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp1Name").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp2Name").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp3Name").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset.Fields.Item("U_Grp4Name").Value, Declarations.FieldTypes.String)})");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogConsumerDAL.Instance.Write($"Exception: {recordset.Fields.Item("ItemCode").Value} - {ex.Message}");
+                            }
+
+                            recordset.MoveNext();
+                        }
+                    }
+                    else if (loadType == "ItemPrices")
+                    {
+                        l_Common.GetList("SELECT ItemCode FROM ITM1 WITH (NOLOCK)", ref l_ItemPrices);
+                        recordset2.DoQuery($"SELECT \"ItemCode\",\"PriceList\",\"Price\" FROM ITM1");
+
+                        while (!recordset2.EoF)
+                        {
+                            try
+                            {
+                                if (l_ItemPrices.Select($"ItemCode = '{recordset2.Fields.Item(0).Value}'").Length > 0)
+                                {
+                                    l_Common.Execut($"UPDATE ITM1 SET " +
+                                        $"PriceList = {recordset2.Fields.Item("PriceList").Value}," +
+                                        $"Price = {recordset2.Fields.Item("Price").Value}" +
+                                        $" WHERE ItemCode = {PublicFunctions.FieldToParam(recordset2.Fields.Item("ItemCode").Value, Declarations.FieldTypes.String)}");
+                                }
+                                else
+                                {
+                                    l_Common.Execut($"INSERT INTO ITM1 (ItemCode, PriceList, Price) VALUES ({PublicFunctions.FieldToParam(recordset2.Fields.Item("ItemCode").Value, Declarations.FieldTypes.String)}, {recordset2.Fields.Item("PriceList").Value}, {recordset2.Fields.Item("Price").Value});");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogConsumerDAL.Instance.Write($"Exception: {recordset2.Fields.Item("ItemCode").Value} - {ex.Message}");
+                            }
+
+                            recordset2.MoveNext();
+                        }
+                    }
+                    else if (loadType == "Resources")
+                    {
+                        l_Common.GetList("SELECT ResCode FROM ORSC WITH (NOLOCK)", ref l_Resources);
+                        recordset3.DoQuery($"SELECT \"ResCode\",\"ResName\",\"FrgnName\",\"DfltWH\",\"UnitOfMsr\" FROM ORSC");
+
+                        while (!recordset3.EoF)
+                        {
+                            try
+                            {
+                                if (l_Resources.Select($"ResCode = '{recordset3.Fields.Item(0).Value}'").Length > 0)
+                                {
+                                    l_Common.Execut($"UPDATE ORSC SET " +
+                                        $"ResName = {PublicFunctions.FieldToParam(recordset3.Fields.Item("ResName").Value, Declarations.FieldTypes.String)}," +
+                                        $"FrgnName = {PublicFunctions.FieldToParam(recordset3.Fields.Item("FrgnName").Value, Declarations.FieldTypes.String)}," +
+                                        $"DfltWH = {PublicFunctions.FieldToParam(recordset3.Fields.Item("DfltWH").Value, Declarations.FieldTypes.String)}," +
+                                        $"UnitOfMsr = {PublicFunctions.FieldToParam(recordset3.Fields.Item("UnitOfMsr").Value, Declarations.FieldTypes.String)}" +
+                                        $" WHERE ResCode = {PublicFunctions.FieldToParam(recordset3.Fields.Item("ResCode").Value, Declarations.FieldTypes.String)}");
+                                }
+                                else
+                                {
+                                    l_Common.Execut($"INSERT INTO ORSC (ResCode,ResName,FrgnName,DfltWH,UnitOfMsr) " +
+                                        $"VALUES ({PublicFunctions.FieldToParam(recordset3.Fields.Item("ResCode").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset3.Fields.Item("ResName").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset3.Fields.Item("FrgnName").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset3.Fields.Item("DfltWH").Value, Declarations.FieldTypes.String)}," +
+                                        $"{PublicFunctions.FieldToParam(recordset3.Fields.Item("UnitOfMsr").Value, Declarations.FieldTypes.String)});");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogConsumerDAL.Instance.Write($"Exception: {recordset3.Fields.Item("ResCode").Value} - {ex.Message}");
+                            }
+
+                            recordset3.MoveNext();
+                        }
+                    }
+                    else if (loadType == "Groups")
+                    {
+                        l_Common.GetList("SELECT * FROM OITM_ItemGroups WITH (NOLOCK)", ref l_Groups);
+                        recordset4.DoQuery($"SELECT \"ItemCode\",\"ItemName\",\"FrgnName\",\"ExitPrice\",\"AvgPrice\",\"PriceUnit\",\"CreateDate\",\"SalUnitMsr\",\"DfltWH\",\"VatGourpSa\",\"U_Grp1Name\",\"U_Grp2Name\",\"U_Grp3Name\",\"U_Grp4Name\",\"BHeight1\",\"UgpEntry\" FROM OITM");
+
+                        while (!recordset4.EoF)
+                        {
+                            try
+                            {
+                                if (l_Groups.Select($"ItemCode = '{recordset4.Fields.Item("ItemCode").Value}'").Length > 0)
+                                {
+                                    l_Common.Execut($"UPDATE OITM_ItemGroups SET " +
+                                        $"U_Grp1Name = {PublicFunctions.FieldToParam(recordset4.Fields.Item("U_Grp1Name").Value, Declarations.FieldTypes.String)}," +
+                                        $"U_Grp2Name = {PublicFunctions.FieldToParam(recordset4.Fields.Item("U_Grp2Name").Value, Declarations.FieldTypes.String)}," +
+                                        $"U_Grp3Name = {PublicFunctions.FieldToParam(recordset4.Fields.Item("U_Grp3Name").Value, Declarations.FieldTypes.String)}," +
+                                        $"U_Grp4Name = {PublicFunctions.FieldToParam(recordset4.Fields.Item("U_Grp4Name").Value, Declarations.FieldTypes.String)}" +
+                                        $" WHERE ItemCode = {PublicFunctions.FieldToParam(recordset4.Fields.Item("ItemCode").Value, Declarations.FieldTypes.String)}");
+                                }
+                                else
+                                {
+                                    l_Common.Execut($"INSERT INTO OITM_ItemGroups(ItemCode,ItemName,FrgnName,ExitPrice,AvgPrice, PriceUnit,CreateDate,SalUnitMsr,DfltWH,VatGourpSa,U_Grp1Name,U_Grp2Name,U_Grp3Name,U_Grp4Name,BHeight1,UgpEntry) VALUES ('{recordset4.Fields.Item("ItemCode").Value}','{recordset4.Fields.Item("ItemName").Value}','{recordset4.Fields.Item("FrgnName").Value}','{recordset4.Fields.Item("ExitPrice").Value}','{recordset4.Fields.Item("AvgPrice").Value}','{recordset4.Fields.Item("PriceUnit").Value}','{recordset4.Fields.Item("CreateDate").Value}','{recordset4.Fields.Item("SalUnitMsr").Value}','{recordset4.Fields.Item("DfltWH").Value}','{recordset4.Fields.Item("VatGourpSa").Value}','{recordset4.Fields.Item("U_Grp1Name").Value}','{recordset4.Fields.Item("U_Grp2Name").Value}','{recordset4.Fields.Item("U_Grp3Name").Value}','{recordset4.Fields.Item("U_Grp4Name").Value}','{recordset4.Fields.Item("BHeight1").Value}','{recordset4.Fields.Item("UgpEntry").Value}');");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogConsumerDAL.Instance.Write($"Exception: {recordset4.Fields.Item("ItemCode").Value} - {ex.Message}");
+                            }
+
+                            recordset4.MoveNext();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogConsumerDAL.Instance.Write($"Exception while loading Item Master Data: {ex.Message}");
+            }
+            finally
+            {
+                l_Items.Dispose();
+                l_ItemPrices.Dispose();
+                l_Resources.Dispose();
+                l_Groups.Dispose();
+            }
+
+            return false;
         }
-        else
+
+        public bool LoadItemToIMOSfromSAP(string IMOS_Parent, string SAP_ItemFrgnName, string SAP_ItemName, ItemTargetTable table)
         {
-            command = new SqlCommand();
-            object[] args = new object[9];
-            args[0] = mi.IMOSItem;
-            args[1] = mi.IMOSItemVariable;
-            args[2] = mi.IMOSItemVariableValue;
-            args[3] = mi.SAPItem;
-            args[4] = DocNum;
-            args[5] = mi.Length;
-            args[6] = mi.Width;
-            args[7] = mi.Thickness;
-            args[8] = mi.ArticleNo;
-            command.CommandText = string.Format("Insert into MapIMOSSAP(IMOSItem,IMOSItemVar,IMOSItemVarValue,SAPItem,DocNum,Length,Width,Thickness,ArticleNo) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", args);
-            command.Connection = connection;
+            SqlConnection connection = new SqlConnection
+            {
+                ConnectionString = HelperDAL.IMOSConnectionString
+            };
+            connection.Open();
+            SqlCommand command = new SqlCommand
+            {
+                Connection = connection
+            };
+            SqlTransaction transaction = connection.BeginTransaction();
             command.Transaction = transaction;
+            command.CommandText = $"Insert into matfolder(Name,Type,Parent_ID) values ('{SAP_ItemFrgnName}','100',{IMOS_Parent})";
             command.ExecuteNonQuery();
+            switch (table)
+            {
+                case ItemTargetTable.Material:
+                    command.CommandText = $"Insert into Mat(Name,TEXT) values ('{SAP_ItemFrgnName}','{SAP_ItemName}')";
+                    command.ExecuteNonQuery();
+                    break;
+
+                case ItemTargetTable.Profil:
+                    command.CommandText = $"Insert into PROFIL(Name,TEXT) values ('{SAP_ItemFrgnName}','{SAP_ItemName}')";
+                    command.ExecuteNonQuery();
+                    break;
+
+                case ItemTargetTable.Surface:
+                    command.CommandText = $"Insert into surf(Name,TEXT) values ('{SAP_ItemFrgnName}','{SAP_ItemName}')";
+                    command.ExecuteNonQuery();
+                    break;
+
+                default:
+                    break;
+            }
             transaction.Commit();
             connection.Close();
-                l_Result = true;
+            return true;
         }
-            return l_Result;
-    }
 
-    public bool UnMapItem(IMW.Common.MapItem mi)
-    {
-        SqlConnection connection = new SqlConnection
+        public bool MapItem(IMW.Common.MapItem mi, string DocNum)
         {
-            ConnectionString = HelperDAL.ISCConnectionString
-        };
-        connection.Open();
-        SqlTransaction transaction = connection.BeginTransaction();
-        this.oCompany = new SAPDAL().ConnectSAP();
-        new SqlCommand
+            bool l_Result;
+            SqlConnection connection = new SqlConnection
+            {
+                ConnectionString = HelperDAL.ISCConnectionString
+            };
+            connection.Open();
+            SqlTransaction transaction = connection.BeginTransaction();
+            this.oCompany = new SAPDAL().ConnectSAP();
+            SqlCommand command = new SqlCommand
+            {
+                CommandText = $"Select isnull(count(IMOSItem),0) total from MapIMOSSAP where IMOSItem='{mi.IMOSItem}' and IMOSItemVar='{mi.IMOSItemVariable}' and IMOSItemVarValue='{mi.IMOSItemVariableValue}' and SAPItem='{mi.SAPItem}' and DocNum='{DocNum}' and Length='{mi.Length}' and Width='{mi.Width}' and Thickness='{mi.Thickness}'",
+                Connection = connection,
+                Transaction = transaction
+            };
+            if (Convert.ToInt32(command.ExecuteScalar()) != 0)
+            {
+                connection.Close();
+                l_Result = false;
+            }
+            else
+            {
+                command = new SqlCommand();
+                object[] args = new object[9];
+                args[0] = mi.IMOSItem;
+                args[1] = mi.IMOSItemVariable;
+                args[2] = mi.IMOSItemVariableValue;
+                args[3] = mi.SAPItem;
+                args[4] = DocNum;
+                args[5] = mi.Length;
+                args[6] = mi.Width;
+                args[7] = mi.Thickness;
+                args[8] = mi.ArticleNo;
+                command.CommandText = string.Format("Insert into MapIMOSSAP(IMOSItem,IMOSItemVar,IMOSItemVarValue,SAPItem,DocNum,Length,Width,Thickness,ArticleNo) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", args);
+                command.Connection = connection;
+                command.Transaction = transaction;
+                command.ExecuteNonQuery();
+                transaction.Commit();
+                connection.Close();
+                l_Result = true;
+            }
+            return l_Result;
+        }
+
+        public bool UnMapItem(IMW.Common.MapItem mi)
         {
-            Connection = connection,
-            Transaction = transaction,
-            CommandText = $"delete from MapIMOSSAP where IMOSItem='{mi.IMOSItem}' and IMOSItemVar='{mi.IMOSItemVariable}' and IMOSItemVarValue='{mi.IMOSItemVariableValue}' and SAPItem='{mi.SAPItem}'"
-        }.ExecuteNonQuery();
-        transaction.Commit();
-        connection.Close();
-        return true;
+            SqlConnection connection = new SqlConnection
+            {
+                ConnectionString = HelperDAL.ISCConnectionString
+            };
+            connection.Open();
+            SqlTransaction transaction = connection.BeginTransaction();
+            this.oCompany = new SAPDAL().ConnectSAP();
+            new SqlCommand
+            {
+                Connection = connection,
+                Transaction = transaction,
+                CommandText = $"delete from MapIMOSSAP where IMOSItem='{mi.IMOSItem}' and IMOSItemVar='{mi.IMOSItemVariable}' and IMOSItemVarValue='{mi.IMOSItemVariableValue}' and SAPItem='{mi.SAPItem}'"
+            }.ExecuteNonQuery();
+            transaction.Commit();
+            connection.Close();
+            return true;
+        }
     }
-}
 }
 

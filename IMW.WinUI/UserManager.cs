@@ -77,7 +77,7 @@ namespace IMW.WinUI
                         {
                             this.menuDetailGrid.DataSource = null;
                             menuDetailGrid.DataSource = l_Data;
-                          
+
                             this.menuDetailGrid.AllowUserToAddRows = false;
                             this.menuDetailGrid.RowHeadersVisible = false;
                             this.menuDetailGrid.AllowUserToAddRows = false;
@@ -213,10 +213,10 @@ namespace IMW.WinUI
                         l_UserNo = Convert.ToInt32(l_Data.Rows[0]["UserNo"]);
                     }
                 }
-                
+
                 m_Connection.BeginTransaction();
 
-                 l_Query = "INSERT INTO Users (UserNo, UserID,Password, FirstName, LastName, IsAdmin, Blocked) VALUES ( ";
+                l_Query = "INSERT INTO Users (UserNo, UserID,Password, FirstName, LastName, IsAdmin, Blocked) VALUES ( ";
 
                 PublicFunctions.FieldToParam(l_UserNo, ref l_Param, Declarations.FieldTypes.Number);
                 l_Query += l_Param + ", ";

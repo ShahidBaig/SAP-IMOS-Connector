@@ -11,7 +11,7 @@
 
     public class ProductionOrderDAL
     {
-        private Company oCompany = ((Company) Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("632F4591-AA62-4219-8FB6-22BCF5F60090"))));
+        private Company oCompany = new SAPbobsCOM.Company();
 
         public int GetLastProductionOrderFSAP()
         {

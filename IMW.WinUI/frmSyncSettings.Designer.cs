@@ -28,260 +28,366 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.chkSyncItems = new System.Windows.Forms.CheckBox();
-            this.chkSyncCustomers = new System.Windows.Forms.CheckBox();
-            this.chkTransferSQFromSAPToISC = new System.Windows.Forms.CheckBox();
-            this.chkTransferSQFromISCToIMOS = new System.Windows.Forms.CheckBox();
-            this.chkTransferSQFromISCToSAP = new System.Windows.Forms.CheckBox();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnLoadItems = new System.Windows.Forms.Button();
-            this.btnLoadCustomers = new System.Windows.Forms.Button();
-            this.btnTransferSQfromSAPtoISC = new System.Windows.Forms.Button();
-            this.btnTransferSQfromISCtoIMOS = new System.Windows.Forms.Button();
-            this.btnTransferSQfromISCtoSAP = new System.Windows.Forms.Button();
-            this.btnTransferSQFromIMOSToISC = new System.Windows.Forms.Button();
-            this.chkTransferSQFromIMOSToISC = new System.Windows.Forms.CheckBox();
-            this.btnInstallSyncService = new System.Windows.Forms.Button();
-            this.btnStartService = new System.Windows.Forms.Button();
-            this.btnUnInstallSyncService = new System.Windows.Forms.Button();
-            this.btnStopService = new System.Windows.Forms.Button();
-            this.btnCreateSQInSAPForEachOpportunity = new System.Windows.Forms.Button();
-            this.chkCreateSQInSAPForEachOpportunity = new System.Windows.Forms.CheckBox();
-            this.SuspendLayout();
+            chkSyncItems = new CheckBox();
+            chkSyncCustomers = new CheckBox();
+            chkTransferSQFromSAPToISC = new CheckBox();
+            chkTransferSQFromISCToIMOS = new CheckBox();
+            chkTransferSQFromISCToSAP = new CheckBox();
+            btnSave = new Button();
+            btnLoadItems = new Button();
+            btnLoadCustomers = new Button();
+            btnTransferSQfromSAPtoISC = new Button();
+            btnTransferSQfromISCtoIMOS = new Button();
+            btnTransferSQfromISCtoSAP = new Button();
+            btnTransferSQFromIMOSToISC = new Button();
+            chkTransferSQFromIMOSToISC = new CheckBox();
+            btnInstallSyncService = new Button();
+            btnStartService = new Button();
+            btnUnInstallSyncService = new Button();
+            btnStopService = new Button();
+            btnCreateSQInSAPForEachOpportunity = new Button();
+            chkCreateSQInSAPForEachOpportunity = new CheckBox();
+            btnSyncBoM = new Button();
+            chkSyncBoM = new CheckBox();
+            chkItemsItems = new CheckBox();
+            chkItemsPrices = new CheckBox();
+            chkItemsGroups = new CheckBox();
+            chkItemsResources = new CheckBox();
+            SuspendLayout();
             // 
             // chkSyncItems
             // 
-            this.chkSyncItems.AutoSize = true;
-            this.chkSyncItems.Location = new System.Drawing.Point(240, 28);
-            this.chkSyncItems.Name = "chkSyncItems";
-            this.chkSyncItems.Size = new System.Drawing.Size(55, 19);
-            this.chkSyncItems.TabIndex = 43;
-            this.chkSyncItems.Text = "Items";
-            this.chkSyncItems.UseVisualStyleBackColor = true;
-            this.chkSyncItems.CheckedChanged += new System.EventHandler(this.chkSyncItems_CheckedChanged);
+            chkSyncItems.AutoSize = true;
+            chkSyncItems.Location = new Point(326, 37);
+            chkSyncItems.Margin = new Padding(3, 4, 3, 4);
+            chkSyncItems.Name = "chkSyncItems";
+            chkSyncItems.Size = new Size(67, 24);
+            chkSyncItems.TabIndex = 43;
+            chkSyncItems.Text = "Items";
+            chkSyncItems.UseVisualStyleBackColor = true;
+            chkSyncItems.CheckedChanged += chkSyncItems_CheckedChanged;
             // 
             // chkSyncCustomers
             // 
-            this.chkSyncCustomers.AutoSize = true;
-            this.chkSyncCustomers.Location = new System.Drawing.Point(240, 69);
-            this.chkSyncCustomers.Name = "chkSyncCustomers";
-            this.chkSyncCustomers.Size = new System.Drawing.Size(83, 19);
-            this.chkSyncCustomers.TabIndex = 44;
-            this.chkSyncCustomers.Text = "Customers";
-            this.chkSyncCustomers.UseVisualStyleBackColor = true;
-            this.chkSyncCustomers.CheckedChanged += new System.EventHandler(this.chkSyncCustomers_CheckedChanged);
+            chkSyncCustomers.AutoSize = true;
+            chkSyncCustomers.Location = new Point(326, 92);
+            chkSyncCustomers.Margin = new Padding(3, 4, 3, 4);
+            chkSyncCustomers.Name = "chkSyncCustomers";
+            chkSyncCustomers.Size = new Size(100, 24);
+            chkSyncCustomers.TabIndex = 44;
+            chkSyncCustomers.Text = "Customers";
+            chkSyncCustomers.UseVisualStyleBackColor = true;
+            chkSyncCustomers.CheckedChanged += chkSyncCustomers_CheckedChanged;
             // 
             // chkTransferSQFromSAPToISC
             // 
-            this.chkTransferSQFromSAPToISC.AutoSize = true;
-            this.chkTransferSQFromSAPToISC.Location = new System.Drawing.Point(240, 152);
-            this.chkTransferSQFromSAPToISC.Name = "chkTransferSQFromSAPToISC";
-            this.chkTransferSQFromSAPToISC.Size = new System.Drawing.Size(172, 19);
-            this.chkTransferSQFromSAPToISC.TabIndex = 45;
-            this.chkTransferSQFromSAPToISC.Text = "Transfer SQ from SAP to ISC";
-            this.chkTransferSQFromSAPToISC.UseVisualStyleBackColor = true;
-            this.chkTransferSQFromSAPToISC.CheckedChanged += new System.EventHandler(this.chkTransferSQFromSAPToISC_CheckedChanged);
+            chkTransferSQFromSAPToISC.AutoSize = true;
+            chkTransferSQFromSAPToISC.Location = new Point(326, 203);
+            chkTransferSQFromSAPToISC.Margin = new Padding(3, 4, 3, 4);
+            chkTransferSQFromSAPToISC.Name = "chkTransferSQFromSAPToISC";
+            chkTransferSQFromSAPToISC.Size = new Size(215, 24);
+            chkTransferSQFromSAPToISC.TabIndex = 45;
+            chkTransferSQFromSAPToISC.Text = "Transfer SQ from SAP to ISC";
+            chkTransferSQFromSAPToISC.UseVisualStyleBackColor = true;
+            chkTransferSQFromSAPToISC.CheckedChanged += chkTransferSQFromSAPToISC_CheckedChanged;
             // 
             // chkTransferSQFromISCToIMOS
             // 
-            this.chkTransferSQFromISCToIMOS.AutoSize = true;
-            this.chkTransferSQFromISCToIMOS.Location = new System.Drawing.Point(240, 193);
-            this.chkTransferSQFromISCToIMOS.Name = "chkTransferSQFromISCToIMOS";
-            this.chkTransferSQFromISCToIMOS.Size = new System.Drawing.Size(180, 19);
-            this.chkTransferSQFromISCToIMOS.TabIndex = 46;
-            this.chkTransferSQFromISCToIMOS.Text = "Transfer SQ from ISC to IMOS";
-            this.chkTransferSQFromISCToIMOS.UseVisualStyleBackColor = true;
-            this.chkTransferSQFromISCToIMOS.CheckedChanged += new System.EventHandler(this.chkTransferSQFromISCToIMOS_CheckedChanged);
+            chkTransferSQFromISCToIMOS.AutoSize = true;
+            chkTransferSQFromISCToIMOS.Location = new Point(326, 257);
+            chkTransferSQFromISCToIMOS.Margin = new Padding(3, 4, 3, 4);
+            chkTransferSQFromISCToIMOS.Name = "chkTransferSQFromISCToIMOS";
+            chkTransferSQFromISCToIMOS.Size = new Size(225, 24);
+            chkTransferSQFromISCToIMOS.TabIndex = 46;
+            chkTransferSQFromISCToIMOS.Text = "Transfer SQ from ISC to IMOS";
+            chkTransferSQFromISCToIMOS.UseVisualStyleBackColor = true;
+            chkTransferSQFromISCToIMOS.CheckedChanged += chkTransferSQFromISCToIMOS_CheckedChanged;
             // 
             // chkTransferSQFromISCToSAP
             // 
-            this.chkTransferSQFromISCToSAP.AutoSize = true;
-            this.chkTransferSQFromISCToSAP.Location = new System.Drawing.Point(240, 276);
-            this.chkTransferSQFromISCToSAP.Name = "chkTransferSQFromISCToSAP";
-            this.chkTransferSQFromISCToSAP.Size = new System.Drawing.Size(172, 19);
-            this.chkTransferSQFromISCToSAP.TabIndex = 47;
-            this.chkTransferSQFromISCToSAP.Text = "Transfer SQ from ISC to SAP";
-            this.chkTransferSQFromISCToSAP.UseVisualStyleBackColor = true;
-            this.chkTransferSQFromISCToSAP.CheckedChanged += new System.EventHandler(this.chkTransferSQFromISCToSAP_CheckedChanged);
+            chkTransferSQFromISCToSAP.AutoSize = true;
+            chkTransferSQFromISCToSAP.Location = new Point(326, 368);
+            chkTransferSQFromISCToSAP.Margin = new Padding(3, 4, 3, 4);
+            chkTransferSQFromISCToSAP.Name = "chkTransferSQFromISCToSAP";
+            chkTransferSQFromISCToSAP.Size = new Size(215, 24);
+            chkTransferSQFromISCToSAP.TabIndex = 47;
+            chkTransferSQFromISCToSAP.Text = "Transfer SQ from ISC to SAP";
+            chkTransferSQFromISCToSAP.UseVisualStyleBackColor = true;
+            chkTransferSQFromISCToSAP.CheckedChanged += chkTransferSQFromISCToSAP_CheckedChanged;
             // 
             // btnSave
             // 
-            this.btnSave.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSave.Location = new System.Drawing.Point(581, 28);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(172, 241);
-            this.btnSave.TabIndex = 48;
-            this.btnSave.Text = "&Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Font = new Font("Segoe UI", 26.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnSave.Location = new Point(665, 87);
+            btnSave.Margin = new Padding(3, 4, 3, 4);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(197, 321);
+            btnSave.TabIndex = 48;
+            btnSave.Text = "&Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // btnLoadItems
             // 
-            this.btnLoadItems.Location = new System.Drawing.Point(111, 12);
-            this.btnLoadItems.Name = "btnLoadItems";
-            this.btnLoadItems.Size = new System.Drawing.Size(123, 35);
-            this.btnLoadItems.TabIndex = 49;
-            this.btnLoadItems.Text = "Load Items";
-            this.btnLoadItems.UseVisualStyleBackColor = true;
-            this.btnLoadItems.Click += new System.EventHandler(this.btnLoadItems_Click);
+            btnLoadItems.Location = new Point(127, 16);
+            btnLoadItems.Margin = new Padding(3, 4, 3, 4);
+            btnLoadItems.Name = "btnLoadItems";
+            btnLoadItems.Size = new Size(193, 47);
+            btnLoadItems.TabIndex = 49;
+            btnLoadItems.Text = "Load Items";
+            btnLoadItems.UseVisualStyleBackColor = true;
+            btnLoadItems.Click += btnLoadItems_Click;
             // 
             // btnLoadCustomers
             // 
-            this.btnLoadCustomers.Location = new System.Drawing.Point(79, 53);
-            this.btnLoadCustomers.Name = "btnLoadCustomers";
-            this.btnLoadCustomers.Size = new System.Drawing.Size(155, 35);
-            this.btnLoadCustomers.TabIndex = 50;
-            this.btnLoadCustomers.Text = "Load Customers";
-            this.btnLoadCustomers.UseVisualStyleBackColor = true;
-            this.btnLoadCustomers.Click += new System.EventHandler(this.btnLoadCustomers_Click);
+            btnLoadCustomers.Location = new Point(90, 71);
+            btnLoadCustomers.Margin = new Padding(3, 4, 3, 4);
+            btnLoadCustomers.Name = "btnLoadCustomers";
+            btnLoadCustomers.Size = new Size(229, 47);
+            btnLoadCustomers.TabIndex = 50;
+            btnLoadCustomers.Text = "Load Customers";
+            btnLoadCustomers.UseVisualStyleBackColor = true;
+            btnLoadCustomers.Click += btnLoadCustomers_Click;
             // 
             // btnTransferSQfromSAPtoISC
             // 
-            this.btnTransferSQfromSAPtoISC.Location = new System.Drawing.Point(12, 136);
-            this.btnTransferSQfromSAPtoISC.Name = "btnTransferSQfromSAPtoISC";
-            this.btnTransferSQfromSAPtoISC.Size = new System.Drawing.Size(222, 35);
-            this.btnTransferSQfromSAPtoISC.TabIndex = 51;
-            this.btnTransferSQfromSAPtoISC.Text = "Transfer SQ from SAP to ISC";
-            this.btnTransferSQfromSAPtoISC.UseVisualStyleBackColor = true;
-            this.btnTransferSQfromSAPtoISC.Click += new System.EventHandler(this.btnTransferSQfromSAPtoISC_Click);
+            btnTransferSQfromSAPtoISC.Location = new Point(14, 181);
+            btnTransferSQfromSAPtoISC.Margin = new Padding(3, 4, 3, 4);
+            btnTransferSQfromSAPtoISC.Name = "btnTransferSQfromSAPtoISC";
+            btnTransferSQfromSAPtoISC.Size = new Size(306, 47);
+            btnTransferSQfromSAPtoISC.TabIndex = 51;
+            btnTransferSQfromSAPtoISC.Text = "Transfer SQ from SAP to ISC";
+            btnTransferSQfromSAPtoISC.UseVisualStyleBackColor = true;
+            btnTransferSQfromSAPtoISC.Click += btnTransferSQfromSAPtoISC_Click;
             // 
             // btnTransferSQfromISCtoIMOS
             // 
-            this.btnTransferSQfromISCtoIMOS.Location = new System.Drawing.Point(12, 177);
-            this.btnTransferSQfromISCtoIMOS.Name = "btnTransferSQfromISCtoIMOS";
-            this.btnTransferSQfromISCtoIMOS.Size = new System.Drawing.Size(222, 35);
-            this.btnTransferSQfromISCtoIMOS.TabIndex = 52;
-            this.btnTransferSQfromISCtoIMOS.Text = "Transfer SQ from ISC to IMOS";
-            this.btnTransferSQfromISCtoIMOS.UseVisualStyleBackColor = true;
-            this.btnTransferSQfromISCtoIMOS.Click += new System.EventHandler(this.btnTransferSQfromISCtoIMOS_Click);
+            btnTransferSQfromISCtoIMOS.Location = new Point(14, 236);
+            btnTransferSQfromISCtoIMOS.Margin = new Padding(3, 4, 3, 4);
+            btnTransferSQfromISCtoIMOS.Name = "btnTransferSQfromISCtoIMOS";
+            btnTransferSQfromISCtoIMOS.Size = new Size(306, 47);
+            btnTransferSQfromISCtoIMOS.TabIndex = 52;
+            btnTransferSQfromISCtoIMOS.Text = "Transfer SQ from ISC to IMOS";
+            btnTransferSQfromISCtoIMOS.UseVisualStyleBackColor = true;
+            btnTransferSQfromISCtoIMOS.Click += btnTransferSQfromISCtoIMOS_Click;
             // 
             // btnTransferSQfromISCtoSAP
             // 
-            this.btnTransferSQfromISCtoSAP.Location = new System.Drawing.Point(12, 260);
-            this.btnTransferSQfromISCtoSAP.Name = "btnTransferSQfromISCtoSAP";
-            this.btnTransferSQfromISCtoSAP.Size = new System.Drawing.Size(222, 35);
-            this.btnTransferSQfromISCtoSAP.TabIndex = 53;
-            this.btnTransferSQfromISCtoSAP.Text = "Transfer SQ from ISC to SAP";
-            this.btnTransferSQfromISCtoSAP.UseVisualStyleBackColor = true;
-            this.btnTransferSQfromISCtoSAP.Click += new System.EventHandler(this.btnTransferSQfromISCtoSAP_Click);
+            btnTransferSQfromISCtoSAP.Location = new Point(14, 347);
+            btnTransferSQfromISCtoSAP.Margin = new Padding(3, 4, 3, 4);
+            btnTransferSQfromISCtoSAP.Name = "btnTransferSQfromISCtoSAP";
+            btnTransferSQfromISCtoSAP.Size = new Size(306, 47);
+            btnTransferSQfromISCtoSAP.TabIndex = 53;
+            btnTransferSQfromISCtoSAP.Text = "Transfer SQ from ISC to SAP";
+            btnTransferSQfromISCtoSAP.UseVisualStyleBackColor = true;
+            btnTransferSQfromISCtoSAP.Click += btnTransferSQfromISCtoSAP_Click;
             // 
             // btnTransferSQFromIMOSToISC
             // 
-            this.btnTransferSQFromIMOSToISC.Location = new System.Drawing.Point(12, 219);
-            this.btnTransferSQFromIMOSToISC.Name = "btnTransferSQFromIMOSToISC";
-            this.btnTransferSQFromIMOSToISC.Size = new System.Drawing.Size(222, 35);
-            this.btnTransferSQFromIMOSToISC.TabIndex = 55;
-            this.btnTransferSQFromIMOSToISC.Text = "Transfer SQ from IMOS to ISC";
-            this.btnTransferSQFromIMOSToISC.UseVisualStyleBackColor = true;
-            this.btnTransferSQFromIMOSToISC.Click += new System.EventHandler(this.btnTransferSQFromIMOSToISC_Click);
+            btnTransferSQFromIMOSToISC.Location = new Point(14, 292);
+            btnTransferSQFromIMOSToISC.Margin = new Padding(3, 4, 3, 4);
+            btnTransferSQFromIMOSToISC.Name = "btnTransferSQFromIMOSToISC";
+            btnTransferSQFromIMOSToISC.Size = new Size(306, 47);
+            btnTransferSQFromIMOSToISC.TabIndex = 55;
+            btnTransferSQFromIMOSToISC.Text = "Transfer SQ from IMOS to ISC";
+            btnTransferSQFromIMOSToISC.UseVisualStyleBackColor = true;
+            btnTransferSQFromIMOSToISC.Click += btnTransferSQFromIMOSToISC_Click;
             // 
             // chkTransferSQFromIMOSToISC
             // 
-            this.chkTransferSQFromIMOSToISC.AutoSize = true;
-            this.chkTransferSQFromIMOSToISC.Location = new System.Drawing.Point(240, 235);
-            this.chkTransferSQFromIMOSToISC.Name = "chkTransferSQFromIMOSToISC";
-            this.chkTransferSQFromIMOSToISC.Size = new System.Drawing.Size(183, 19);
-            this.chkTransferSQFromIMOSToISC.TabIndex = 54;
-            this.chkTransferSQFromIMOSToISC.Text = "Transfer SQ from IMOS to ISC ";
-            this.chkTransferSQFromIMOSToISC.UseVisualStyleBackColor = true;
-            this.chkTransferSQFromIMOSToISC.CheckedChanged += new System.EventHandler(this.chkTransferSQFromIMOSToISC_CheckedChanged);
+            chkTransferSQFromIMOSToISC.AutoSize = true;
+            chkTransferSQFromIMOSToISC.Location = new Point(326, 313);
+            chkTransferSQFromIMOSToISC.Margin = new Padding(3, 4, 3, 4);
+            chkTransferSQFromIMOSToISC.Name = "chkTransferSQFromIMOSToISC";
+            chkTransferSQFromIMOSToISC.Size = new Size(229, 24);
+            chkTransferSQFromIMOSToISC.TabIndex = 54;
+            chkTransferSQFromIMOSToISC.Text = "Transfer SQ from IMOS to ISC ";
+            chkTransferSQFromIMOSToISC.UseVisualStyleBackColor = true;
+            chkTransferSQFromIMOSToISC.CheckedChanged += chkTransferSQFromIMOSToISC_CheckedChanged;
             // 
             // btnInstallSyncService
             // 
-            this.btnInstallSyncService.Location = new System.Drawing.Point(91, 350);
-            this.btnInstallSyncService.Name = "btnInstallSyncService";
-            this.btnInstallSyncService.Size = new System.Drawing.Size(149, 35);
-            this.btnInstallSyncService.TabIndex = 56;
-            this.btnInstallSyncService.Text = "Install Sync Service";
-            this.btnInstallSyncService.UseVisualStyleBackColor = true;
-            this.btnInstallSyncService.Click += new System.EventHandler(this.btnInstallSyncService_Click);
+            btnInstallSyncService.Location = new Point(106, 485);
+            btnInstallSyncService.Margin = new Padding(3, 4, 3, 4);
+            btnInstallSyncService.Name = "btnInstallSyncService";
+            btnInstallSyncService.Size = new Size(170, 47);
+            btnInstallSyncService.TabIndex = 56;
+            btnInstallSyncService.Text = "Install Sync Service";
+            btnInstallSyncService.UseVisualStyleBackColor = true;
+            btnInstallSyncService.Click += btnInstallSyncService_Click;
             // 
             // btnStartService
             // 
-            this.btnStartService.Location = new System.Drawing.Point(465, 350);
-            this.btnStartService.Name = "btnStartService";
-            this.btnStartService.Size = new System.Drawing.Size(102, 35);
-            this.btnStartService.TabIndex = 57;
-            this.btnStartService.Text = "Start Service";
-            this.btnStartService.UseVisualStyleBackColor = true;
-            this.btnStartService.Click += new System.EventHandler(this.btnStartService_Click);
+            btnStartService.Location = new Point(533, 485);
+            btnStartService.Margin = new Padding(3, 4, 3, 4);
+            btnStartService.Name = "btnStartService";
+            btnStartService.Size = new Size(117, 47);
+            btnStartService.TabIndex = 57;
+            btnStartService.Text = "Start Service";
+            btnStartService.UseVisualStyleBackColor = true;
+            btnStartService.Click += btnStartService_Click;
             // 
             // btnUnInstallSyncService
             // 
-            this.btnUnInstallSyncService.Location = new System.Drawing.Point(246, 350);
-            this.btnUnInstallSyncService.Name = "btnUnInstallSyncService";
-            this.btnUnInstallSyncService.Size = new System.Drawing.Size(149, 35);
-            this.btnUnInstallSyncService.TabIndex = 58;
-            this.btnUnInstallSyncService.Text = "Un-Install Sync Service";
-            this.btnUnInstallSyncService.UseVisualStyleBackColor = true;
-            this.btnUnInstallSyncService.Click += new System.EventHandler(this.btnUnInstallSyncService_Click);
+            btnUnInstallSyncService.Location = new Point(283, 485);
+            btnUnInstallSyncService.Margin = new Padding(3, 4, 3, 4);
+            btnUnInstallSyncService.Name = "btnUnInstallSyncService";
+            btnUnInstallSyncService.Size = new Size(170, 47);
+            btnUnInstallSyncService.TabIndex = 58;
+            btnUnInstallSyncService.Text = "Un-Install Sync Service";
+            btnUnInstallSyncService.UseVisualStyleBackColor = true;
+            btnUnInstallSyncService.Click += btnUnInstallSyncService_Click;
             // 
             // btnStopService
             // 
-            this.btnStopService.Location = new System.Drawing.Point(573, 350);
-            this.btnStopService.Name = "btnStopService";
-            this.btnStopService.Size = new System.Drawing.Size(102, 35);
-            this.btnStopService.TabIndex = 59;
-            this.btnStopService.Text = "Stop Service";
-            this.btnStopService.UseVisualStyleBackColor = true;
-            this.btnStopService.Click += new System.EventHandler(this.btnStopService_Click);
+            btnStopService.Location = new Point(657, 485);
+            btnStopService.Margin = new Padding(3, 4, 3, 4);
+            btnStopService.Name = "btnStopService";
+            btnStopService.Size = new Size(117, 47);
+            btnStopService.TabIndex = 59;
+            btnStopService.Text = "Stop Service";
+            btnStopService.UseVisualStyleBackColor = true;
+            btnStopService.Click += btnStopService_Click;
             // 
             // btnCreateSQInSAPForEachOpportunity
             // 
-            this.btnCreateSQInSAPForEachOpportunity.Location = new System.Drawing.Point(12, 94);
-            this.btnCreateSQInSAPForEachOpportunity.Name = "btnCreateSQInSAPForEachOpportunity";
-            this.btnCreateSQInSAPForEachOpportunity.Size = new System.Drawing.Size(222, 35);
-            this.btnCreateSQInSAPForEachOpportunity.TabIndex = 61;
-            this.btnCreateSQInSAPForEachOpportunity.Text = "Create SQ in SAP for each Opportunity";
-            this.btnCreateSQInSAPForEachOpportunity.UseVisualStyleBackColor = true;
-            this.btnCreateSQInSAPForEachOpportunity.Click += new System.EventHandler(this.btnCreateSQInSAPForEachOpportunity_Click);
+            btnCreateSQInSAPForEachOpportunity.Location = new Point(14, 125);
+            btnCreateSQInSAPForEachOpportunity.Margin = new Padding(3, 4, 3, 4);
+            btnCreateSQInSAPForEachOpportunity.Name = "btnCreateSQInSAPForEachOpportunity";
+            btnCreateSQInSAPForEachOpportunity.Size = new Size(306, 47);
+            btnCreateSQInSAPForEachOpportunity.TabIndex = 61;
+            btnCreateSQInSAPForEachOpportunity.Text = "Create SQ in SAP for each Opportunity";
+            btnCreateSQInSAPForEachOpportunity.UseVisualStyleBackColor = true;
+            btnCreateSQInSAPForEachOpportunity.Click += btnCreateSQInSAPForEachOpportunity_Click;
             // 
             // chkCreateSQInSAPForEachOpportunity
             // 
-            this.chkCreateSQInSAPForEachOpportunity.AutoSize = true;
-            this.chkCreateSQInSAPForEachOpportunity.Location = new System.Drawing.Point(240, 110);
-            this.chkCreateSQInSAPForEachOpportunity.Name = "chkCreateSQInSAPForEachOpportunity";
-            this.chkCreateSQInSAPForEachOpportunity.Size = new System.Drawing.Size(229, 19);
-            this.chkCreateSQInSAPForEachOpportunity.TabIndex = 60;
-            this.chkCreateSQInSAPForEachOpportunity.Text = "Create SQ in SAP for each Opportunity";
-            this.chkCreateSQInSAPForEachOpportunity.UseVisualStyleBackColor = true;
-            this.chkCreateSQInSAPForEachOpportunity.CheckedChanged += new System.EventHandler(this.chkCreateSQInSAPForEachOpportunity_CheckedChanged);
+            chkCreateSQInSAPForEachOpportunity.AutoSize = true;
+            chkCreateSQInSAPForEachOpportunity.Location = new Point(326, 147);
+            chkCreateSQInSAPForEachOpportunity.Margin = new Padding(3, 4, 3, 4);
+            chkCreateSQInSAPForEachOpportunity.Name = "chkCreateSQInSAPForEachOpportunity";
+            chkCreateSQInSAPForEachOpportunity.Size = new Size(285, 24);
+            chkCreateSQInSAPForEachOpportunity.TabIndex = 60;
+            chkCreateSQInSAPForEachOpportunity.Text = "Create SQ in SAP for each Opportunity";
+            chkCreateSQInSAPForEachOpportunity.UseVisualStyleBackColor = true;
+            chkCreateSQInSAPForEachOpportunity.CheckedChanged += chkCreateSQInSAPForEachOpportunity_CheckedChanged;
+            // 
+            // btnSyncBoM
+            // 
+            btnSyncBoM.Location = new Point(12, 402);
+            btnSyncBoM.Margin = new Padding(3, 4, 3, 4);
+            btnSyncBoM.Name = "btnSyncBoM";
+            btnSyncBoM.Size = new Size(306, 47);
+            btnSyncBoM.TabIndex = 63;
+            btnSyncBoM.Text = "Sync BoM";
+            btnSyncBoM.UseVisualStyleBackColor = true;
+            btnSyncBoM.Click += btnSyncBoM_Click;
+            // 
+            // chkSyncBoM
+            // 
+            chkSyncBoM.AutoSize = true;
+            chkSyncBoM.Location = new Point(324, 423);
+            chkSyncBoM.Margin = new Padding(3, 4, 3, 4);
+            chkSyncBoM.Name = "chkSyncBoM";
+            chkSyncBoM.Size = new Size(96, 24);
+            chkSyncBoM.TabIndex = 62;
+            chkSyncBoM.Text = "Sync BoM";
+            chkSyncBoM.UseVisualStyleBackColor = true;
+            chkSyncBoM.CheckedChanged += chkSyncBoM_CheckedChanged;
+            // 
+            // chkItemsItems
+            // 
+            chkItemsItems.AutoSize = true;
+            chkItemsItems.Checked = true;
+            chkItemsItems.CheckState = CheckState.Checked;
+            chkItemsItems.Location = new Point(419, 37);
+            chkItemsItems.Margin = new Padding(3, 4, 3, 4);
+            chkItemsItems.Name = "chkItemsItems";
+            chkItemsItems.Size = new Size(67, 24);
+            chkItemsItems.TabIndex = 64;
+            chkItemsItems.Text = "Items";
+            chkItemsItems.UseVisualStyleBackColor = true;
+            // 
+            // chkItemsPrices
+            // 
+            chkItemsPrices.AutoSize = true;
+            chkItemsPrices.Checked = true;
+            chkItemsPrices.CheckState = CheckState.Checked;
+            chkItemsPrices.Location = new Point(492, 37);
+            chkItemsPrices.Margin = new Padding(3, 4, 3, 4);
+            chkItemsPrices.Name = "chkItemsPrices";
+            chkItemsPrices.Size = new Size(69, 24);
+            chkItemsPrices.TabIndex = 65;
+            chkItemsPrices.Text = "Prices";
+            chkItemsPrices.UseVisualStyleBackColor = true;
+            // 
+            // chkItemsGroups
+            // 
+            chkItemsGroups.AutoSize = true;
+            chkItemsGroups.Checked = true;
+            chkItemsGroups.CheckState = CheckState.Checked;
+            chkItemsGroups.Location = new Point(567, 37);
+            chkItemsGroups.Margin = new Padding(3, 4, 3, 4);
+            chkItemsGroups.Name = "chkItemsGroups";
+            chkItemsGroups.Size = new Size(78, 24);
+            chkItemsGroups.TabIndex = 66;
+            chkItemsGroups.Text = "Groups";
+            chkItemsGroups.UseVisualStyleBackColor = true;
+            // 
+            // chkItemsResources
+            // 
+            chkItemsResources.AutoSize = true;
+            chkItemsResources.Checked = true;
+            chkItemsResources.CheckState = CheckState.Checked;
+            chkItemsResources.Location = new Point(651, 37);
+            chkItemsResources.Margin = new Padding(3, 4, 3, 4);
+            chkItemsResources.Name = "chkItemsResources";
+            chkItemsResources.Size = new Size(97, 24);
+            chkItemsResources.TabIndex = 67;
+            chkItemsResources.Text = "Resources";
+            chkItemsResources.UseVisualStyleBackColor = true;
             // 
             // frmSyncSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(765, 409);
-            this.Controls.Add(this.btnCreateSQInSAPForEachOpportunity);
-            this.Controls.Add(this.chkCreateSQInSAPForEachOpportunity);
-            this.Controls.Add(this.btnStopService);
-            this.Controls.Add(this.btnUnInstallSyncService);
-            this.Controls.Add(this.btnStartService);
-            this.Controls.Add(this.btnInstallSyncService);
-            this.Controls.Add(this.btnTransferSQFromIMOSToISC);
-            this.Controls.Add(this.chkTransferSQFromIMOSToISC);
-            this.Controls.Add(this.btnTransferSQfromISCtoSAP);
-            this.Controls.Add(this.btnTransferSQfromISCtoIMOS);
-            this.Controls.Add(this.btnTransferSQfromSAPtoISC);
-            this.Controls.Add(this.btnLoadCustomers);
-            this.Controls.Add(this.btnLoadItems);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.chkTransferSQFromISCToSAP);
-            this.Controls.Add(this.chkTransferSQFromISCToIMOS);
-            this.Controls.Add(this.chkTransferSQFromSAPToISC);
-            this.Controls.Add(this.chkSyncCustomers);
-            this.Controls.Add(this.chkSyncItems);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmSyncSettings";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ISC Sync Settings";
-            this.Load += new System.EventHandler(this.frmSyncSettings_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(874, 545);
+            Controls.Add(chkItemsResources);
+            Controls.Add(chkItemsGroups);
+            Controls.Add(chkItemsPrices);
+            Controls.Add(chkItemsItems);
+            Controls.Add(btnSyncBoM);
+            Controls.Add(chkSyncBoM);
+            Controls.Add(btnCreateSQInSAPForEachOpportunity);
+            Controls.Add(chkCreateSQInSAPForEachOpportunity);
+            Controls.Add(btnStopService);
+            Controls.Add(btnUnInstallSyncService);
+            Controls.Add(btnStartService);
+            Controls.Add(btnInstallSyncService);
+            Controls.Add(btnTransferSQFromIMOSToISC);
+            Controls.Add(chkTransferSQFromIMOSToISC);
+            Controls.Add(btnTransferSQfromISCtoSAP);
+            Controls.Add(btnTransferSQfromISCtoIMOS);
+            Controls.Add(btnTransferSQfromSAPtoISC);
+            Controls.Add(btnLoadCustomers);
+            Controls.Add(btnLoadItems);
+            Controls.Add(btnSave);
+            Controls.Add(chkTransferSQFromISCToSAP);
+            Controls.Add(chkTransferSQFromISCToIMOS);
+            Controls.Add(chkTransferSQFromSAPToISC);
+            Controls.Add(chkSyncCustomers);
+            Controls.Add(chkSyncItems);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmSyncSettings";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "ISC Sync Settings";
+            Load += frmSyncSettings_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -305,5 +411,11 @@
         private Button btnStopService;
         private Button btnCreateSQInSAPForEachOpportunity;
         private CheckBox chkCreateSQInSAPForEachOpportunity;
+        private Button btnSyncBoM;
+        private CheckBox chkSyncBoM;
+        private CheckBox chkItemsItems;
+        private CheckBox chkItemsPrices;
+        private CheckBox chkItemsGroups;
+        private CheckBox chkItemsResources;
     }
 }

@@ -26,18 +26,22 @@ namespace ISCService
             SetupSyncSettings();
         }
 
-        private string GetSettings(string name)
+        private void InitConnectionStrings()
         {
             var configJson1 = File.ReadAllText(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"));
             var jsonNodeOptions1 = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
             var node1 = JsonNode.Parse(configJson1, jsonNodeOptions1);
-            var configJson = File.ReadAllText(Path.Combine(node1["AppSettings"]["ISCAppPath"].ToString(), "appsettings.json"));
-            var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-            var node = JsonNode.Parse(configJson, jsonNodeOptions);
 
-            HelperDAL.SettingsPath = node1["AppSettings"]["ISCAppPath"].ToString();
+            HelperDAL.SetupConnectionStrings(node1["ConnectionStrings"]["iscConn"].ToString(), node1["ConnectionStrings"]["imosConn"].ToString());
+        }
 
-            return node["AppSettings"][name].ToString();
+        private string GetSyncSettings()
+        {
+            InitConnectionStrings();
+
+            AppSettings appSettings = HelperDAL.GetSettings();
+
+            return appSettings.Sync;
         }
 
         private bool[] GetJobSyncFlags()
@@ -65,7 +69,7 @@ namespace ISCService
 
         public bool[] SetupSyncSettings()
         {
-            string[] splits = GetSettings("Sync").Split('|');
+            string[] splits = GetSyncSettings().Split('|');
             int index = 0;
 
             while (index < splits.Length)
@@ -109,7 +113,7 @@ namespace ISCService
         {
             if (jobName == "LoadItems" && SyncItems)
             {
-                new ItemsDAL().LoadItem();
+                new ItemsDAL().LoadItem("Items,ItemPrices,Groups,Resources");
             }
             else if (jobName == "LoadCustomers" && SyncCustomers)
             {

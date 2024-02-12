@@ -104,24 +104,26 @@ BEGIN
 									WHERE id NOT IN (SELECT ID FROM #IDBORDEREXT WHERE Name LIKE ''%FG%'')
 								)T0
 							CROSS APPLY STRING_SPLIT(PVARSTRING, ''='') as f
-							WHERE T0.Pvarstring Like ''%XML%'' OR ('
-	WHILE @l_Index < @l_Count
-	BEGIN
-		SELECT TOP 1 @l_ProductCode = ProductCode
-		FROM #ISAPItemIdentityConfig
-		WHERE Processed = 0
+							WHERE T0.Pvarstring Like ''%_XML%'' '
+							--WHERE T0.Pvarstring Like ''%XML%'' OR ('
+	--WHILE @l_Index < @l_Count
+	--BEGIN
+	--	SELECT TOP 1 @l_ProductCode = ProductCode
+	--	FROM #ISAPItemIdentityConfig
+	--	WHERE Processed = 0
 
-		SET @l_SQL = @l_SQL + 'T0.Pvarstring Like ''%' + @l_ProductCode + '%'' '
-		SET @l_SQL = @l_SQL + CASE WHEN @l_Index < @l_Count - 1 THEN ' OR ' ELSE '' END
+	--	SET @l_SQL = @l_SQL + 'T0.Pvarstring Like ''%' + @l_ProductCode + '%'' '
+	--	SET @l_SQL = @l_SQL + CASE WHEN @l_Index < @l_Count - 1 THEN ' OR ' ELSE '' END
 
-		UPDATE #ISAPItemIdentityConfig
-		SET Processed = 1
-		WHERE ProductCode = @l_ProductCode
+	--	UPDATE #ISAPItemIdentityConfig
+	--	SET Processed = 1
+	--	WHERE ProductCode = @l_ProductCode
 
-		SET @l_Index = @l_Index + 1
-	END
+	--	SET @l_Index = @l_Index + 1
+	--END
 	
-		SET @l_SQL = @l_SQL + 	'))A CROSS APPLY STRING_SPLIT(PVARSTRING, '','') as f
+		--SET @l_SQL = @l_SQL + 	'))A CROSS APPLY STRING_SPLIT(PVARSTRING, '','') as f
+		SET @l_SQL = @l_SQL + 	')A CROSS APPLY STRING_SPLIT(PVARSTRING, '','') as f
 					WHERE ('
 
 	SET @l_Index = 0

@@ -31,5 +31,7 @@ namespace IMW.Common
 		public string TSI { get; set; }
 
         public string Sync { get; set; }
+
+        public string BoMLastAutoID { get; set; }
     }
 }

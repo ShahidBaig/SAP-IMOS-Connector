@@ -64,6 +64,9 @@
         private TextBox txtIMOSServer;
         private TextBox txtIMOSDbUserName;
         private TextBox txtIMOSDbPassword;
+        private Panel panel1;
+        private Panel panel2;
+        private Panel panel3;
         public frmMain main;
 
         public frmSAPConnection()
@@ -112,12 +115,13 @@
         private void ConnectIMOS()
         {
             try
-			{
-				var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
+            {
+                var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
 
-				SqlConnection connection = new SqlConnection {
+                SqlConnection connection = new SqlConnection
+                {
                     ConnectionString = appSettings.imosConn
-				};
+                };
                 connection.Open();
                 this.lblIMOSComments.ForeColor = Color.Green;
                 this.lblIMOSComments.Text = "IMOS Connected Successfully!";
@@ -133,12 +137,13 @@
         private void ConnectISC()
         {
             try
-			{
-				var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
+            {
+                var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
 
-				SqlConnection connection = new SqlConnection {
+                SqlConnection connection = new SqlConnection
+                {
                     ConnectionString = appSettings.iscConn
-				};
+                };
                 connection.Open();
                 this.lblISCComments.ForeColor = Color.Green;
                 this.lblISCComments.Text = "ISC Connected Successfully!";
@@ -154,17 +159,17 @@
         private void ConnectSAP()
         {
             try
-			{
-				var appSettings = HelperDAL.GetSettings();
+            {
+                var appSettings = HelperDAL.GetSettings();
 
-				this.oCompany.CompanyDB = appSettings.CompanyDB;
-				this.oCompany.Server = appSettings.Server;
-				this.oCompany.LicenseServer = appSettings.LicenseServer;
+                this.oCompany.CompanyDB = appSettings.CompanyDB;
+                this.oCompany.Server = appSettings.Server;
+                this.oCompany.LicenseServer = appSettings.LicenseServer;
                 this.oCompany.SLDServer = appSettings.SLDServer;
                 this.oCompany.DbUserName = appSettings.DbUserName;
-				this.oCompany.DbPassword = appSettings.DbPassword;
-				this.oCompany.UserName = appSettings.UserName;
-				this.oCompany.Password = appSettings.Password;
+                this.oCompany.DbPassword = appSettings.DbPassword;
+                this.oCompany.UserName = appSettings.UserName;
+                this.oCompany.Password = appSettings.Password;
 
                 if (appSettings.DbServerType == "dst_MSSQL2014")
                 {
@@ -222,11 +227,11 @@
         }
 
         private void GetSettings()
-		{
-			var appSettings = HelperDAL.GetSettings();
+        {
+            var appSettings = HelperDAL.GetSettings();
 
-			this.txtCompanyDB.Text = appSettings.CompanyDB;
-			this.txtServer.Text = appSettings.Server;
+            this.txtCompanyDB.Text = appSettings.CompanyDB;
+            this.txtServer.Text = appSettings.Server;
             this.txtSLDServer.Text = appSettings.SLDServer;
             this.txtLicenseServer.Text = appSettings.LicenseServer;
             this.txtDBUserName.Text = appSettings.DbUserName;
@@ -238,9 +243,9 @@
         }
 
         private void GetSettingsIMOS()
-		{
-			var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
-			string connectionString = appSettings.imosConn;
+        {
+            var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
+            string connectionString = appSettings.imosConn;
 
             char[] separator = new char[] { ';' };
             char[] chArray2 = new char[] { '=' };
@@ -257,9 +262,9 @@
         }
 
         private void GetSettingsISC()
-		{
-			var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
-			string connectionString = appSettings.iscConn;
+        {
+            var appSettings = AppConfiguration.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
+            string connectionString = appSettings.iscConn;
 
             char[] separator = new char[] { ';' };
             char[] chArray2 = new char[] { '=' };
@@ -277,566 +282,600 @@
 
         private void InitializeComponent()
         {
-            this.lblComments = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.gbxSAPConnection = new System.Windows.Forms.GroupBox();
-            this.chxUseTrusted = new System.Windows.Forms.CheckBox();
-            this.cbxDBServerType = new System.Windows.Forms.ComboBox();
-            this.lblDBServerType = new System.Windows.Forms.Label();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.lblUserName = new System.Windows.Forms.Label();
-            this.lblDBPassword = new System.Windows.Forms.Label();
-            this.lblDBUserName = new System.Windows.Forms.Label();
-            this.lblSLDServer = new System.Windows.Forms.Label();
-            this.lblLicenseServer = new System.Windows.Forms.Label();
-            this.lblServer = new System.Windows.Forms.Label();
-            this.lblCompanyDB = new System.Windows.Forms.Label();
-            this.txtCompanyDB = new System.Windows.Forms.TextBox();
-            this.txtServer = new System.Windows.Forms.TextBox();
-            this.txtLicenseServer = new System.Windows.Forms.TextBox();
-            this.txtSLDServer = new System.Windows.Forms.TextBox();
-            this.txtDBUserName = new System.Windows.Forms.TextBox();
-            this.txtDBPassword = new System.Windows.Forms.TextBox();
-            this.txtUserName = new System.Windows.Forms.TextBox();
-            this.gbxISCConnection = new System.Windows.Forms.GroupBox();
-            this.lblISCComments = new System.Windows.Forms.Label();
-            this.lblISCDbPassword = new System.Windows.Forms.Label();
-            this.lblISCDbUserName = new System.Windows.Forms.Label();
-            this.lblISCServer = new System.Windows.Forms.Label();
-            this.lblISCCompanyDB = new System.Windows.Forms.Label();
-            this.txtISCCompanyDB = new System.Windows.Forms.TextBox();
-            this.txtISCServer = new System.Windows.Forms.TextBox();
-            this.txtISCDbUserName = new System.Windows.Forms.TextBox();
-            this.txtISCDbPassword = new System.Windows.Forms.TextBox();
-            this.gbxIMOSConnection = new System.Windows.Forms.GroupBox();
-            this.lblIMOSComments = new System.Windows.Forms.Label();
-            this.lblIMOSDbPassword = new System.Windows.Forms.Label();
-            this.lblIMOSDbUserName = new System.Windows.Forms.Label();
-            this.lblIMOSServer = new System.Windows.Forms.Label();
-            this.lblIMOSCompanyDB = new System.Windows.Forms.Label();
-            this.txtIMOSCompanyDB = new System.Windows.Forms.TextBox();
-            this.txtIMOSServer = new System.Windows.Forms.TextBox();
-            this.txtIMOSDbUserName = new System.Windows.Forms.TextBox();
-            this.txtIMOSDbPassword = new System.Windows.Forms.TextBox();
-            this.gbxSAPConnection.SuspendLayout();
-            this.gbxISCConnection.SuspendLayout();
-            this.gbxIMOSConnection.SuspendLayout();
-            this.SuspendLayout();
+            lblComments = new Label();
+            btnSave = new Button();
+            btnConnect = new Button();
+            btnClose = new Button();
+            gbxSAPConnection = new GroupBox();
+            chxUseTrusted = new CheckBox();
+            cbxDBServerType = new ComboBox();
+            lblDBServerType = new Label();
+            lblPassword = new Label();
+            txtPassword = new TextBox();
+            lblUserName = new Label();
+            lblDBPassword = new Label();
+            lblDBUserName = new Label();
+            lblSLDServer = new Label();
+            lblLicenseServer = new Label();
+            lblServer = new Label();
+            lblCompanyDB = new Label();
+            txtCompanyDB = new TextBox();
+            txtServer = new TextBox();
+            txtLicenseServer = new TextBox();
+            txtSLDServer = new TextBox();
+            txtDBUserName = new TextBox();
+            txtDBPassword = new TextBox();
+            txtUserName = new TextBox();
+            gbxISCConnection = new GroupBox();
+            lblISCComments = new Label();
+            lblISCDbPassword = new Label();
+            lblISCDbUserName = new Label();
+            lblISCServer = new Label();
+            lblISCCompanyDB = new Label();
+            txtISCCompanyDB = new TextBox();
+            txtISCServer = new TextBox();
+            txtISCDbUserName = new TextBox();
+            txtISCDbPassword = new TextBox();
+            gbxIMOSConnection = new GroupBox();
+            lblIMOSComments = new Label();
+            lblIMOSDbPassword = new Label();
+            lblIMOSDbUserName = new Label();
+            lblIMOSServer = new Label();
+            lblIMOSCompanyDB = new Label();
+            txtIMOSCompanyDB = new TextBox();
+            txtIMOSServer = new TextBox();
+            txtIMOSDbUserName = new TextBox();
+            txtIMOSDbPassword = new TextBox();
+            panel1 = new Panel();
+            panel2 = new Panel();
+            panel3 = new Panel();
+            gbxSAPConnection.SuspendLayout();
+            gbxISCConnection.SuspendLayout();
+            gbxIMOSConnection.SuspendLayout();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            panel3.SuspendLayout();
+            SuspendLayout();
             // 
             // lblComments
             // 
-            this.lblComments.AutoSize = true;
-            this.lblComments.Location = new System.Drawing.Point(9, 27);
-            this.lblComments.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblComments.Name = "lblComments";
-            this.lblComments.Size = new System.Drawing.Size(10, 15);
-            this.lblComments.TabIndex = 13;
-            this.lblComments.Text = ".";
+            lblComments.AutoSize = true;
+            lblComments.Location = new Point(10, 36);
+            lblComments.Margin = new Padding(2, 0, 2, 0);
+            lblComments.Name = "lblComments";
+            lblComments.Size = new Size(12, 20);
+            lblComments.TabIndex = 13;
+            lblComments.Text = ".";
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(232, 377);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(77, 32);
-            this.btnSave.TabIndex = 23;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Location = new Point(250, 6);
+            btnSave.Margin = new Padding(2, 3, 2, 3);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(88, 43);
+            btnSave.TabIndex = 23;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(314, 377);
-            this.btnConnect.Margin = new System.Windows.Forms.Padding(2);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(77, 32);
-            this.btnConnect.TabIndex = 24;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            btnConnect.Location = new Point(344, 6);
+            btnConnect.Margin = new Padding(2, 3, 2, 3);
+            btnConnect.Name = "btnConnect";
+            btnConnect.Size = new Size(88, 43);
+            btnConnect.TabIndex = 24;
+            btnConnect.Text = "Connect";
+            btnConnect.UseVisualStyleBackColor = true;
+            btnConnect.Click += btnConnect_Click;
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(397, 377);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(2);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(77, 32);
-            this.btnClose.TabIndex = 25;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            btnClose.Location = new Point(438, 6);
+            btnClose.Margin = new Padding(2, 3, 2, 3);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(88, 43);
+            btnClose.TabIndex = 25;
+            btnClose.Text = "Close";
+            btnClose.UseVisualStyleBackColor = true;
+            btnClose.Click += btnClose_Click;
             // 
             // gbxSAPConnection
             // 
-            this.gbxSAPConnection.Controls.Add(this.chxUseTrusted);
-            this.gbxSAPConnection.Controls.Add(this.lblComments);
-            this.gbxSAPConnection.Controls.Add(this.cbxDBServerType);
-            this.gbxSAPConnection.Controls.Add(this.lblDBServerType);
-            this.gbxSAPConnection.Controls.Add(this.lblPassword);
-            this.gbxSAPConnection.Controls.Add(this.txtPassword);
-            this.gbxSAPConnection.Controls.Add(this.lblUserName);
-            this.gbxSAPConnection.Controls.Add(this.lblDBPassword);
-            this.gbxSAPConnection.Controls.Add(this.lblDBUserName);
-            this.gbxSAPConnection.Controls.Add(this.lblSLDServer);
-            this.gbxSAPConnection.Controls.Add(this.lblLicenseServer);
-            this.gbxSAPConnection.Controls.Add(this.lblServer);
-            this.gbxSAPConnection.Controls.Add(this.lblCompanyDB);
-            this.gbxSAPConnection.Controls.Add(this.txtCompanyDB);
-            this.gbxSAPConnection.Controls.Add(this.txtServer);
-            this.gbxSAPConnection.Controls.Add(this.txtLicenseServer);
-            this.gbxSAPConnection.Controls.Add(this.txtSLDServer);
-            this.gbxSAPConnection.Controls.Add(this.txtDBUserName);
-            this.gbxSAPConnection.Controls.Add(this.txtDBPassword);
-            this.gbxSAPConnection.Controls.Add(this.txtUserName);
-            this.gbxSAPConnection.Location = new System.Drawing.Point(10, 12);
-            this.gbxSAPConnection.Margin = new System.Windows.Forms.Padding(2);
-            this.gbxSAPConnection.Name = "gbxSAPConnection";
-            this.gbxSAPConnection.Padding = new System.Windows.Forms.Padding(2);
-            this.gbxSAPConnection.Size = new System.Drawing.Size(341, 360);
-            this.gbxSAPConnection.TabIndex = 26;
-            this.gbxSAPConnection.TabStop = false;
-            this.gbxSAPConnection.Text = "SAP B1 9.3 PL 12 Connection";
+            gbxSAPConnection.Controls.Add(chxUseTrusted);
+            gbxSAPConnection.Controls.Add(lblComments);
+            gbxSAPConnection.Controls.Add(cbxDBServerType);
+            gbxSAPConnection.Controls.Add(lblDBServerType);
+            gbxSAPConnection.Controls.Add(lblPassword);
+            gbxSAPConnection.Controls.Add(txtPassword);
+            gbxSAPConnection.Controls.Add(lblUserName);
+            gbxSAPConnection.Controls.Add(lblDBPassword);
+            gbxSAPConnection.Controls.Add(lblDBUserName);
+            gbxSAPConnection.Controls.Add(lblSLDServer);
+            gbxSAPConnection.Controls.Add(lblLicenseServer);
+            gbxSAPConnection.Controls.Add(lblServer);
+            gbxSAPConnection.Controls.Add(lblCompanyDB);
+            gbxSAPConnection.Controls.Add(txtCompanyDB);
+            gbxSAPConnection.Controls.Add(txtServer);
+            gbxSAPConnection.Controls.Add(txtLicenseServer);
+            gbxSAPConnection.Controls.Add(txtSLDServer);
+            gbxSAPConnection.Controls.Add(txtDBUserName);
+            gbxSAPConnection.Controls.Add(txtDBPassword);
+            gbxSAPConnection.Controls.Add(txtUserName);
+            gbxSAPConnection.Dock = DockStyle.Left;
+            gbxSAPConnection.Location = new Point(0, 0);
+            gbxSAPConnection.Margin = new Padding(2, 3, 2, 3);
+            gbxSAPConnection.Name = "gbxSAPConnection";
+            gbxSAPConnection.Padding = new Padding(2, 3, 2, 3);
+            gbxSAPConnection.Size = new Size(390, 509);
+            gbxSAPConnection.TabIndex = 26;
+            gbxSAPConnection.TabStop = false;
+            gbxSAPConnection.Text = "SAP B1 9.3 PL 12 Connection";
             // 
             // chxUseTrusted
             // 
-            this.chxUseTrusted.AutoSize = true;
-            this.chxUseTrusted.Location = new System.Drawing.Point(107, 300);
-            this.chxUseTrusted.Margin = new System.Windows.Forms.Padding(2);
-            this.chxUseTrusted.Name = "chxUseTrusted";
-            this.chxUseTrusted.Size = new System.Drawing.Size(83, 19);
-            this.chxUseTrusted.TabIndex = 41;
-            this.chxUseTrusted.Text = "UseTrusted";
-            this.chxUseTrusted.UseVisualStyleBackColor = true;
+            chxUseTrusted.AutoSize = true;
+            chxUseTrusted.Location = new Point(122, 400);
+            chxUseTrusted.Margin = new Padding(2, 3, 2, 3);
+            chxUseTrusted.Name = "chxUseTrusted";
+            chxUseTrusted.Size = new Size(103, 24);
+            chxUseTrusted.TabIndex = 41;
+            chxUseTrusted.Text = "UseTrusted";
+            chxUseTrusted.UseVisualStyleBackColor = true;
             // 
             // cbxDBServerType
             // 
-            this.cbxDBServerType.FormattingEnabled = true;
-            this.cbxDBServerType.Location = new System.Drawing.Point(107, 268);
-            this.cbxDBServerType.Margin = new System.Windows.Forms.Padding(2);
-            this.cbxDBServerType.Name = "cbxDBServerType";
-            this.cbxDBServerType.Size = new System.Drawing.Size(228, 23);
-            this.cbxDBServerType.TabIndex = 40;
+            cbxDBServerType.FormattingEnabled = true;
+            cbxDBServerType.Location = new Point(122, 357);
+            cbxDBServerType.Margin = new Padding(2, 3, 2, 3);
+            cbxDBServerType.Name = "cbxDBServerType";
+            cbxDBServerType.Size = new Size(260, 28);
+            cbxDBServerType.TabIndex = 40;
             // 
             // lblDBServerType
             // 
-            this.lblDBServerType.AutoSize = true;
-            this.lblDBServerType.Location = new System.Drawing.Point(9, 273);
-            this.lblDBServerType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblDBServerType.Name = "lblDBServerType";
-            this.lblDBServerType.Size = new System.Drawing.Size(78, 15);
-            this.lblDBServerType.TabIndex = 39;
-            this.lblDBServerType.Text = "DBServerType";
+            lblDBServerType.AutoSize = true;
+            lblDBServerType.Location = new Point(10, 364);
+            lblDBServerType.Margin = new Padding(2, 0, 2, 0);
+            lblDBServerType.Name = "lblDBServerType";
+            lblDBServerType.Size = new Size(101, 20);
+            lblDBServerType.TabIndex = 39;
+            lblDBServerType.Text = "DBServerType";
             // 
             // lblPassword
             // 
-            this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(9, 247);
-            this.lblPassword.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(57, 15);
-            this.lblPassword.TabIndex = 38;
-            this.lblPassword.Text = "Password";
+            lblPassword.AutoSize = true;
+            lblPassword.Location = new Point(10, 329);
+            lblPassword.Margin = new Padding(2, 0, 2, 0);
+            lblPassword.Name = "lblPassword";
+            lblPassword.Size = new Size(70, 20);
+            lblPassword.TabIndex = 38;
+            lblPassword.Text = "Password";
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(107, 242);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(2);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(228, 23);
-            this.txtPassword.TabIndex = 37;
+            txtPassword.Location = new Point(122, 323);
+            txtPassword.Margin = new Padding(2, 3, 2, 3);
+            txtPassword.Name = "txtPassword";
+            txtPassword.Size = new Size(260, 27);
+            txtPassword.TabIndex = 37;
             // 
             // lblUserName
             // 
-            this.lblUserName.AutoSize = true;
-            this.lblUserName.Location = new System.Drawing.Point(9, 222);
-            this.lblUserName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblUserName.Name = "lblUserName";
-            this.lblUserName.Size = new System.Drawing.Size(62, 15);
-            this.lblUserName.TabIndex = 36;
-            this.lblUserName.Text = "UserName";
+            lblUserName.AutoSize = true;
+            lblUserName.Location = new Point(10, 296);
+            lblUserName.Margin = new Padding(2, 0, 2, 0);
+            lblUserName.Name = "lblUserName";
+            lblUserName.Size = new Size(78, 20);
+            lblUserName.TabIndex = 36;
+            lblUserName.Text = "UserName";
             // 
             // lblDBPassword
             // 
-            this.lblDBPassword.AutoSize = true;
-            this.lblDBPassword.Location = new System.Drawing.Point(9, 195);
-            this.lblDBPassword.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblDBPassword.Name = "lblDBPassword";
-            this.lblDBPassword.Size = new System.Drawing.Size(72, 15);
-            this.lblDBPassword.TabIndex = 35;
-            this.lblDBPassword.Text = "DbPassword";
+            lblDBPassword.AutoSize = true;
+            lblDBPassword.Location = new Point(10, 260);
+            lblDBPassword.Margin = new Padding(2, 0, 2, 0);
+            lblDBPassword.Name = "lblDBPassword";
+            lblDBPassword.Size = new Size(90, 20);
+            lblDBPassword.TabIndex = 35;
+            lblDBPassword.Text = "DbPassword";
             // 
             // lblDBUserName
             // 
-            this.lblDBUserName.AutoSize = true;
-            this.lblDBUserName.Location = new System.Drawing.Point(9, 168);
-            this.lblDBUserName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblDBUserName.Name = "lblDBUserName";
-            this.lblDBUserName.Size = new System.Drawing.Size(77, 15);
-            this.lblDBUserName.TabIndex = 34;
-            this.lblDBUserName.Text = "DbUserName";
+            lblDBUserName.AutoSize = true;
+            lblDBUserName.Location = new Point(10, 224);
+            lblDBUserName.Margin = new Padding(2, 0, 2, 0);
+            lblDBUserName.Name = "lblDBUserName";
+            lblDBUserName.Size = new Size(98, 20);
+            lblDBUserName.TabIndex = 34;
+            lblDBUserName.Text = "DbUserName";
             // 
             // lblSLDServer
             // 
-            this.lblSLDServer.AutoSize = true;
-            this.lblSLDServer.Location = new System.Drawing.Point(9, 143);
-            this.lblSLDServer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblSLDServer.Name = "lblSLDServer";
-            this.lblSLDServer.Size = new System.Drawing.Size(59, 15);
-            this.lblSLDServer.TabIndex = 33;
-            this.lblSLDServer.Text = "SLDServer";
+            lblSLDServer.AutoSize = true;
+            lblSLDServer.Location = new Point(10, 191);
+            lblSLDServer.Margin = new Padding(2, 0, 2, 0);
+            lblSLDServer.Name = "lblSLDServer";
+            lblSLDServer.Size = new Size(76, 20);
+            lblSLDServer.TabIndex = 33;
+            lblSLDServer.Text = "SLDServer";
             // 
             // lblLicenseServer
             // 
-            this.lblLicenseServer.AutoSize = true;
-            this.lblLicenseServer.Location = new System.Drawing.Point(9, 114);
-            this.lblLicenseServer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblLicenseServer.Name = "lblLicenseServer";
-            this.lblLicenseServer.Size = new System.Drawing.Size(78, 15);
-            this.lblLicenseServer.TabIndex = 32;
-            this.lblLicenseServer.Text = "LicenseServer";
+            lblLicenseServer.AutoSize = true;
+            lblLicenseServer.Location = new Point(10, 152);
+            lblLicenseServer.Margin = new Padding(2, 0, 2, 0);
+            lblLicenseServer.Name = "lblLicenseServer";
+            lblLicenseServer.Size = new Size(98, 20);
+            lblLicenseServer.TabIndex = 32;
+            lblLicenseServer.Text = "LicenseServer";
             // 
             // lblServer
             // 
-            this.lblServer.AutoSize = true;
-            this.lblServer.Location = new System.Drawing.Point(9, 90);
-            this.lblServer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblServer.Name = "lblServer";
-            this.lblServer.Size = new System.Drawing.Size(39, 15);
-            this.lblServer.TabIndex = 31;
-            this.lblServer.Text = "Server";
+            lblServer.AutoSize = true;
+            lblServer.Location = new Point(10, 120);
+            lblServer.Margin = new Padding(2, 0, 2, 0);
+            lblServer.Name = "lblServer";
+            lblServer.Size = new Size(50, 20);
+            lblServer.TabIndex = 31;
+            lblServer.Text = "Server";
             // 
             // lblCompanyDB
             // 
-            this.lblCompanyDB.AutoSize = true;
-            this.lblCompanyDB.Location = new System.Drawing.Point(9, 58);
-            this.lblCompanyDB.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblCompanyDB.Name = "lblCompanyDB";
-            this.lblCompanyDB.Size = new System.Drawing.Size(74, 15);
-            this.lblCompanyDB.TabIndex = 30;
-            this.lblCompanyDB.Text = "ComapnyDB";
+            lblCompanyDB.AutoSize = true;
+            lblCompanyDB.Location = new Point(10, 77);
+            lblCompanyDB.Margin = new Padding(2, 0, 2, 0);
+            lblCompanyDB.Name = "lblCompanyDB";
+            lblCompanyDB.Size = new Size(92, 20);
+            lblCompanyDB.TabIndex = 30;
+            lblCompanyDB.Text = "ComapnyDB";
             // 
             // txtCompanyDB
             // 
-            this.txtCompanyDB.Location = new System.Drawing.Point(107, 55);
-            this.txtCompanyDB.Margin = new System.Windows.Forms.Padding(2);
-            this.txtCompanyDB.Name = "txtCompanyDB";
-            this.txtCompanyDB.Size = new System.Drawing.Size(228, 23);
-            this.txtCompanyDB.TabIndex = 29;
+            txtCompanyDB.Location = new Point(122, 73);
+            txtCompanyDB.Margin = new Padding(2, 3, 2, 3);
+            txtCompanyDB.Name = "txtCompanyDB";
+            txtCompanyDB.Size = new Size(260, 27);
+            txtCompanyDB.TabIndex = 29;
             // 
             // txtServer
             // 
-            this.txtServer.Location = new System.Drawing.Point(107, 85);
-            this.txtServer.Margin = new System.Windows.Forms.Padding(2);
-            this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(228, 23);
-            this.txtServer.TabIndex = 28;
+            txtServer.Location = new Point(122, 113);
+            txtServer.Margin = new Padding(2, 3, 2, 3);
+            txtServer.Name = "txtServer";
+            txtServer.Size = new Size(260, 27);
+            txtServer.TabIndex = 28;
             // 
             // txtLicenseServer
             // 
-            this.txtLicenseServer.Location = new System.Drawing.Point(107, 112);
-            this.txtLicenseServer.Margin = new System.Windows.Forms.Padding(2);
-            this.txtLicenseServer.Name = "txtLicenseServer";
-            this.txtLicenseServer.Size = new System.Drawing.Size(228, 23);
-            this.txtLicenseServer.TabIndex = 27;
+            txtLicenseServer.Location = new Point(122, 149);
+            txtLicenseServer.Margin = new Padding(2, 3, 2, 3);
+            txtLicenseServer.Name = "txtLicenseServer";
+            txtLicenseServer.Size = new Size(260, 27);
+            txtLicenseServer.TabIndex = 27;
             // 
             // txtSLDServer
             // 
-            this.txtSLDServer.Location = new System.Drawing.Point(107, 137);
-            this.txtSLDServer.Margin = new System.Windows.Forms.Padding(2);
-            this.txtSLDServer.Name = "txtSLDServer";
-            this.txtSLDServer.Size = new System.Drawing.Size(228, 23);
-            this.txtSLDServer.TabIndex = 26;
+            txtSLDServer.Location = new Point(122, 183);
+            txtSLDServer.Margin = new Padding(2, 3, 2, 3);
+            txtSLDServer.Name = "txtSLDServer";
+            txtSLDServer.Size = new Size(260, 27);
+            txtSLDServer.TabIndex = 26;
             // 
             // txtDBUserName
             // 
-            this.txtDBUserName.Location = new System.Drawing.Point(107, 164);
-            this.txtDBUserName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtDBUserName.Name = "txtDBUserName";
-            this.txtDBUserName.Size = new System.Drawing.Size(228, 23);
-            this.txtDBUserName.TabIndex = 25;
+            txtDBUserName.Location = new Point(122, 219);
+            txtDBUserName.Margin = new Padding(2, 3, 2, 3);
+            txtDBUserName.Name = "txtDBUserName";
+            txtDBUserName.Size = new Size(260, 27);
+            txtDBUserName.TabIndex = 25;
             // 
             // txtDBPassword
             // 
-            this.txtDBPassword.Location = new System.Drawing.Point(107, 190);
-            this.txtDBPassword.Margin = new System.Windows.Forms.Padding(2);
-            this.txtDBPassword.Name = "txtDBPassword";
-            this.txtDBPassword.PasswordChar = '*';
-            this.txtDBPassword.Size = new System.Drawing.Size(228, 23);
-            this.txtDBPassword.TabIndex = 24;
+            txtDBPassword.Location = new Point(122, 253);
+            txtDBPassword.Margin = new Padding(2, 3, 2, 3);
+            txtDBPassword.Name = "txtDBPassword";
+            txtDBPassword.PasswordChar = '*';
+            txtDBPassword.Size = new Size(260, 27);
+            txtDBPassword.TabIndex = 24;
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(107, 217);
-            this.txtUserName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(228, 23);
-            this.txtUserName.TabIndex = 23;
+            txtUserName.Location = new Point(122, 289);
+            txtUserName.Margin = new Padding(2, 3, 2, 3);
+            txtUserName.Name = "txtUserName";
+            txtUserName.Size = new Size(260, 27);
+            txtUserName.TabIndex = 23;
             // 
             // gbxISCConnection
             // 
-            this.gbxISCConnection.Controls.Add(this.lblISCComments);
-            this.gbxISCConnection.Controls.Add(this.lblISCDbPassword);
-            this.gbxISCConnection.Controls.Add(this.lblISCDbUserName);
-            this.gbxISCConnection.Controls.Add(this.lblISCServer);
-            this.gbxISCConnection.Controls.Add(this.lblISCCompanyDB);
-            this.gbxISCConnection.Controls.Add(this.txtISCCompanyDB);
-            this.gbxISCConnection.Controls.Add(this.txtISCServer);
-            this.gbxISCConnection.Controls.Add(this.txtISCDbUserName);
-            this.gbxISCConnection.Controls.Add(this.txtISCDbPassword);
-            this.gbxISCConnection.Location = new System.Drawing.Point(356, 12);
-            this.gbxISCConnection.Margin = new System.Windows.Forms.Padding(2);
-            this.gbxISCConnection.Name = "gbxISCConnection";
-            this.gbxISCConnection.Padding = new System.Windows.Forms.Padding(2);
-            this.gbxISCConnection.Size = new System.Drawing.Size(341, 173);
-            this.gbxISCConnection.TabIndex = 27;
-            this.gbxISCConnection.TabStop = false;
-            this.gbxISCConnection.Text = "ISC Connection";
+            gbxISCConnection.Controls.Add(lblISCComments);
+            gbxISCConnection.Controls.Add(lblISCDbPassword);
+            gbxISCConnection.Controls.Add(lblISCDbUserName);
+            gbxISCConnection.Controls.Add(lblISCServer);
+            gbxISCConnection.Controls.Add(lblISCCompanyDB);
+            gbxISCConnection.Controls.Add(txtISCCompanyDB);
+            gbxISCConnection.Controls.Add(txtISCServer);
+            gbxISCConnection.Controls.Add(txtISCDbUserName);
+            gbxISCConnection.Controls.Add(txtISCDbPassword);
+            gbxISCConnection.Dock = DockStyle.Top;
+            gbxISCConnection.Location = new Point(0, 0);
+            gbxISCConnection.Margin = new Padding(2, 3, 2, 3);
+            gbxISCConnection.Name = "gbxISCConnection";
+            gbxISCConnection.Padding = new Padding(2, 3, 2, 3);
+            gbxISCConnection.Size = new Size(417, 231);
+            gbxISCConnection.TabIndex = 27;
+            gbxISCConnection.TabStop = false;
+            gbxISCConnection.Text = "ISC Connection";
             // 
             // lblISCComments
             // 
-            this.lblISCComments.AutoSize = true;
-            this.lblISCComments.Location = new System.Drawing.Point(7, 17);
-            this.lblISCComments.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblISCComments.Name = "lblISCComments";
-            this.lblISCComments.Size = new System.Drawing.Size(10, 15);
-            this.lblISCComments.TabIndex = 69;
-            this.lblISCComments.Text = ".";
+            lblISCComments.AutoSize = true;
+            lblISCComments.Location = new Point(8, 23);
+            lblISCComments.Margin = new Padding(2, 0, 2, 0);
+            lblISCComments.Name = "lblISCComments";
+            lblISCComments.Size = new Size(12, 20);
+            lblISCComments.TabIndex = 69;
+            lblISCComments.Text = ".";
             // 
             // lblISCDbPassword
             // 
-            this.lblISCDbPassword.AutoSize = true;
-            this.lblISCDbPassword.Location = new System.Drawing.Point(7, 137);
-            this.lblISCDbPassword.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblISCDbPassword.Name = "lblISCDbPassword";
-            this.lblISCDbPassword.Size = new System.Drawing.Size(72, 15);
-            this.lblISCDbPassword.TabIndex = 68;
-            this.lblISCDbPassword.Text = "DbPassword";
+            lblISCDbPassword.AutoSize = true;
+            lblISCDbPassword.Location = new Point(8, 183);
+            lblISCDbPassword.Margin = new Padding(2, 0, 2, 0);
+            lblISCDbPassword.Name = "lblISCDbPassword";
+            lblISCDbPassword.Size = new Size(90, 20);
+            lblISCDbPassword.TabIndex = 68;
+            lblISCDbPassword.Text = "DbPassword";
             // 
             // lblISCDbUserName
             // 
-            this.lblISCDbUserName.AutoSize = true;
-            this.lblISCDbUserName.Location = new System.Drawing.Point(7, 112);
-            this.lblISCDbUserName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblISCDbUserName.Name = "lblISCDbUserName";
-            this.lblISCDbUserName.Size = new System.Drawing.Size(77, 15);
-            this.lblISCDbUserName.TabIndex = 67;
-            this.lblISCDbUserName.Text = "DbUserName";
+            lblISCDbUserName.AutoSize = true;
+            lblISCDbUserName.Location = new Point(8, 149);
+            lblISCDbUserName.Margin = new Padding(2, 0, 2, 0);
+            lblISCDbUserName.Name = "lblISCDbUserName";
+            lblISCDbUserName.Size = new Size(98, 20);
+            lblISCDbUserName.TabIndex = 67;
+            lblISCDbUserName.Text = "DbUserName";
             // 
             // lblISCServer
             // 
-            this.lblISCServer.AutoSize = true;
-            this.lblISCServer.Location = new System.Drawing.Point(7, 81);
-            this.lblISCServer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblISCServer.Name = "lblISCServer";
-            this.lblISCServer.Size = new System.Drawing.Size(39, 15);
-            this.lblISCServer.TabIndex = 66;
-            this.lblISCServer.Text = "Server";
+            lblISCServer.AutoSize = true;
+            lblISCServer.Location = new Point(8, 108);
+            lblISCServer.Margin = new Padding(2, 0, 2, 0);
+            lblISCServer.Name = "lblISCServer";
+            lblISCServer.Size = new Size(50, 20);
+            lblISCServer.TabIndex = 66;
+            lblISCServer.Text = "Server";
             // 
             // lblISCCompanyDB
             // 
-            this.lblISCCompanyDB.AutoSize = true;
-            this.lblISCCompanyDB.Location = new System.Drawing.Point(7, 48);
-            this.lblISCCompanyDB.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblISCCompanyDB.Name = "lblISCCompanyDB";
-            this.lblISCCompanyDB.Size = new System.Drawing.Size(74, 15);
-            this.lblISCCompanyDB.TabIndex = 65;
-            this.lblISCCompanyDB.Text = "ComapnyDB";
+            lblISCCompanyDB.AutoSize = true;
+            lblISCCompanyDB.Location = new Point(8, 64);
+            lblISCCompanyDB.Margin = new Padding(2, 0, 2, 0);
+            lblISCCompanyDB.Name = "lblISCCompanyDB";
+            lblISCCompanyDB.Size = new Size(92, 20);
+            lblISCCompanyDB.TabIndex = 65;
+            lblISCCompanyDB.Text = "ComapnyDB";
             // 
             // txtISCCompanyDB
             // 
-            this.txtISCCompanyDB.Location = new System.Drawing.Point(106, 46);
-            this.txtISCCompanyDB.Margin = new System.Windows.Forms.Padding(2);
-            this.txtISCCompanyDB.Name = "txtISCCompanyDB";
-            this.txtISCCompanyDB.Size = new System.Drawing.Size(228, 23);
-            this.txtISCCompanyDB.TabIndex = 64;
+            txtISCCompanyDB.Location = new Point(121, 61);
+            txtISCCompanyDB.Margin = new Padding(2, 3, 2, 3);
+            txtISCCompanyDB.Name = "txtISCCompanyDB";
+            txtISCCompanyDB.Size = new Size(260, 27);
+            txtISCCompanyDB.TabIndex = 64;
             // 
             // txtISCServer
             // 
-            this.txtISCServer.Location = new System.Drawing.Point(106, 76);
-            this.txtISCServer.Margin = new System.Windows.Forms.Padding(2);
-            this.txtISCServer.Name = "txtISCServer";
-            this.txtISCServer.Size = new System.Drawing.Size(228, 23);
-            this.txtISCServer.TabIndex = 63;
+            txtISCServer.Location = new Point(121, 101);
+            txtISCServer.Margin = new Padding(2, 3, 2, 3);
+            txtISCServer.Name = "txtISCServer";
+            txtISCServer.Size = new Size(260, 27);
+            txtISCServer.TabIndex = 63;
             // 
             // txtISCDbUserName
             // 
-            this.txtISCDbUserName.Location = new System.Drawing.Point(106, 107);
-            this.txtISCDbUserName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtISCDbUserName.Name = "txtISCDbUserName";
-            this.txtISCDbUserName.Size = new System.Drawing.Size(228, 23);
-            this.txtISCDbUserName.TabIndex = 62;
+            txtISCDbUserName.Location = new Point(121, 143);
+            txtISCDbUserName.Margin = new Padding(2, 3, 2, 3);
+            txtISCDbUserName.Name = "txtISCDbUserName";
+            txtISCDbUserName.Size = new Size(260, 27);
+            txtISCDbUserName.TabIndex = 62;
             // 
             // txtISCDbPassword
             // 
-            this.txtISCDbPassword.Location = new System.Drawing.Point(106, 133);
-            this.txtISCDbPassword.Margin = new System.Windows.Forms.Padding(2);
-            this.txtISCDbPassword.Name = "txtISCDbPassword";
-            this.txtISCDbPassword.PasswordChar = '*';
-            this.txtISCDbPassword.Size = new System.Drawing.Size(228, 23);
-            this.txtISCDbPassword.TabIndex = 61;
+            txtISCDbPassword.Location = new Point(121, 177);
+            txtISCDbPassword.Margin = new Padding(2, 3, 2, 3);
+            txtISCDbPassword.Name = "txtISCDbPassword";
+            txtISCDbPassword.PasswordChar = '*';
+            txtISCDbPassword.Size = new Size(260, 27);
+            txtISCDbPassword.TabIndex = 61;
             // 
             // gbxIMOSConnection
             // 
-            this.gbxIMOSConnection.Controls.Add(this.lblIMOSComments);
-            this.gbxIMOSConnection.Controls.Add(this.lblIMOSDbPassword);
-            this.gbxIMOSConnection.Controls.Add(this.lblIMOSDbUserName);
-            this.gbxIMOSConnection.Controls.Add(this.lblIMOSServer);
-            this.gbxIMOSConnection.Controls.Add(this.lblIMOSCompanyDB);
-            this.gbxIMOSConnection.Controls.Add(this.txtIMOSCompanyDB);
-            this.gbxIMOSConnection.Controls.Add(this.txtIMOSServer);
-            this.gbxIMOSConnection.Controls.Add(this.txtIMOSDbUserName);
-            this.gbxIMOSConnection.Controls.Add(this.txtIMOSDbPassword);
-            this.gbxIMOSConnection.Location = new System.Drawing.Point(356, 192);
-            this.gbxIMOSConnection.Margin = new System.Windows.Forms.Padding(2);
-            this.gbxIMOSConnection.Name = "gbxIMOSConnection";
-            this.gbxIMOSConnection.Padding = new System.Windows.Forms.Padding(2);
-            this.gbxIMOSConnection.Size = new System.Drawing.Size(341, 180);
-            this.gbxIMOSConnection.TabIndex = 28;
-            this.gbxIMOSConnection.TabStop = false;
-            this.gbxIMOSConnection.Text = "IMOS Connection";
+            gbxIMOSConnection.Controls.Add(lblIMOSComments);
+            gbxIMOSConnection.Controls.Add(lblIMOSDbPassword);
+            gbxIMOSConnection.Controls.Add(lblIMOSDbUserName);
+            gbxIMOSConnection.Controls.Add(lblIMOSServer);
+            gbxIMOSConnection.Controls.Add(lblIMOSCompanyDB);
+            gbxIMOSConnection.Controls.Add(txtIMOSCompanyDB);
+            gbxIMOSConnection.Controls.Add(txtIMOSServer);
+            gbxIMOSConnection.Controls.Add(txtIMOSDbUserName);
+            gbxIMOSConnection.Controls.Add(txtIMOSDbPassword);
+            gbxIMOSConnection.Dock = DockStyle.Fill;
+            gbxIMOSConnection.Location = new Point(0, 231);
+            gbxIMOSConnection.Margin = new Padding(2, 3, 2, 3);
+            gbxIMOSConnection.Name = "gbxIMOSConnection";
+            gbxIMOSConnection.Padding = new Padding(2, 3, 2, 3);
+            gbxIMOSConnection.Size = new Size(417, 278);
+            gbxIMOSConnection.TabIndex = 28;
+            gbxIMOSConnection.TabStop = false;
+            gbxIMOSConnection.Text = "IMOS Connection";
             // 
             // lblIMOSComments
             // 
-            this.lblIMOSComments.AutoSize = true;
-            this.lblIMOSComments.Location = new System.Drawing.Point(14, 24);
-            this.lblIMOSComments.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblIMOSComments.Name = "lblIMOSComments";
-            this.lblIMOSComments.Size = new System.Drawing.Size(10, 15);
-            this.lblIMOSComments.TabIndex = 57;
-            this.lblIMOSComments.Text = ".";
+            lblIMOSComments.AutoSize = true;
+            lblIMOSComments.Location = new Point(16, 32);
+            lblIMOSComments.Margin = new Padding(2, 0, 2, 0);
+            lblIMOSComments.Name = "lblIMOSComments";
+            lblIMOSComments.Size = new Size(12, 20);
+            lblIMOSComments.TabIndex = 57;
+            lblIMOSComments.Text = ".";
             // 
             // lblIMOSDbPassword
             // 
-            this.lblIMOSDbPassword.AutoSize = true;
-            this.lblIMOSDbPassword.Location = new System.Drawing.Point(14, 145);
-            this.lblIMOSDbPassword.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblIMOSDbPassword.Name = "lblIMOSDbPassword";
-            this.lblIMOSDbPassword.Size = new System.Drawing.Size(72, 15);
-            this.lblIMOSDbPassword.TabIndex = 56;
-            this.lblIMOSDbPassword.Text = "DbPassword";
+            lblIMOSDbPassword.AutoSize = true;
+            lblIMOSDbPassword.Location = new Point(16, 193);
+            lblIMOSDbPassword.Margin = new Padding(2, 0, 2, 0);
+            lblIMOSDbPassword.Name = "lblIMOSDbPassword";
+            lblIMOSDbPassword.Size = new Size(90, 20);
+            lblIMOSDbPassword.TabIndex = 56;
+            lblIMOSDbPassword.Text = "DbPassword";
             // 
             // lblIMOSDbUserName
             // 
-            this.lblIMOSDbUserName.AutoSize = true;
-            this.lblIMOSDbUserName.Location = new System.Drawing.Point(14, 119);
-            this.lblIMOSDbUserName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblIMOSDbUserName.Name = "lblIMOSDbUserName";
-            this.lblIMOSDbUserName.Size = new System.Drawing.Size(77, 15);
-            this.lblIMOSDbUserName.TabIndex = 55;
-            this.lblIMOSDbUserName.Text = "DbUserName";
+            lblIMOSDbUserName.AutoSize = true;
+            lblIMOSDbUserName.Location = new Point(16, 159);
+            lblIMOSDbUserName.Margin = new Padding(2, 0, 2, 0);
+            lblIMOSDbUserName.Name = "lblIMOSDbUserName";
+            lblIMOSDbUserName.Size = new Size(98, 20);
+            lblIMOSDbUserName.TabIndex = 55;
+            lblIMOSDbUserName.Text = "DbUserName";
             // 
             // lblIMOSServer
             // 
-            this.lblIMOSServer.AutoSize = true;
-            this.lblIMOSServer.Location = new System.Drawing.Point(14, 88);
-            this.lblIMOSServer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblIMOSServer.Name = "lblIMOSServer";
-            this.lblIMOSServer.Size = new System.Drawing.Size(39, 15);
-            this.lblIMOSServer.TabIndex = 54;
-            this.lblIMOSServer.Text = "Server";
+            lblIMOSServer.AutoSize = true;
+            lblIMOSServer.Location = new Point(16, 117);
+            lblIMOSServer.Margin = new Padding(2, 0, 2, 0);
+            lblIMOSServer.Name = "lblIMOSServer";
+            lblIMOSServer.Size = new Size(50, 20);
+            lblIMOSServer.TabIndex = 54;
+            lblIMOSServer.Text = "Server";
             // 
             // lblIMOSCompanyDB
             // 
-            this.lblIMOSCompanyDB.AutoSize = true;
-            this.lblIMOSCompanyDB.Location = new System.Drawing.Point(14, 57);
-            this.lblIMOSCompanyDB.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblIMOSCompanyDB.Name = "lblIMOSCompanyDB";
-            this.lblIMOSCompanyDB.Size = new System.Drawing.Size(74, 15);
-            this.lblIMOSCompanyDB.TabIndex = 53;
-            this.lblIMOSCompanyDB.Text = "ComapnyDB";
+            lblIMOSCompanyDB.AutoSize = true;
+            lblIMOSCompanyDB.Location = new Point(16, 76);
+            lblIMOSCompanyDB.Margin = new Padding(2, 0, 2, 0);
+            lblIMOSCompanyDB.Name = "lblIMOSCompanyDB";
+            lblIMOSCompanyDB.Size = new Size(92, 20);
+            lblIMOSCompanyDB.TabIndex = 53;
+            lblIMOSCompanyDB.Text = "ComapnyDB";
             // 
             // txtIMOSCompanyDB
             // 
-            this.txtIMOSCompanyDB.Location = new System.Drawing.Point(106, 53);
-            this.txtIMOSCompanyDB.Margin = new System.Windows.Forms.Padding(2);
-            this.txtIMOSCompanyDB.Name = "txtIMOSCompanyDB";
-            this.txtIMOSCompanyDB.Size = new System.Drawing.Size(228, 23);
-            this.txtIMOSCompanyDB.TabIndex = 52;
+            txtIMOSCompanyDB.Location = new Point(121, 71);
+            txtIMOSCompanyDB.Margin = new Padding(2, 3, 2, 3);
+            txtIMOSCompanyDB.Name = "txtIMOSCompanyDB";
+            txtIMOSCompanyDB.Size = new Size(260, 27);
+            txtIMOSCompanyDB.TabIndex = 52;
             // 
             // txtIMOSServer
             // 
-            this.txtIMOSServer.Location = new System.Drawing.Point(106, 83);
-            this.txtIMOSServer.Margin = new System.Windows.Forms.Padding(2);
-            this.txtIMOSServer.Name = "txtIMOSServer";
-            this.txtIMOSServer.Size = new System.Drawing.Size(228, 23);
-            this.txtIMOSServer.TabIndex = 51;
+            txtIMOSServer.Location = new Point(121, 111);
+            txtIMOSServer.Margin = new Padding(2, 3, 2, 3);
+            txtIMOSServer.Name = "txtIMOSServer";
+            txtIMOSServer.Size = new Size(260, 27);
+            txtIMOSServer.TabIndex = 51;
             // 
             // txtIMOSDbUserName
             // 
-            this.txtIMOSDbUserName.Location = new System.Drawing.Point(106, 114);
-            this.txtIMOSDbUserName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtIMOSDbUserName.Name = "txtIMOSDbUserName";
-            this.txtIMOSDbUserName.Size = new System.Drawing.Size(228, 23);
-            this.txtIMOSDbUserName.TabIndex = 50;
+            txtIMOSDbUserName.Location = new Point(121, 152);
+            txtIMOSDbUserName.Margin = new Padding(2, 3, 2, 3);
+            txtIMOSDbUserName.Name = "txtIMOSDbUserName";
+            txtIMOSDbUserName.Size = new Size(260, 27);
+            txtIMOSDbUserName.TabIndex = 50;
             // 
             // txtIMOSDbPassword
             // 
-            this.txtIMOSDbPassword.Location = new System.Drawing.Point(106, 141);
-            this.txtIMOSDbPassword.Margin = new System.Windows.Forms.Padding(2);
-            this.txtIMOSDbPassword.Name = "txtIMOSDbPassword";
-            this.txtIMOSDbPassword.PasswordChar = '*';
-            this.txtIMOSDbPassword.Size = new System.Drawing.Size(228, 23);
-            this.txtIMOSDbPassword.TabIndex = 49;
+            txtIMOSDbPassword.Location = new Point(121, 188);
+            txtIMOSDbPassword.Margin = new Padding(2, 3, 2, 3);
+            txtIMOSDbPassword.Name = "txtIMOSDbPassword";
+            txtIMOSDbPassword.PasswordChar = '*';
+            txtIMOSDbPassword.Size = new Size(260, 27);
+            txtIMOSDbPassword.TabIndex = 49;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(btnClose);
+            panel1.Controls.Add(btnConnect);
+            panel1.Controls.Add(btnSave);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 509);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(807, 52);
+            panel1.TabIndex = 29;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(panel3);
+            panel2.Controls.Add(gbxSAPConnection);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(807, 509);
+            panel2.TabIndex = 30;
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(gbxIMOSConnection);
+            panel3.Controls.Add(gbxISCConnection);
+            panel3.Dock = DockStyle.Fill;
+            panel3.Location = new Point(390, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(417, 509);
+            panel3.TabIndex = 29;
             // 
             // frmSAPConnection
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(771, 421);
-            this.ControlBox = false;
-            this.Controls.Add(this.gbxIMOSConnection);
-            this.Controls.Add(this.gbxISCConnection);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.gbxSAPConnection);
-            this.Controls.Add(this.btnSave);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmSAPConnection";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Connection SAP B1 9.3 PL 12";
-            this.Load += new System.EventHandler(this.frmConnection_Load);
-            this.gbxSAPConnection.ResumeLayout(false);
-            this.gbxSAPConnection.PerformLayout();
-            this.gbxISCConnection.ResumeLayout(false);
-            this.gbxISCConnection.PerformLayout();
-            this.gbxIMOSConnection.ResumeLayout(false);
-            this.gbxIMOSConnection.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(807, 561);
+            ControlBox = false;
+            Controls.Add(panel2);
+            Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Margin = new Padding(2, 3, 2, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmSAPConnection";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Connection SAP B1 9.3 PL 12";
+            Load += frmConnection_Load;
+            gbxSAPConnection.ResumeLayout(false);
+            gbxSAPConnection.PerformLayout();
+            gbxISCConnection.ResumeLayout(false);
+            gbxISCConnection.PerformLayout();
+            gbxIMOSConnection.ResumeLayout(false);
+            gbxIMOSConnection.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel3.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         private void SetSettings()
         {
             try
-			{
-				var configJson = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+            {
+                HelperDAL.SaveTagValue("CompanyDB", txtCompanyDB.Text);
+                HelperDAL.SaveTagValue("Server", txtServer.Text);
+                HelperDAL.SaveTagValue("SLDServer", txtSLDServer.Text);
+                HelperDAL.SaveTagValue("LicenseServer", txtLicenseServer.Text);
+                HelperDAL.SaveTagValue("DbUserName", txtDBUserName.Text);
+                HelperDAL.SaveTagValue("DbPassword", txtDBPassword.Text);
+                HelperDAL.SaveTagValue("UserName", txtUserName.Text);
+                HelperDAL.SaveTagValue("Password", txtPassword.Text);
+                HelperDAL.SaveTagValue("DbServerType", cbxDBServerType.Text);
+                HelperDAL.SaveTagValue("UseTrusted", !this.chxUseTrusted.Checked ? "False" : "True");
 
-				var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-				var node = JsonNode.Parse(configJson, jsonNodeOptions);
-				var options = new JsonSerializerOptions { WriteIndented = true };
+                SaleQuotationDAL.appSettings = HelperDAL.GetSettings();
+                BOMDAL.appSettings = HelperDAL.GetSettings();
 
-				node["AppSettings"]["CompanyDB"] = this.txtCompanyDB.Text;
-				node["AppSettings"]["Server"] = this.txtServer.Text;
-				node["AppSettings"]["SLDServer"] = this.txtSLDServer.Text;
-				node["AppSettings"]["LicenseServer"] = this.txtLicenseServer.Text;
-				node["AppSettings"]["DbUserName"] = this.txtDBUserName.Text;
-				node["AppSettings"]["DbPassword"] = this.txtDBPassword.Text;
-				node["AppSettings"]["UserName"] = this.txtUserName.Text;
-				node["AppSettings"]["Password"] = this.txtPassword.Text;
-				node["AppSettings"]["DbServerType"] = this.cbxDBServerType.Text;
-				node["AppSettings"]["UseTrusted"] = !this.chxUseTrusted.Checked ? "False" : "True";
-
-				File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), node.ToJsonString(options));
-				this.lblComments.ForeColor = Color.Blue;
-				this.lblComments.Text = "Configuration Saved Successfully!";
-			}
+                this.lblComments.ForeColor = Color.Blue;
+                this.lblComments.Text = "Configuration Saved Successfully!";
+            }
             catch (Exception ex)
             {
 
@@ -847,40 +886,40 @@
         {
             Common l_Common = new Common();
 
-			var configJson = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+            var configJson = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
 
-			var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-			var node = JsonNode.Parse(configJson, jsonNodeOptions);
-			var options = new JsonSerializerOptions { WriteIndented = true };
+            var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
+            var node = JsonNode.Parse(configJson, jsonNodeOptions);
+            var options = new JsonSerializerOptions { WriteIndented = true };
 
-			node["ConnectionStrings"]["imosConn"] = $"Server={this.txtIMOSServer.Text};Database={this.txtIMOSCompanyDB.Text};user id={this.txtIMOSDbUserName.Text};password={this.txtIMOSDbPassword.Text}";
+            node["ConnectionStrings"]["imosConn"] = $"Server={this.txtIMOSServer.Text};Database={this.txtIMOSCompanyDB.Text};user id={this.txtIMOSDbUserName.Text};password={this.txtIMOSDbPassword.Text}";
 
-			File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), node.ToJsonString(options));
+            File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), node.ToJsonString(options));
 
             l_Common.UseConnection(HelperDAL.ISCConnectionString);
 
             l_Common.Execut($"UPDATE IMOSCenters SET SQLServer = '{this.txtIMOSServer.Text}', DatabaseName = '{this.txtIMOSCompanyDB.Text}', DBUserName = '{this.txtIMOSDbUserName.Text}', DBPassword = '{this.txtIMOSDbPassword.Text}'");
 
             this.lblComments.ForeColor = Color.Blue;
-			this.lblComments.Text = "Configuration Saved Successfully!";
+            this.lblComments.Text = "Configuration Saved Successfully!";
         }
 
         private void SetSettingsISC()
-		{
-			var configJson = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+        {
+            var configJson = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
 
-			var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-			var node = JsonNode.Parse(configJson, jsonNodeOptions);
-			var options = new JsonSerializerOptions { WriteIndented = true };
+            var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
+            var node = JsonNode.Parse(configJson, jsonNodeOptions);
+            var options = new JsonSerializerOptions { WriteIndented = true };
 
-			node["ConnectionStrings"]["iscConn"] = $"Server={this.txtISCServer.Text};Database={this.txtISCCompanyDB.Text};user id={this.txtISCDbUserName.Text};password={this.txtISCDbPassword.Text}";
+            node["ConnectionStrings"]["iscConn"] = $"Server={this.txtISCServer.Text};Database={this.txtISCCompanyDB.Text};user id={this.txtISCDbUserName.Text};password={this.txtISCDbPassword.Text}";
 
             Declarations.g_ConnectionString = $"Server={this.txtISCServer.Text};Database={this.txtISCCompanyDB.Text};user id={this.txtISCDbUserName.Text};password={this.txtISCDbPassword.Text}";
 
             File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), node.ToJsonString(options));
-			
+
             this.lblComments.ForeColor = Color.Blue;
-			this.lblComments.Text = "Configuration Saved Successfully!";
+            this.lblComments.Text = "Configuration Saved Successfully!";
         }
     }
 }

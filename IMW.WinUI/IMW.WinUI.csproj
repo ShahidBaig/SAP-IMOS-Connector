@@ -13,6 +13,7 @@
     <Company>Corvit</Company>
     <PackageIcon>logo.png</PackageIcon>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,7 @@
     <None Remove="Scripts\2.0.0.0\ISC\3 - sp_GetSAPQuotationItemsISC.sql" />
     <None Remove="Scripts\2.0.0.0\ISC\4 - SAP_QuotationAnalyzer.sql" />
     <None Remove="Scripts\2.0.0.0\ISC\5 - SAP_InsertQtyConversionDetail.sql" />
+    <None Remove="Scripts\2.0.0.1\IMOS\1 - sp_GetSAPBoMItems.sql" />
     <None Remove="Scripts\Versions\Versions.sql" />
   </ItemGroup>
 
@@ -35,8 +37,8 @@
     <COMReference Include="SAPbobsCOM">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
-      <VersionMajor>9</VersionMajor>
-      <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30090</Guid>
+      <VersionMajor>10</VersionMajor>
+      <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30100</Guid>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
@@ -81,6 +83,9 @@
     <Content Include="Scripts\2.0.0.0\ISC\3 - sp_GetSAPQuotationItemsISC.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\2.0.0.1\IMOS\1 - sp_GetSAPBoMItems.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\Versions\Versions.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -120,6 +125,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\2.0.0.1\ISC\" />
   </ItemGroup>
 
 </Project>

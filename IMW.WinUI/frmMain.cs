@@ -24,6 +24,8 @@ namespace IMW.WinUI
             InitializeComponent();
             this.Hide();
 
+            HelperDAL.SetupConnectionStrings();
+
             new frmSplash().ShowDialog(this);
         }
 
@@ -77,6 +79,8 @@ namespace IMW.WinUI
 
                     Microsoft.Data.SqlClient.SqlConnection l_Conn = new Microsoft.Data.SqlClient.SqlConnection(Declarations.g_ConnectionString);
                     Server l_Server = new Server(new ServerConnection(l_Conn));
+
+                    l_Common.UseConnection(Declarations.g_ConnectionString);
 
                     l_Query = "SELECT name FROM sys.tables WHERE name = 'ISCVersions'";
                     if (!l_Common.GetList(l_Query, ref l_Data))

@@ -15,6 +15,42 @@ BEGIN
 	DROP TABLE IF EXISTS #OrderItems
 	DROP TABLE IF EXISTS #SAPQuotationLines
 	DROP TABLE IF EXISTS #QtyConversionDetail
+	DROP TABLE IF EXISTS #SAPQuotationLines
+
+	CREATE TABLE #SAPQuotationLines
+	(
+		[OrderID] [nvarchar](80) NULL,
+		[Line_No] [int] NULL,
+		[ItemCode] [nvarchar](100) NULL,
+		[ItemName] [nvarchar](200) NULL,
+		[ID] [nvarchar](60) NULL,
+		[DfltWH] [nvarchar](80) NULL,
+		[VatGourpSa] [nvarchar](80) NULL,
+		[SalUnitMsr] [nvarchar](80) NULL,
+		[PriceList] [int] NULL,
+		[Price] [decimal](18, 0) NULL,
+		[Qty] [real] NULL,
+		[SequenceNo] [real] NULL,
+		[UgpEntry] [int] NULL
+	) 
+
+	CREATE TABLE #OITMItemGroups_T
+	(
+		ItemCode NVARCHAR(100),
+		ItemName NVARCHAR(200),
+		Grp1Name VARCHAR(250),
+		Grp2Name VARCHAR(250),
+		Grp3Name VARCHAR(250),
+		Grp4Name VARCHAR(250),
+		DfltWH NVARCHAR(80), 
+		VatGourpSa NVARCHAR(80),
+		SalUnitMsr  NVARCHAR(80),
+		PriceList INT,
+		Price DECIMAL,
+		FormulaDesc VARCHAR(MAX),
+		SequenceNo REAL,
+		UgpEntry INT
+	)
 
 	CREATE TABLE #OITMItemGroups
 	(
@@ -75,7 +111,7 @@ BEGIN
 
 	INSERT INTO #OrderItems
 	SELECT *
-	FROM SalesQuotationItemsList
+	FROM SalesQuotationItemsList WITH (NOLOCK)
 	WHERE OrderID = @l_OrderID
 
 	INSERT INTO #QtyConversionDetail
@@ -98,15 +134,26 @@ BEGIN
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND O.U_Grp2Name <> ''
 		AND Q.Grp3Name = '' AND Q.Grp4Name = '' --AND Q.SequenceNo <> 99999
 
-	INSERT INTO #OITMItemGroups
+	INSERT INTO #OITMItemGroups_T
 	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
 	FROM #OITMItems O
 		LEFT OUTER JOIN #QtyConversionDetail Q ON O.U_Grp1Name = Q.Grp1Name AND O.U_Grp2Name = Q.Grp2Name 
 			AND O.U_Grp3Name = Q.Grp3Name
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems) AND Q.Grp3Name <> '' 
 		AND Q.Grp4Name = '' --AND Q.SequenceNo <> 99999
+
+	UPDATE O SET FormulaDesc = T.FormulaDesc, SequenceNo = T.SequenceNo
+	FROM #OITMItemGroups O
+		INNER JOIN #OITMItemGroups_T T ON O.ItemCode = T.ItemCode
 		
 	INSERT INTO #OITMItemGroups
+	SELECT *
+	FROM #OITMItemGroups_T
+	WHERE ItemCode NOT IN (SELECT DISTINCT ItemCode FROM #OITMItemGroups) 
+
+	TRUNCATE TABLE #OITMItemGroups_T
+		
+	INSERT INTO #OITMItemGroups_T
 	SELECT O.ItemCode, O.ItemName, U_Grp1Name, U_Grp2Name, U_Grp3Name, U_Grp4Name, O.DfltWH, O.VatGourpSa, O.SalUnitMsr, O.PriceList, O.Price, Q.FormulaDesc, Q.SequenceNo, UgpEntry
 	FROM #OITMItems O
 		INNER JOIN ITM1 IT WITH (NOLOCK) ON O.ItemCode = IT.ItemCode
@@ -115,6 +162,15 @@ BEGIN
 	WHERE O.ItemCode IN (SELECT DISTINCT ItemCode FROM #OrderItems)
 		AND Q.Grp1Name <> '' AND Q.Grp2Name <> '' AND Q.Grp3Name <> '' AND Q.Grp4Name <> ''
 		 --AND Q.SequenceNo <> 99999
+
+	UPDATE O SET FormulaDesc = T.FormulaDesc, SequenceNo = T.SequenceNo
+	FROM #OITMItemGroups O
+		INNER JOIN #OITMItemGroups_T T ON O.ItemCode = T.ItemCode
+		
+	INSERT INTO #OITMItemGroups
+	SELECT *
+	FROM #OITMItemGroups_T
+	WHERE ItemCode NOT IN (SELECT DISTINCT ItemCode FROM #OITMItemGroups) 
 
 	DELETE FROM SAPQuotationLines
 	WHERE OrderID = @l_OrderID
@@ -143,7 +199,7 @@ BEGIN
 	GROUP BY OI.ItemCode
 
 	SELECT Q.* 
-	FROM SAPQuotationLines Q
+	FROM SAPQuotationLines Q WITH (NOLOCK)
 		LEFT OUTER JOIN #OITMItemGroups OG ON Q.ItemCode = OG.ItemCode
 	WHERE OrderID = @l_OrderID
 	ORDER BY ISNULL(Q.SequenceNo, 99999), OG.Grp1Name, OG.Grp2Name, OG.Grp3Name, OG.Grp4Name

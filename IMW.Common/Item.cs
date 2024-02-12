@@ -23,6 +23,8 @@
         public string VatGourpSa { get; set; }
 
         public string Currency { get; set; }
+        public string Active { get; set; }
+        public string Inactive { get; set; }
     }
 }
 

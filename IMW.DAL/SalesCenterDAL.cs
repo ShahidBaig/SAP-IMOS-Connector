@@ -1,8 +1,10 @@
 ﻿namespace IMW.DAL
 {
     using IMW.Common;
+    using IMW.DB;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.SqlClient;
 
     public class SalesCenterDAL
@@ -63,35 +65,31 @@
         public List<SalesCenters> GetSalesCenters()
         {
             List<SalesCenters> list = new List<SalesCenters>();
-            SqlConnection connection = new SqlConnection {
-                ConnectionString = HelperDAL.ISCConnectionString
-            };
-            connection.Open();
-            SqlCommand command = new SqlCommand {
-                CommandText = "select * from IMOSCenters", // WHERE NAME = 'M-FC'",
-                Connection = connection
-            };
-            SqlDataReader reader = command.ExecuteReader();
-            while (true)
+            DBConnector l_Conn = new DBConnector();
+            DataTable l_Data = new DataTable();
+
+            l_Conn.ConnectionString = HelperDAL.ISCConnectionString;
+
+            l_Conn.GetData("select * from IMOSCenters WITH (NOLOCK)", ref l_Data);
+
+            foreach(DataRow l_Row in l_Data.Rows)
             {
-                if (!reader.Read())
-                {
-                    reader.Close();
-                    command.Dispose();
-                    connection.Close();
-                    return list;
-                }
                 SalesCenters item = new SalesCenters {
-                    Name = reader["Name"].ToString(),
-                    FirstOrder = reader["FirstOrder"].ToString(),
-                    MachineAddress = reader["MachineAddress"].ToString(),
-                    SQLServer = reader["SQLServer"].ToString(),
-                    DatabaseName = reader["DatabaseName"].ToString(),
-                    DbUserName = reader["DbUserName"].ToString(),
-                    DBPassword = reader["DbPassword"].ToString()
+                    Name = l_Row["Name"].ToString(),
+                    FirstOrder = l_Row["FirstOrder"].ToString(),
+                    MachineAddress = l_Row["MachineAddress"].ToString(),
+                    SQLServer = l_Row["SQLServer"].ToString(),
+                    DatabaseName = l_Row["DatabaseName"].ToString(),
+                    DbUserName = l_Row["DbUserName"].ToString(),
+                    DBPassword = l_Row["DbPassword"].ToString()
                 };
+
                 list.Add(item);
             }
+
+            l_Data.Dispose();
+
+            return list;
         }
 
         public bool SaveSalesCenter(SalesCenters sc, bool isUpdate)

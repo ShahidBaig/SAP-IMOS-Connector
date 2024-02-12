@@ -15,6 +15,8 @@ using IMW.DAL;
 using System.ServiceProcess;
 using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using IMW.DB;
+using static Azure.Core.HttpHeader;
 
 namespace IMW.WinUI
 {
@@ -32,15 +34,8 @@ namespace IMW.WinUI
         {
             try
             {
-                var configJson = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+                HelperDAL.SaveTagValue("Sync", $"{(chkSyncItems.Checked ? 1 : 0)}|{(chkSyncCustomers.Checked ? 1 : 0)}|{(chkCreateSQInSAPForEachOpportunity.Checked ? 1 : 0)}|{(chkTransferSQFromSAPToISC.Checked ? 1 : 0)}|{(chkTransferSQFromISCToIMOS.Checked ? 1 : 0)}|{(chkTransferSQFromIMOSToISC.Checked ? 1 : 0)}|{(chkTransferSQFromISCToSAP.Checked ? 1 : 0)}|{(chkSyncBoM.Checked ? 1 : 0)}");
 
-                var jsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
-                var node = JsonNode.Parse(configJson, jsonNodeOptions);
-                var options = new JsonSerializerOptions { WriteIndented = true };
-
-                node["AppSettings"]["Sync"] = $"{(chkSyncItems.Checked ? 1 : 0)}|{(chkSyncCustomers.Checked ? 1 : 0)}|{(chkCreateSQInSAPForEachOpportunity.Checked ? 1 : 0)}|{(chkTransferSQFromSAPToISC.Checked ? 1 : 0)}|{(chkTransferSQFromISCToIMOS.Checked ? 1 : 0)}|{(chkTransferSQFromIMOSToISC.Checked ? 1 : 0)}|{(chkTransferSQFromISCToSAP.Checked ? 1 : 0)}";
-
-                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), node.ToJsonString(options));
                 MessageBox.Show("Settings saved successfully!", "Sync Settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
@@ -94,6 +89,11 @@ namespace IMW.WinUI
                     {
                         chkTransferSQFromISCToSAP.Checked = splits[index] == "1" ? true : false;
                         btnTransferSQfromISCtoSAP.Enabled = splits[index] == "1" ? false : true;
+                    }
+                    else if (index == 7)
+                    {
+                        chkSyncBoM.Checked = splits[index] == "1" ? true : false;
+                        btnSyncBoM.Enabled = splits[index] == "1" ? false : true;
                     }
 
                     index++;
@@ -186,12 +186,39 @@ namespace IMW.WinUI
             catch (Exception) { }
         }
 
+        private string getItemsOptions()
+        {
+            List<string> options = new List<string>();
+
+            if(chkItemsItems.Checked)
+            {
+                options.Add("Items");
+            }
+
+            if (chkItemsPrices.Checked)
+            {
+                options.Add("ItemPrices");
+            }
+
+            if (chkItemsGroups.Checked)
+            {
+                options.Add("Groups");
+            }
+
+            if (chkItemsResources.Checked)
+            {
+                options.Add("Resources");
+            }
+
+            return String.Join(",", options.ToArray());
+        }
+
         private void btnLoadItems_Click(object sender, EventArgs e)
         {
             try
             {
                 LogConsumerDAL.Instance.Write("Initiating Getting Item Master Data from SAP to ISC");
-                new ItemsDAL().LoadItem();
+                new ItemsDAL().LoadItem(getItemsOptions());
                 LogConsumerDAL.Instance.Write("Completed Iteration for Item Master Data from SAP to ISC");
 
                 MessageBox.Show("Items sync is completed.", "IMOS - SAP Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -327,7 +354,7 @@ namespace IMW.WinUI
             try
             {
                 //string servicePath = "C:\\Personal\\Interwood\\IMW_Code\\ISCService\\bin\\Debug\\net6.0\\ISCService.exe";
-                string servicePath = Path.Combine(Application.StartupPath.Replace("\\App", "\\Service"),  "ISCService.exe");
+                string servicePath = Path.Combine(Application.StartupPath.Replace("\\App", "\\Service"), "ISCService.exe");
                 Process p = new Process();
 
                 p.StartInfo.UseShellExecute = false;
@@ -336,7 +363,7 @@ namespace IMW.WinUI
                 p.StartInfo.Arguments = $"create \"{serviceName}\" binpath=\"{servicePath}\" start=auto";
 
                 p.Start();
-                
+
                 string output = p.StandardOutput.ReadToEnd().ToLower();
                 p.WaitForExit();
 
@@ -348,7 +375,7 @@ namespace IMW.WinUI
                     btnStopService.Enabled = false;
                     btnInstallSyncService.Enabled = false;
                     btnUnInstallSyncService.Enabled = true;
-                    
+
                     MessageBox.Show("ISC Service installed.", "Install ISC Service", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -413,6 +440,29 @@ namespace IMW.WinUI
             try
             {
                 btnCreateSQInSAPForEachOpportunity.Enabled = !chkCreateSQInSAPForEachOpportunity.Checked;
+            }
+            catch (Exception) { }
+        }
+
+        private void btnSyncBoM_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LogConsumerDAL.Instance.Write("Initiating Sync BoM");
+                new BOMDAL().SyncBoM();
+                LogConsumerDAL.Instance.Write("Completed Sync BoM");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void chkSyncBoM_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                btnSyncBoM.Enabled = !chkSyncBoM.Checked;
             }
             catch (Exception) { }
         }

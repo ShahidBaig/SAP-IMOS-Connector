@@ -48,7 +48,6 @@ namespace IMW.DB
                 l_rsHDR = new DataTable();
             }
 
-            UseConnection(Declarations.g_ConnectionString);
             return Connection.GetData(l_SQL, ref l_rsHDR, p_Timeout, p_IsSetRole);
         }
 

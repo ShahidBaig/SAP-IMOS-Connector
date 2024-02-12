@@ -347,6 +347,15 @@ namespace IMW.DB
             return l_Process;
         }
 
+        public static string FieldToParam(object value, Declarations.FieldTypes type)
+        {
+            string l_Param = string.Empty;
+
+            FieldToParam(value, ref l_Param, type);
+
+            return l_Param;
+        }
+
         /// <summary>
         /// TODO: Update summary.
         /// </summary>

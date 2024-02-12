@@ -28,219 +28,263 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.UserID = new System.Windows.Forms.TextBox();
-            this.UID = new System.Windows.Forms.Label();
-            this.FirstName = new System.Windows.Forms.TextBox();
-            this.FName = new System.Windows.Forms.Label();
-            this.LName = new System.Windows.Forms.Label();
-            this.LastName = new System.Windows.Forms.TextBox();
-            this.Pass = new System.Windows.Forms.Label();
-            this.Password = new System.Windows.Forms.TextBox();
-            this.IsAdmin = new System.Windows.Forms.CheckBox();
-            this.Blocked = new System.Windows.Forms.CheckBox();
-            this.menuDetailGrid = new System.Windows.Forms.DataGridView();
-            this.Modify = new System.Windows.Forms.Button();
-            this.Save = new System.Windows.Forms.Button();
-            this.Delete = new System.Windows.Forms.Button();
-            this.Cancel = new System.Windows.Forms.Button();
-            this.New = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.menuDetailGrid)).BeginInit();
-            this.SuspendLayout();
+            UserID = new TextBox();
+            UID = new Label();
+            FirstName = new TextBox();
+            FName = new Label();
+            LName = new Label();
+            LastName = new TextBox();
+            Pass = new Label();
+            Password = new TextBox();
+            IsAdmin = new CheckBox();
+            Blocked = new CheckBox();
+            menuDetailGrid = new DataGridView();
+            Modify = new Button();
+            Save = new Button();
+            Delete = new Button();
+            Cancel = new Button();
+            New = new Button();
+            panel1 = new Panel();
+            panel2 = new Panel();
+            panel3 = new Panel();
+            panel4 = new Panel();
+            panel5 = new Panel();
+            ((System.ComponentModel.ISupportInitialize)menuDetailGrid).BeginInit();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            panel5.SuspendLayout();
+            SuspendLayout();
             // 
             // UserID
             // 
-            this.UserID.Location = new System.Drawing.Point(77, 21);
-            this.UserID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.UserID.MaxLength = 20;
-            this.UserID.Name = "UserID";
-            this.UserID.Size = new System.Drawing.Size(173, 23);
-            this.UserID.TabIndex = 0;
-            this.UserID.KeyDown += UserIDKeyPress;  
+            UserID.Location = new Point(94, 17);
+            UserID.MaxLength = 20;
+            UserID.Name = "UserID";
+            UserID.Size = new Size(197, 27);
+            UserID.TabIndex = 0;
+            UserID.KeyDown += UserIDKeyPress;
             // 
             // UID
             // 
-            this.UID.AutoSize = true;
-            this.UID.Location = new System.Drawing.Point(10, 26);
-            this.UID.Name = "UID";
-            this.UID.Size = new System.Drawing.Size(44, 15);
-            this.UID.TabIndex = 1;
-            this.UID.Text = "User ID";
+            UID.AutoSize = true;
+            UID.Location = new Point(17, 24);
+            UID.Name = "UID";
+            UID.Size = new Size(57, 20);
+            UID.TabIndex = 1;
+            UID.Text = "User ID";
             // 
             // FirstName
             // 
-            this.FirstName.Location = new System.Drawing.Point(336, 21);
-            this.FirstName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.FirstName.MaxLength = 50;
-            this.FirstName.Name = "FirstName";
-            this.FirstName.Size = new System.Drawing.Size(220, 23);
-            this.FirstName.TabIndex = 2;
+            FirstName.Location = new Point(390, 17);
+            FirstName.MaxLength = 50;
+            FirstName.Name = "FirstName";
+            FirstName.Size = new Size(251, 27);
+            FirstName.TabIndex = 2;
             // 
             // FName
             // 
-            this.FName.AutoSize = true;
-            this.FName.Location = new System.Drawing.Point(261, 26);
-            this.FName.Name = "FName";
-            this.FName.Size = new System.Drawing.Size(64, 15);
-            this.FName.TabIndex = 3;
-            this.FName.Text = "First Name";
+            FName.AutoSize = true;
+            FName.Location = new Point(304, 24);
+            FName.Name = "FName";
+            FName.Size = new Size(80, 20);
+            FName.TabIndex = 3;
+            FName.Text = "First Name";
             // 
             // LName
             // 
-            this.LName.AutoSize = true;
-            this.LName.Location = new System.Drawing.Point(570, 26);
-            this.LName.Name = "LName";
-            this.LName.Size = new System.Drawing.Size(63, 15);
-            this.LName.TabIndex = 4;
-            this.LName.Text = "Last Name";
+            LName.AutoSize = true;
+            LName.Location = new Point(657, 24);
+            LName.Name = "LName";
+            LName.Size = new Size(79, 20);
+            LName.TabIndex = 4;
+            LName.Text = "Last Name";
             // 
             // LastName
             // 
-            this.LastName.Location = new System.Drawing.Point(644, 21);
-            this.LastName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LastName.MaxLength = 50;
-            this.LastName.Name = "LastName";
-            this.LastName.Size = new System.Drawing.Size(162, 23);
-            this.LastName.TabIndex = 5;
+            LastName.Location = new Point(742, 17);
+            LastName.MaxLength = 50;
+            LastName.Name = "LastName";
+            LastName.Size = new Size(185, 27);
+            LastName.TabIndex = 5;
             // 
             // Pass
             // 
-            this.Pass.AutoSize = true;
-            this.Pass.Location = new System.Drawing.Point(10, 83);
-            this.Pass.Name = "Pass";
-            this.Pass.Size = new System.Drawing.Size(57, 15);
-            this.Pass.TabIndex = 6;
-            this.Pass.Text = "Password";
+            Pass.AutoSize = true;
+            Pass.Location = new Point(17, 68);
+            Pass.Name = "Pass";
+            Pass.Size = new Size(70, 20);
+            Pass.TabIndex = 6;
+            Pass.Text = "Password";
             // 
             // Password
             // 
-            this.Password.Location = new System.Drawing.Point(77, 80);
-            this.Password.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Password.MaxLength = 50;
-            this.Password.Name = "Password";
-            this.Password.Size = new System.Drawing.Size(173, 23);
-            this.Password.TabIndex = 7;
-            this.Password.Text = "Password";
+            Password.Location = new Point(94, 64);
+            Password.MaxLength = 50;
+            Password.Name = "Password";
+            Password.Size = new Size(197, 27);
+            Password.TabIndex = 7;
+            Password.Text = "Password";
             // 
             // IsAdmin
             // 
-            this.IsAdmin.AutoSize = true;
-            this.IsAdmin.Location = new System.Drawing.Point(336, 82);
-            this.IsAdmin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.IsAdmin.Name = "IsAdmin";
-            this.IsAdmin.Size = new System.Drawing.Size(88, 19);
-            this.IsAdmin.TabIndex = 8;
-            this.IsAdmin.Text = "Admin User";
-            this.IsAdmin.UseVisualStyleBackColor = true;
-            this.IsAdmin.CheckedChanged += IsAdmin_CheckedChanged;
+            IsAdmin.AutoSize = true;
+            IsAdmin.Location = new Point(390, 66);
+            IsAdmin.Name = "IsAdmin";
+            IsAdmin.Size = new Size(108, 24);
+            IsAdmin.TabIndex = 8;
+            IsAdmin.Text = "Admin User";
+            IsAdmin.UseVisualStyleBackColor = true;
+            IsAdmin.CheckedChanged += IsAdmin_CheckedChanged;
             // 
             // Blocked
             // 
-            this.Blocked.AutoSize = true;
-            this.Blocked.Location = new System.Drawing.Point(570, 82);
-            this.Blocked.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Blocked.Name = "Blocked";
-            this.Blocked.Size = new System.Drawing.Size(68, 19);
-            this.Blocked.TabIndex = 9;
-            this.Blocked.Text = "Blocked";
-            this.Blocked.UseVisualStyleBackColor = true;
+            Blocked.AutoSize = true;
+            Blocked.Location = new Point(657, 66);
+            Blocked.Name = "Blocked";
+            Blocked.Size = new Size(84, 24);
+            Blocked.TabIndex = 9;
+            Blocked.Text = "Blocked";
+            Blocked.UseVisualStyleBackColor = true;
             // 
             // menuDetailGrid
             // 
-            this.menuDetailGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.menuDetailGrid.Location = new System.Drawing.Point(77, 145);
-            this.menuDetailGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.menuDetailGrid.Name = "menuDetailGrid";
-            this.menuDetailGrid.RowHeadersWidth = 51;
-            this.menuDetailGrid.RowTemplate.Height = 29;
-            this.menuDetailGrid.Size = new System.Drawing.Size(640, 208);
-            this.menuDetailGrid.TabIndex = 10;
-            this.menuDetailGrid.CellContentClick += dataGridView1_CellContentClick;
+            menuDetailGrid.BackgroundColor = Color.White;
+            menuDetailGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            menuDetailGrid.Dock = DockStyle.Fill;
+            menuDetailGrid.Location = new Point(0, 117);
+            menuDetailGrid.Name = "menuDetailGrid";
+            menuDetailGrid.RowHeadersWidth = 51;
+            menuDetailGrid.RowTemplate.Height = 29;
+            menuDetailGrid.Size = new Size(942, 404);
+            menuDetailGrid.TabIndex = 10;
+            menuDetailGrid.CellContentClick += dataGridView1_CellContentClick;
             // 
             // Modify
             // 
-            this.Modify.Location = new System.Drawing.Point(173, 393);
-            this.Modify.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Modify.Name = "Modify";
-            this.Modify.Size = new System.Drawing.Size(82, 22);
-            this.Modify.TabIndex = 11;
-            this.Modify.Text = "Modify";
-            this.Modify.UseVisualStyleBackColor = true;
-            this.Modify.Click += Modify_Click;
+            Modify.Location = new Point(16, 17);
+            Modify.Name = "Modify";
+            Modify.Size = new Size(94, 29);
+            Modify.TabIndex = 11;
+            Modify.Text = "Modify";
+            Modify.UseVisualStyleBackColor = true;
+            Modify.Click += Modify_Click;
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(348, 393);
-            this.Save.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(82, 22);
-            this.Save.TabIndex = 12;
-            this.Save.Text = "Save";
-            this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += Save_Click;
+            Save.Location = new Point(216, 17);
+            Save.Name = "Save";
+            Save.Size = new Size(94, 29);
+            Save.TabIndex = 12;
+            Save.Text = "Save";
+            Save.UseVisualStyleBackColor = true;
+            Save.Click += Save_Click;
             // 
             // Delete
             // 
-            this.Delete.Location = new System.Drawing.Point(433, 393);
-            this.Delete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(82, 22);
-            this.Delete.TabIndex = 13;
-            this.Delete.Text = "Delete";
-            this.Delete.UseVisualStyleBackColor = true;
-            this.Delete.Click += Delete_Click;
+            Delete.Location = new Point(313, 17);
+            Delete.Name = "Delete";
+            Delete.Size = new Size(94, 29);
+            Delete.TabIndex = 13;
+            Delete.Text = "Delete";
+            Delete.UseVisualStyleBackColor = true;
+            Delete.Click += Delete_Click;
             // 
             // Cancel
             // 
-            this.Cancel.Location = new System.Drawing.Point(521, 393);
-            this.Cancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(82, 22);
-            this.Cancel.TabIndex = 14;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += Cancel_Click;
+            Cancel.Location = new Point(413, 17);
+            Cancel.Name = "Cancel";
+            Cancel.Size = new Size(94, 29);
+            Cancel.TabIndex = 14;
+            Cancel.Text = "Cancel";
+            Cancel.UseVisualStyleBackColor = true;
+            Cancel.Click += Cancel_Click;
             // 
             // New
             // 
-            this.New.Location = new System.Drawing.Point(261, 393);
-            this.New.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.New.Name = "New";
-            this.New.Size = new System.Drawing.Size(82, 22);
-            this.New.TabIndex = 15;
-            this.New.Text = "New";
-            this.New.UseVisualStyleBackColor = true;
-            this.New.Click += New_Click;
+            New.Location = new Point(116, 17);
+            New.Name = "New";
+            New.Size = new Size(94, 29);
+            New.TabIndex = 15;
+            New.Text = "New";
+            New.UseVisualStyleBackColor = true;
+            New.Click += New_Click;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(panel2);
+            panel1.Controls.Add(panel4);
+            panel1.Controls.Add(panel3);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 521);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(942, 58);
+            panel1.TabIndex = 16;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(New);
+            panel2.Controls.Add(Cancel);
+            panel2.Controls.Add(Delete);
+            panel2.Controls.Add(Save);
+            panel2.Controls.Add(Modify);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(198, 0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(524, 58);
+            panel2.TabIndex = 16;
+            // 
+            // panel3
+            // 
+            panel3.Dock = DockStyle.Right;
+            panel3.Location = new Point(722, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(220, 58);
+            panel3.TabIndex = 17;
+            // 
+            // panel4
+            // 
+            panel4.Dock = DockStyle.Left;
+            panel4.Location = new Point(0, 0);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(198, 58);
+            panel4.TabIndex = 18;
+            // 
+            // panel5
+            // 
+            panel5.Controls.Add(Blocked);
+            panel5.Controls.Add(IsAdmin);
+            panel5.Controls.Add(Password);
+            panel5.Controls.Add(Pass);
+            panel5.Controls.Add(LastName);
+            panel5.Controls.Add(LName);
+            panel5.Controls.Add(FName);
+            panel5.Controls.Add(FirstName);
+            panel5.Controls.Add(UID);
+            panel5.Controls.Add(UserID);
+            panel5.Dock = DockStyle.Top;
+            panel5.Location = new Point(0, 0);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(942, 117);
+            panel5.TabIndex = 17;
             // 
             // UserManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 434);
-            this.Controls.Add(this.New);
-            this.Controls.Add(this.Cancel);
-            this.Controls.Add(this.Delete);
-            this.Controls.Add(this.Save);
-            this.Controls.Add(this.Modify);
-            this.Controls.Add(this.menuDetailGrid);
-            this.Controls.Add(this.Blocked);
-            this.Controls.Add(this.IsAdmin);
-            this.Controls.Add(this.Password);
-            this.Controls.Add(this.Pass);
-            this.Controls.Add(this.LastName);
-            this.Controls.Add(this.LName);
-            this.Controls.Add(this.FName);
-            this.Controls.Add(this.FirstName);
-            this.Controls.Add(this.UID);
-            this.Controls.Add(this.UserID);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "UserManager";
-            this.ShowInTaskbar = false;
-            this.Text = "User Manager";
-            ((System.ComponentModel.ISupportInitialize)(this.menuDetailGrid)).EndInit();
-            this.Load += new System.EventHandler(this.UserManager_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(942, 579);
+            Controls.Add(menuDetailGrid);
+            Controls.Add(panel5);
+            Controls.Add(panel1);
+            Name = "UserManager";
+            ShowInTaskbar = false;
+            Text = "User Manager";
+            Load += UserManager_Load;
+            ((System.ComponentModel.ISupportInitialize)menuDetailGrid).EndInit();
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -261,5 +305,10 @@
         private Button Delete;
         private Button Cancel;
         private Button New;
+        private Panel panel1;
+        private Panel panel4;
+        private Panel panel3;
+        private Panel panel2;
+        private Panel panel5;
     }
 }

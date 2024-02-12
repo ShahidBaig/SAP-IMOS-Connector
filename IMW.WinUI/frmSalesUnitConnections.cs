@@ -33,6 +33,9 @@
         private Button btnConnect;
         private Button btnSave;
         private ContextMenuStrip contextMenuStrip1;
+        private Panel panel1;
+        private Panel panel2;
+        private Panel panel3;
         private ToolStripMenuItem editToolStripMenuItem;
 
         public frmSalesUnitConnections()
@@ -55,7 +58,8 @@
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SalesCenters sc = new SalesCenters {
+            SalesCenters sc = new SalesCenters
+            {
                 Name = this.txtWName.Text,
                 FirstOrder = this.txtFirstOrder.Text,
                 MachineAddress = this.txtMachineAddress.Text,
@@ -106,261 +110,287 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.lblMachineAddress = new System.Windows.Forms.Label();
-            this.txtWDBPassword = new System.Windows.Forms.TextBox();
-            this.lblWDbName = new System.Windows.Forms.Label();
-            this.txtWDbUserName = new System.Windows.Forms.TextBox();
-            this.lblWDbPassword = new System.Windows.Forms.Label();
-            this.txtWDatabaseName = new System.Windows.Forms.TextBox();
-            this.lblWDbUserName = new System.Windows.Forms.Label();
-            this.txtWSQLServer = new System.Windows.Forms.TextBox();
-            this.lblWSQLServer = new System.Windows.Forms.Label();
-            this.txtMachineAddress = new System.Windows.Forms.TextBox();
-            this.lblFirstOrder = new System.Windows.Forms.Label();
-            this.txtFirstOrder = new System.Windows.Forms.TextBox();
-            this.lblWName = new System.Windows.Forms.Label();
-            this.txtWName = new System.Windows.Forms.TextBox();
-            this.dgvSalesCenters = new System.Windows.Forms.DataGridView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvSalesCenters)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            lblMachineAddress = new Label();
+            txtWDBPassword = new TextBox();
+            lblWDbName = new Label();
+            txtWDbUserName = new TextBox();
+            lblWDbPassword = new Label();
+            txtWDatabaseName = new TextBox();
+            lblWDbUserName = new Label();
+            txtWSQLServer = new TextBox();
+            lblWSQLServer = new Label();
+            txtMachineAddress = new TextBox();
+            lblFirstOrder = new Label();
+            txtFirstOrder = new TextBox();
+            lblWName = new Label();
+            txtWName = new TextBox();
+            dgvSalesCenters = new DataGridView();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            editToolStripMenuItem = new ToolStripMenuItem();
+            btnClose = new Button();
+            btnConnect = new Button();
+            btnSave = new Button();
+            panel1 = new Panel();
+            panel2 = new Panel();
+            panel3 = new Panel();
+            ((ISupportInitialize)dgvSalesCenters).BeginInit();
+            contextMenuStrip1.SuspendLayout();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            panel3.SuspendLayout();
+            SuspendLayout();
             // 
             // lblMachineAddress
             // 
-            this.lblMachineAddress.AutoSize = true;
-            this.lblMachineAddress.Location = new System.Drawing.Point(27, 76);
-            this.lblMachineAddress.Name = "lblMachineAddress";
-            this.lblMachineAddress.Size = new System.Drawing.Size(98, 15);
-            this.lblMachineAddress.TabIndex = 63;
-            this.lblMachineAddress.Text = "Machine Address";
+            lblMachineAddress.AutoSize = true;
+            lblMachineAddress.Location = new Point(31, 99);
+            lblMachineAddress.Name = "lblMachineAddress";
+            lblMachineAddress.Size = new Size(122, 20);
+            lblMachineAddress.TabIndex = 63;
+            lblMachineAddress.Text = "Machine Address";
             // 
             // txtWDBPassword
             // 
-            this.txtWDBPassword.Location = new System.Drawing.Point(134, 181);
-            this.txtWDBPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtWDBPassword.Name = "txtWDBPassword";
-            this.txtWDBPassword.Size = new System.Drawing.Size(228, 23);
-            this.txtWDBPassword.TabIndex = 61;
+            txtWDBPassword.Location = new Point(159, 239);
+            txtWDBPassword.Name = "txtWDBPassword";
+            txtWDBPassword.Size = new Size(260, 27);
+            txtWDBPassword.TabIndex = 61;
             // 
             // lblWDbName
             // 
-            this.lblWDbName.AutoSize = true;
-            this.lblWDbName.Location = new System.Drawing.Point(27, 134);
-            this.lblWDbName.Name = "lblWDbName";
-            this.lblWDbName.Size = new System.Drawing.Size(90, 15);
-            this.lblWDbName.TabIndex = 62;
-            this.lblWDbName.Text = "Database Name";
+            lblWDbName.AutoSize = true;
+            lblWDbName.Location = new Point(37, 177);
+            lblWDbName.Name = "lblWDbName";
+            lblWDbName.Size = new Size(116, 20);
+            lblWDbName.TabIndex = 62;
+            lblWDbName.Text = "Database Name";
             // 
             // txtWDbUserName
             // 
-            this.txtWDbUserName.Location = new System.Drawing.Point(134, 154);
-            this.txtWDbUserName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtWDbUserName.Name = "txtWDbUserName";
-            this.txtWDbUserName.Size = new System.Drawing.Size(228, 23);
-            this.txtWDbUserName.TabIndex = 59;
+            txtWDbUserName.Location = new Point(159, 203);
+            txtWDbUserName.Name = "txtWDbUserName";
+            txtWDbUserName.Size = new Size(260, 27);
+            txtWDbUserName.TabIndex = 59;
             // 
             // lblWDbPassword
             // 
-            this.lblWDbPassword.AutoSize = true;
-            this.lblWDbPassword.Location = new System.Drawing.Point(27, 185);
-            this.lblWDbPassword.Name = "lblWDbPassword";
-            this.lblWDbPassword.Size = new System.Drawing.Size(72, 15);
-            this.lblWDbPassword.TabIndex = 60;
-            this.lblWDbPassword.Text = "DbPassword";
+            lblWDbPassword.AutoSize = true;
+            lblWDbPassword.Location = new Point(63, 245);
+            lblWDbPassword.Name = "lblWDbPassword";
+            lblWDbPassword.Size = new Size(90, 20);
+            lblWDbPassword.TabIndex = 60;
+            lblWDbPassword.Text = "DbPassword";
             // 
             // txtWDatabaseName
             // 
-            this.txtWDatabaseName.Location = new System.Drawing.Point(134, 126);
-            this.txtWDatabaseName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtWDatabaseName.Name = "txtWDatabaseName";
-            this.txtWDatabaseName.Size = new System.Drawing.Size(228, 23);
-            this.txtWDatabaseName.TabIndex = 57;
+            txtWDatabaseName.Location = new Point(159, 166);
+            txtWDatabaseName.Name = "txtWDatabaseName";
+            txtWDatabaseName.Size = new Size(260, 27);
+            txtWDatabaseName.TabIndex = 57;
             // 
             // lblWDbUserName
             // 
-            this.lblWDbUserName.AutoSize = true;
-            this.lblWDbUserName.Location = new System.Drawing.Point(27, 158);
-            this.lblWDbUserName.Name = "lblWDbUserName";
-            this.lblWDbUserName.Size = new System.Drawing.Size(77, 15);
-            this.lblWDbUserName.TabIndex = 58;
-            this.lblWDbUserName.Text = "DbUserName";
+            lblWDbUserName.AutoSize = true;
+            lblWDbUserName.Location = new Point(55, 209);
+            lblWDbUserName.Name = "lblWDbUserName";
+            lblWDbUserName.Size = new Size(98, 20);
+            lblWDbUserName.TabIndex = 58;
+            lblWDbUserName.Text = "DbUserName";
             // 
             // txtWSQLServer
             // 
-            this.txtWSQLServer.Location = new System.Drawing.Point(134, 96);
-            this.txtWSQLServer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtWSQLServer.Name = "txtWSQLServer";
-            this.txtWSQLServer.Size = new System.Drawing.Size(228, 23);
-            this.txtWSQLServer.TabIndex = 55;
+            txtWSQLServer.Location = new Point(159, 126);
+            txtWSQLServer.Name = "txtWSQLServer";
+            txtWSQLServer.Size = new Size(260, 27);
+            txtWSQLServer.TabIndex = 55;
             // 
             // lblWSQLServer
             // 
-            this.lblWSQLServer.AutoSize = true;
-            this.lblWSQLServer.Location = new System.Drawing.Point(27, 104);
-            this.lblWSQLServer.Name = "lblWSQLServer";
-            this.lblWSQLServer.Size = new System.Drawing.Size(63, 15);
-            this.lblWSQLServer.TabIndex = 56;
-            this.lblWSQLServer.Text = "SQL Server";
+            lblWSQLServer.AutoSize = true;
+            lblWSQLServer.Location = new Point(73, 137);
+            lblWSQLServer.Name = "lblWSQLServer";
+            lblWSQLServer.Size = new Size(80, 20);
+            lblWSQLServer.TabIndex = 56;
+            lblWSQLServer.Text = "SQL Server";
             // 
             // txtMachineAddress
             // 
-            this.txtMachineAddress.Location = new System.Drawing.Point(134, 68);
-            this.txtMachineAddress.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtMachineAddress.Name = "txtMachineAddress";
-            this.txtMachineAddress.Size = new System.Drawing.Size(228, 23);
-            this.txtMachineAddress.TabIndex = 53;
+            txtMachineAddress.Location = new Point(159, 89);
+            txtMachineAddress.Name = "txtMachineAddress";
+            txtMachineAddress.Size = new Size(260, 27);
+            txtMachineAddress.TabIndex = 53;
             // 
             // lblFirstOrder
             // 
-            this.lblFirstOrder.AutoSize = true;
-            this.lblFirstOrder.Location = new System.Drawing.Point(27, 46);
-            this.lblFirstOrder.Name = "lblFirstOrder";
-            this.lblFirstOrder.Size = new System.Drawing.Size(62, 15);
-            this.lblFirstOrder.TabIndex = 54;
-            this.lblFirstOrder.Text = "First Order";
+            lblFirstOrder.AutoSize = true;
+            lblFirstOrder.Location = new Point(75, 59);
+            lblFirstOrder.Name = "lblFirstOrder";
+            lblFirstOrder.Size = new Size(78, 20);
+            lblFirstOrder.TabIndex = 54;
+            lblFirstOrder.Text = "First Order";
             // 
             // txtFirstOrder
             // 
-            this.txtFirstOrder.Location = new System.Drawing.Point(134, 40);
-            this.txtFirstOrder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtFirstOrder.Name = "txtFirstOrder";
-            this.txtFirstOrder.Size = new System.Drawing.Size(228, 23);
-            this.txtFirstOrder.TabIndex = 51;
+            txtFirstOrder.Location = new Point(159, 51);
+            txtFirstOrder.Name = "txtFirstOrder";
+            txtFirstOrder.Size = new Size(260, 27);
+            txtFirstOrder.TabIndex = 51;
             // 
             // lblWName
             // 
-            this.lblWName.AutoSize = true;
-            this.lblWName.Location = new System.Drawing.Point(27, 22);
-            this.lblWName.Name = "lblWName";
-            this.lblWName.Size = new System.Drawing.Size(39, 15);
-            this.lblWName.TabIndex = 52;
-            this.lblWName.Text = "Name";
+            lblWName.AutoSize = true;
+            lblWName.Location = new Point(104, 27);
+            lblWName.Name = "lblWName";
+            lblWName.Size = new Size(49, 20);
+            lblWName.TabIndex = 52;
+            lblWName.Text = "Name";
             // 
             // txtWName
             // 
-            this.txtWName.Location = new System.Drawing.Point(134, 13);
-            this.txtWName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtWName.Name = "txtWName";
-            this.txtWName.Size = new System.Drawing.Size(228, 23);
-            this.txtWName.TabIndex = 50;
+            txtWName.Location = new Point(159, 15);
+            txtWName.Name = "txtWName";
+            txtWName.Size = new Size(260, 27);
+            txtWName.TabIndex = 50;
             // 
             // dgvSalesCenters
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvSalesCenters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvSalesCenters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvSalesCenters.ContextMenuStrip = this.contextMenuStrip1;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvSalesCenters.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvSalesCenters.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgvSalesCenters.Location = new System.Drawing.Point(0, 249);
-            this.dgvSalesCenters.Margin = new System.Windows.Forms.Padding(4);
-            this.dgvSalesCenters.Name = "dgvSalesCenters";
-            this.dgvSalesCenters.Size = new System.Drawing.Size(591, 158);
-            this.dgvSalesCenters.TabIndex = 64;
+            dgvSalesCenters.BackgroundColor = Color.White;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvSalesCenters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvSalesCenters.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvSalesCenters.ContextMenuStrip = contextMenuStrip1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvSalesCenters.DefaultCellStyle = dataGridViewCellStyle2;
+            dgvSalesCenters.Dock = DockStyle.Fill;
+            dgvSalesCenters.Location = new Point(0, 286);
+            dgvSalesCenters.Margin = new Padding(5, 5, 5, 5);
+            dgvSalesCenters.Name = "dgvSalesCenters";
+            dgvSalesCenters.RowHeadersWidth = 51;
+            dgvSalesCenters.Size = new Size(675, 335);
+            dgvSalesCenters.TabIndex = 64;
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(95, 26);
+            contextMenuStrip1.ImageScalingSize = new Size(20, 20);
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(105, 28);
             // 
             // editToolStripMenuItem
             // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
-            this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(104, 24);
+            editToolStripMenuItem.Text = "Edit";
+            editToolStripMenuItem.Click += editToolStripMenuItem_Click;
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(466, 167);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(77, 32);
-            this.btnClose.TabIndex = 67;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            btnClose.Location = new Point(58, 166);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(88, 43);
+            btnClose.TabIndex = 67;
+            btnClose.Text = "Close";
+            btnClose.UseVisualStyleBackColor = true;
+            btnClose.Click += btnClose_Click;
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(466, 130);
-            this.btnConnect.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(77, 32);
-            this.btnConnect.TabIndex = 66;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            btnConnect.Location = new Point(58, 116);
+            btnConnect.Name = "btnConnect";
+            btnConnect.Size = new Size(88, 43);
+            btnConnect.TabIndex = 66;
+            btnConnect.Text = "Connect";
+            btnConnect.UseVisualStyleBackColor = true;
+            btnConnect.Click += btnConnect_Click;
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(466, 90);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(77, 32);
-            this.btnSave.TabIndex = 65;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Location = new Point(58, 63);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(88, 43);
+            btnSave.TabIndex = 65;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(panel3);
+            panel1.Controls.Add(panel2);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(675, 286);
+            panel1.TabIndex = 68;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(lblMachineAddress);
+            panel2.Controls.Add(txtWDBPassword);
+            panel2.Controls.Add(lblWDbName);
+            panel2.Controls.Add(txtWDbUserName);
+            panel2.Controls.Add(lblWDbPassword);
+            panel2.Controls.Add(txtWDatabaseName);
+            panel2.Controls.Add(lblWDbUserName);
+            panel2.Controls.Add(txtWSQLServer);
+            panel2.Controls.Add(lblWSQLServer);
+            panel2.Controls.Add(txtMachineAddress);
+            panel2.Controls.Add(lblFirstOrder);
+            panel2.Controls.Add(txtFirstOrder);
+            panel2.Controls.Add(lblWName);
+            panel2.Controls.Add(txtWName);
+            panel2.Dock = DockStyle.Left;
+            panel2.Location = new Point(0, 0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(468, 286);
+            panel2.TabIndex = 68;
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(btnClose);
+            panel3.Controls.Add(btnConnect);
+            panel3.Controls.Add(btnSave);
+            panel3.Dock = DockStyle.Fill;
+            panel3.Location = new Point(468, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(207, 286);
+            panel3.TabIndex = 69;
             // 
             // frmSalesUnitConnections
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(591, 407);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.dgvSalesCenters);
-            this.Controls.Add(this.lblMachineAddress);
-            this.Controls.Add(this.txtWDBPassword);
-            this.Controls.Add(this.lblWDbName);
-            this.Controls.Add(this.txtWDbUserName);
-            this.Controls.Add(this.lblWDbPassword);
-            this.Controls.Add(this.txtWDatabaseName);
-            this.Controls.Add(this.lblWDbUserName);
-            this.Controls.Add(this.txtWSQLServer);
-            this.Controls.Add(this.lblWSQLServer);
-            this.Controls.Add(this.txtMachineAddress);
-            this.Controls.Add(this.lblFirstOrder);
-            this.Controls.Add(this.txtFirstOrder);
-            this.Controls.Add(this.lblWName);
-            this.Controls.Add(this.txtWName);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "frmSalesUnitConnections";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "IMOS Sales Center Connection";
-            this.Load += new System.EventHandler(this.frmSalesUnitConnections_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvSalesCenters)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(675, 621);
+            Controls.Add(dgvSalesCenters);
+            Controls.Add(panel1);
+            Margin = new Padding(5, 5, 5, 5);
+            Name = "frmSalesUnitConnections";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "IMOS Sales Center Connection";
+            Load += frmSalesUnitConnections_Load;
+            ((ISupportInitialize)dgvSalesCenters).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            panel3.ResumeLayout(false);
+            ResumeLayout(false);
         }
     }
 }
