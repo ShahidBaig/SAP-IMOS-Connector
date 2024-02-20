@@ -23,6 +23,7 @@
         public static AppSettings appSettings = HelperDAL.GetSettings();
         //private Company oCompany = ((Company)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("632F4591-AA62-4219-8FB6-22BCF5F60090"))));
         SAPbobsCOM.Company oCompany = new SAPbobsCOM.Company();
+        private static Dictionary<string, string> BoMLinks = new Dictionary<string, string>();
 
         public List<KeyValuePair<string, int>> GetNewOrders(Int64 p_BoMLastAutoID)
         {
@@ -125,6 +126,7 @@
 
             try
             {
+                BoMLinks.Clear();
                 l_Orders = GetNewOrders(bomLastAutoID);
                 //SAPbobsCOM.Recordset sapConn = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
 
@@ -164,6 +166,7 @@
                                     }
 
                                     l_BoMData.DefaultView.RowFilter = "Type = 1 AND ItemCode IS NOT NULL AND ItemCode <> ''";
+                                    //l_BoMData.DefaultView.RowFilter = "Type = 1 AND ItemCode in ('FG040001290','FG040000867')";
                                     l_BoMItemsTypeOne = l_BoMData.DefaultView.ToTable();
                                     List<BoM> l_BoMs = new List<BoM>();
 
@@ -237,7 +240,7 @@
                                                     l_BoM.ProductTreeLines.Add(l_Line);
                                                 }
                                                 context.AddToProductTrees(l_BoM);
-                                                l_BoMlist.Add(l_iBoM.TreeCode);                                                //context.SaveChanges();
+                                                l_BoMlist.Add(l_iBoM.TreeCode);                                                
 
 
                                             }
@@ -370,6 +373,7 @@
             DataTable l_ItemDt = new DataTable();
             Recordset recordset = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
             Recordset recordset2 = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+            Recordset recordset3 = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
 
             recordset.DoQuery("SELECT \"ItemCode\",\"ItemName\",\"FrgnName\",\"BLength1\",\"BWidth1\",\"ExitPrice\",\"AvgPrice\",\"PriceUnit\",\"CreateDate\"," +
                   "\"BuyUnitMsr\",\"SalUnitMsr\",\"UgpEntry\",\"DfltWH\",\"VatGourpSa\",\"BHeight1\",\"U_Grp1Name\",\"U_Grp2Name\",\"U_Grp3Name\",\"U_Grp4Name\" " +
@@ -380,15 +384,38 @@
                 try
                 {
                     l_ItemCode = recordset.Fields.Item("ItemCode").Value;
-                    recordset2.DoQuery("SELECT \"Father\",\"ChildNum\",\"VisOrder\",\"Code\",\"Quantity\",\"Warehouse\",\"Price\",\"Currency\",\"PriceList\"," +
-                            "\"OrigPrice\",\"OrigCurr\",\"IssueMthd\",\"Uom\",\"Comment\",\"LogInstanc\",\"Object\",\"PrncpInput\",\"Project\",\"Type\",\"WipActCode\"," +
-                            "\"AddQuantit\",\"LineText\",\"StageId\" " +
-                            "FROM ITT1 WHERE \"Code\" = '" + l_ItemCode + "' AND \"Father\" = '" + p_ParentItem + "'");
 
-                    if (recordset2.RecordCount >= 0)
+                    if (BoMLinks.ContainsKey(l_ItemCode) && BoMLinks[l_ItemCode] == p_RootItem)
                     {
                         foundItem = true;
                         recordset.MoveLast();
+                    }
+                    else
+                    {
+                        recordset2.DoQuery("SELECT \"Father\",\"ChildNum\",\"VisOrder\",\"Code\",\"Quantity\",\"Warehouse\",\"Price\",\"Currency\",\"PriceList\"," +
+                                "\"OrigPrice\",\"OrigCurr\",\"IssueMthd\",\"Uom\",\"Comment\",\"LogInstanc\",\"Object\",\"PrncpInput\",\"Project\",\"Type\",\"WipActCode\"," +
+                                "\"AddQuantit\",\"LineText\",\"StageId\" " +
+                                "FROM ITT1 WHERE \"Code\" = '" + l_ItemCode + "' AND \"Father\" = '" + p_RootItem + "'");
+
+                        if (recordset2.RecordCount > 0)
+                        {
+                            foundItem = true;
+                            recordset.MoveLast();
+                        }
+                        else if(!BoMLinks.ContainsKey(l_ItemCode))
+                        {
+                            recordset3.DoQuery("SELECT \"Father\",\"ChildNum\",\"VisOrder\",\"Code\",\"Quantity\",\"Warehouse\",\"Price\",\"Currency\",\"PriceList\"," +
+                            "\"OrigPrice\",\"OrigCurr\",\"IssueMthd\",\"Uom\",\"Comment\",\"LogInstanc\",\"Object\",\"PrncpInput\",\"Project\",\"Type\",\"WipActCode\"," +
+                            "\"AddQuantit\",\"LineText\",\"StageId\" " +
+                            "FROM ITT1 WHERE \"Code\" = '" + l_ItemCode + "'");
+
+                            if (recordset3.RecordCount == 0)
+                            {
+                                foundItem = true;
+                                recordset.MoveLast();
+                            }
+
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -401,7 +428,7 @@
             if (!foundItem)
                 l_ItemCode = string.Empty;
 
-            //vItem = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
+            vItem = this.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
             //l_ItemCode = l_Items.GetItemBy(this.oCompany, "ItemName", p_ItemCode);
 
             if (string.IsNullOrEmpty(l_ItemCode))
@@ -434,6 +461,9 @@
 
             l_BoMItem.ItemCode = l_ItemCode;
             l_BoMItem.Warehouse = p_Warehouse;
+
+            if (!BoMLinks.ContainsKey(l_ItemCode))
+                BoMLinks[l_ItemCode] = p_RootItem;
 
             return l_BoMItem;
         }
